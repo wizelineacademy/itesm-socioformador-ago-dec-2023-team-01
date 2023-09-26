@@ -1,19 +1,21 @@
-"use-client";
-import { Paper, Typography } from "@mui/material";
+import List from "@mui/material/List";
+import ListItem from "@mui/material/ListItem";
+import Typography from "@mui/material/Typography";
 
 export default function ChatHistory() {
-    const messages = [
-        { from: 'user', text: 'Hello ChatGPT!' },
-        { from: 'chatgpt', text: 'Hello! How can I assist you today?' }
+    const chats = [
+        'Chat',
+        'Chat',
+        'Chat'
     ];
 
     return (
-        <Paper style={{ maxHeight: '400px', overflowY: 'scroll', padding: '10px' }}>
-            {messages.map((message, index) => (
-                <div key={index} style={{ textAlign: message.from === 'chatgpt' ? 'left': 'right'}}>
-                    <Typography variant="body1">{message.text}</Typography>
-                </div>
+        <List>
+            {chats.map((chat, index) => (
+                <ListItem key={index}>
+                    <Typography variant="body1">{chat}</Typography>
+                </ListItem>
             ))}
-        </Paper>
+        </List>
     );
 }
