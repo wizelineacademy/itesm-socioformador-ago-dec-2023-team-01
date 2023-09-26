@@ -1,5 +1,6 @@
-"use-client";
-import { Button, TextField } from "@mui/material";
+//"use-client";
+import Button from "@mui/material/Button";
+import TextField from "@mui/material/TextField";
 
 export default function ChatInput() {
     return (
