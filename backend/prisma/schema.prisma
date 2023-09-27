@@ -9,3 +9,67 @@ datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
 }
+
+
+model User {
+  id        Int      @id @default(autoincrement())
+  idAuth0   String   @unique
+  email     String   @unique
+  name      String
+  lastName  String
+  groups   Group[]
+  role      String
+  conversations     Conversations[]
+  tokens     Tokens[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Group {
+  id        Int      @id @default(autoincrement())
+  name      String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  users     User[]
+}
+
+model LanguageModel {
+  id        Int      @id @default(autoincrement())
+  name      String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  conversations Conversations[]
+}
+
+model Conversations {
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  deletedAt DateTime?
+  user      User     @relation(fields: [userId], references: [id])
+  userId    Int
+  language  LanguageModel @relation(fields: [languageId], references: [id])
+  languageId Int
+  posts     Post[]
+}
+
+model Post {
+  id        Int      @id @default(autoincrement())
+  question  String
+  content   String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  tokenCost Int
+  conversation Conversations @relation(fields: [conversationId], references: [id])
+  conversationId Int
+}
+
+model Tokens {
+  id        Int      @id @default(autoincrement())
+  numberOfTokens     Int
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  expiresAt DateTime
+  user      User     @relation(fields: [userId], references: [id])
+  userId    Int
+}
