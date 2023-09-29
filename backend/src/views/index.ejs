@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<title>wizeprompt</title>
+</head>
+<body>
+		<nav>
+			<h1><%= title %></h1>
+			<h3>Welcome to my EJS template example!</h3>
+			<ul>
+				<% if(!isAuthenticated) { %>
+					<li><a href="/login/">Login</a></li>
+				<% } else { %>
+					<li><a href="/logout/">Logout</a></li>
+				<% } %>
+			</ul>
+		</nav>
+		<% if(isAuthenticated) { %>
+			</div class="profileInfo">
+				<img src="<%= user.picture %>" alt="Profile image" />
+				<p class="name">
+					<%= user.nickname %>
+				</p>
+			</div>
+		<% } %>
+		<br />
+		<br />
+		<br />
+		<pre>
+			<%= JSON.stringify(user, null, 2) %>
+		</pre>
+</body>
+</html>
