@@ -1,8 +1,9 @@
 import express from 'express';
+import { auth } from 'express-openid-connect';
 import config from './configs/auth0-config';
 import router from './routes/index';
 import userRouter from './routes/userRoutes';
-import { auth } from 'express-openid-connect';
+
 
 const port = 8080;
 const app = express();
@@ -19,5 +20,5 @@ app.use('/', router);
 app.use('/user', userRouter);
 
 app.listen(port, () => {
-  console.log(`Example app listening on port ${port}`);
+  console.info(`Example app listening on port ${port}`);
 });
