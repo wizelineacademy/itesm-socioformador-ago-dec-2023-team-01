@@ -17,3 +17,13 @@ export async function createUser(data: User) {
     return user;
 }
 
+export async function getUserByAuth0Id(idAuth0: string) {
+    const user = await prisma.user.findUnique({
+        where: {
+            idAuth0: idAuth0,
+        },
+    });
+    return user;
+}
+
+
