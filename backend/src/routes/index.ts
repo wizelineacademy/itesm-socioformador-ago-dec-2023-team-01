@@ -1,9 +1,12 @@
 import express from 'express';
+import userRouter from './userRoutes';
+import loginRouter from './loginRoutes';
+
 const router = express.Router();
 
 router.get('/', (req, res) => {
-  console.log(req.oidc.isAuthenticated());
-  console.log('user:', req.oidc.user);
+  console.info(req.oidc.isAuthenticated());
+  console.info('user:', req.oidc.user);
   res.render('index', {
     title: 'Express',
     isAuthenticated: req.oidc.isAuthenticated(),
@@ -11,5 +14,7 @@ router.get('/', (req, res) => {
   });
 });
 
+router.use('/user', userRouter);
+router.use('/login', loginRouter);
 
 export default router;
