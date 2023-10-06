@@ -1,7 +1,7 @@
 
-import { PrismaClient } from '@prisma/client';
 import { User } from '../models/user';
-const prisma = new PrismaClient();
+
+import prisma from '../../prisma/prisma-client';
 
 
 
@@ -12,7 +12,9 @@ export async function createUser(data: User) {
             email: data.email,
             name: data.name,
             lastName: data.lastName,
+            profilePicture: data.profilePicture,
         },
+        // groups: { connect: {  id: ''} } need to check this in the future, typescript is not recognizing the id
     });
     return user;
 }
@@ -20,10 +22,13 @@ export async function createUser(data: User) {
 export async function getUserByAuth0Id(idAuth0: string) {
     const user = await prisma.user.findUnique({
         where: {
-            idAuth0: idAuth0,
+            idAuth0,
         },
     });
     return user;
 }
+
+
+
 
 
