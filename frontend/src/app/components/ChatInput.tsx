@@ -1,13 +1,15 @@
 //"use-client";
 import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
+import useFormControl from "@mui/material/FormControl";
 
 export default function ChatInput() {
     return (
         <div style={{ display: 'flex', padding: '10px' }}>
             <TextField 
                 fullWidth
-                variant="outlined"
+                //backgroundColor="white"
+                variant="filled"
                 placeholder="Type a message..."
             />
             <Button
