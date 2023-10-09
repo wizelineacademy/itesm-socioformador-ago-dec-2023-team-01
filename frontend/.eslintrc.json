@@ -1,3 +1,31 @@
 {
-  "extends": "next/core-web-vitals"
+  "extends": [
+    "next/core-web-vitals",
+    "airbnb",
+    "airbnb-typescript"
+  ],
+  "parserOptions": {
+    "project": "./tsconfig.json",
+    "tsconfigRootDir": "./frontend",
+    "sourceType": "module"
+  },
+  "rules": {
+    "react/jsx-filename-extension": 0,
+    "no-param-reassign": 0,
+    "react/prop-types": 1,
+    "react/require-default-props": 0,
+    "react/no-array-index-key": 0,
+    "react/jsx-props-no-spreading": 0,
+    "react/forbid-prop-types": 0,
+    "import/order": 1,
+    "import/no-cycle": 0,
+    "no-console": 0,
+    "jsx-a11y/anchor-is-valid": 0,
+    "prefer-destructuring": 0,
+    "no-shadow": 0,
+    "import/no-named-as-default": 0,
+    "@typescript-eslint/no-unused-vars": 1,
+    "no-unused-vars": 1,
+    "import/extensions": 0
+}
 }

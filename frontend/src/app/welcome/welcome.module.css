@@ -1,35 +1,35 @@
 .image {
-    width: 175px;
-    height: 175px;
-    border-radius: 50%;
-    object-fit: cover;
-    object-position: 0 30%;
+  width: 175px;
+  height: 175px;
+  border-radius: 50%;
+  object-fit: cover;
+  object-position: 0 30%;
 }
 
 .smallimage {
-    width: 1.75rem;
-    height: 1.75rem;
-    padding-right: 5px;
-    position: relative;
-    top: 5px;
+  width: 1.75rem;
+  height: 1.75rem;
+  padding-right: 5px;
+  position: relative;
+  top: 5px;
 }
 
 .something {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    position: relative;
-    bottom: 5px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  bottom: 5px;
 }
 
 .roundedimage {
-    height: 30vh;
-    max-height: 210px;
-    width: 30vh;
-    max-width: 210px;
-    border-radius: 10%;
+  height: 30vh;
+  max-height: 210px;
+  width: 30vh;
+  max-width: 210px;
+  border-radius: 10%;
 }
 
 .underline {
-    text-decoration: underline;
+  text-decoration: underline;
 }
