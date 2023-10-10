@@ -10,64 +10,84 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+// Define the Role table
+model Role {
+  id          Int       @id @default(autoincrement())
+  name        String
+  description String?
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  deletedAt   DateTime?
+  users       User[]
+}
 
+// Define the User table
 model User {
-  id        String      @id @default(uuid())
-  idAuth0   String   @unique
-  email     String   @unique
-  name      String
-  lastName  String
-  profilePicture String
-  groups   Group[]
-  role      String @default("wizeliner")
-  conversations     Conversations[]
-  tokens     Tokens[]
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id            String         @id
+  firstName     String
+  lastName      String
+  email         String         @unique
+  groups        Group[]        @relation("UserToGroups")
+  token         Token?         @relation(fields: [tokenId], references: [id])
+  tokenId       Int?           @unique
+  role          Role?          @relation(fields: [roleId], references: [id])
+  roleId        Int?
+  conversations Conversation[]
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @updatedAt
 }
 
+// Define the Group table
 model Group {
-  id        String      @id @default(uuid())
+  id        Int      @id @default(autoincrement())
   name      String
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  users     User[]
-}
-
-model LanguageModel {
-  id        String      @id @default(uuid())
-  name      String
+  area      String?
+  users     User[]   @relation("UserToGroups")
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
 
-model Conversations {
-  id        String      @id @default(uuid())
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  deletedAt Boolean @default(false) 
-  user      User     @relation(fields: [userId], references: [id])
-  userId    String
-  posts     Post[]
+// Define the Token table
+model Token {
+  id            Int      @id @default(autoincrement())
+  amount        Int
+  currentAmount Int
+  expiresAt     DateTime
+  user          User?
+  userId        String   @unique
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
 }
 
+// Define the Conversation table with soft delete
+model Conversation {
+  id         Int      @id @default(autoincrement())
+  isDeleted  Boolean  @default(false)
+  userId     String
+  user       User     @relation(fields: [userId], references: [id])
+  language   Language @relation(fields: [languageId], references: [id])
+  languageId Int
+  posts      Post[]   @relation("ConversationToPosts")
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+}
+
+// Define the Post table
 model Post {
-  id        String      @id @default(uuid())
-  question  String
-  content   String
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  tokenCost Int
-  conversation Conversations @relation(fields: [conversationId], references: [id])
-  conversationId String
+  id             Int          @id @default(autoincrement())
+  content        String
+  tokenCost      Int
+  conversation   Conversation @relation("ConversationToPosts", fields: [conversationId], references: [id])
+  conversationId Int
+  createdAt      DateTime     @default(now())
+  updatedAt      DateTime     @updatedAt
 }
 
-model Tokens {
-  id        String      @id @default(uuid())
-  numberOfTokens     Int
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  expiresAt DateTime
-  user      User     @relation(fields: [userId], references: [id])
-  userId    String
+// Define the Language table with auto-generated ID
+model Language {
+  id            Int            @id @default(autoincrement())
+  name          String         @unique
+  conversations Conversation[]
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @updatedAt
 }
