@@ -1,8 +1,7 @@
 
 export interface User {
-    idAuth0: string;
+    id: string;
     email: string;
     name: string;
     lastName: string;
-    profilePicture: string;
 }

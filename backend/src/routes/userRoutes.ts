@@ -12,7 +12,7 @@ userRouter.get('/create', async (req, res) => {
             if (user !== null) {
                 return res.redirect('http://localhost:8080/');
             } if(authUser) {
-                await createUser({ idAuth0: authUser.sub, email: authUser.email, name: authUser.given_name, lastName: authUser.family_name, profilePicture: authUser.picture});
+                await createUser({ id: authUser.sub, email: authUser.email, name: authUser.given_name, lastName: authUser.family_name});
                 return res.redirect('http://localhost:8080/');
             }
         } else {
@@ -21,7 +21,8 @@ userRouter.get('/create', async (req, res) => {
     } catch (error) { 
         console.error('Error creating user:', error);
         return res.status(500).json({ message: 'Internal server error' });
-    }  
+    }
+    return res.status(201);
 });
 
 export default userRouter;
