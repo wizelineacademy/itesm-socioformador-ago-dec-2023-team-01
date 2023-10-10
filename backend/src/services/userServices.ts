@@ -1,32 +1,59 @@
-
-import { User } from '../models/user';
+import {User} from '../models/user';
 
 import prisma from '../../prisma/prisma-client';
 
 
-
+// Create user service
 export async function createUser(data: User) {
-    const user = await prisma.user.create({
+    return prisma.user.create({
         data: {
-            idAuth0: data.idAuth0,
+            id: data.id,
             email: data.email,
-            name: data.name,
+            firstName: data.name,
             lastName: data.lastName,
-            profilePicture: data.profilePicture,
         },
         // groups: { connect: {  id: ''} } need to check this in the future, typescript is not recognizing the id
     });
-    return user;
 }
 
-export async function getUserByAuth0Id(idAuth0: string) {
-    const user = await prisma.user.findUnique({
+// User getters
+export async function getUserByAuth0Id(id: string) {
+    return prisma.user.findUnique({
         where: {
-            idAuth0,
+            id,
         },
     });
-    return user;
 }
+
+export async function getUserById(id: string) {
+    return prisma.user.findUnique({
+        where: {
+            id
+        }
+    });
+}
+
+// User deletes
+export async function deleteUserById(id: string) {
+    return prisma.user.delete({
+        where: {
+            id
+        }
+    });
+}
+
+
+// User updates
+
+
+
+
+
+
+
+
+
+
 
 
 
