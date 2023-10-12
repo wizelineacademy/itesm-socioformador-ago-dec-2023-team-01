@@ -18,7 +18,7 @@ module.exports = {
     'import/extensions': ['error', 'ignorePackages', { ts: 'never' }],
     'no-underscore-dangle': ['error', { allow: ['_count'] }],
     // 'no-console': ['error', { allow: ['info', 'error'] }],
-    'import/no-extraneous-dependencies': ['error', { devDependencies: ['tests/prisma-mock.ts'] }],
+    'import/no-extraneous-dependencies': ['error', { devDependencies: true }],
     semi: ['error', 'always'],
   },
   settings: {
