@@ -17,8 +17,8 @@ module.exports = {
   rules: {
     'import/extensions': ['error', 'ignorePackages', { ts: 'never' }],
     'no-underscore-dangle': ['error', { allow: ['_count'] }],
-    // 'no-console': ['error', { allow: ['info', 'error'] }],
-    'import/no-extraneous-dependencies': ['error', { devDependencies: true }],
+    'no-console': ['error', { allow: ['info', 'error'] }],
+    'import/no-extraneous-dependencies': ['error', { devDependencies: true }, { dependencies: true }],
     semi: ['error', 'always'],
   },
   settings: {
