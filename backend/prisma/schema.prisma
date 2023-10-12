@@ -16,7 +16,7 @@ model Role {
   name        String
   description String?
   createdAt   DateTime  @default(now())
-  updatedAt   DateTime?  @updatedAt
+  updatedAt   DateTime? @updatedAt
   users       User[]
 }
 
@@ -27,47 +27,47 @@ model User {
   lastName      String
   email         String         @unique
   groups        Group[]        @relation("UserToGroups")
-  token         Token?         @relation(fields: [tokenId], references: [id])
+  token         Token[]
   tokenId       Int?           @unique
   role          Role?          @relation(fields: [roleId], references: [id])
   roleId        Int?
   conversations Conversation[]
   createdAt     DateTime       @default(now())
-  updatedAt     DateTime?       @updatedAt
+  updatedAt     DateTime?      @updatedAt
 }
 
 // Define the Group table
 model Group {
-  id        Int      @id @default(autoincrement())
-  name      String   @unique
+  id        Int       @id @default(autoincrement())
+  name      String    @unique
   area      String?
-  users     User[]   @relation("UserToGroups")
-  createdAt DateTime @default(now())
+  users     User[]    @relation("UserToGroups")
+  createdAt DateTime  @default(now())
   updatedAt DateTime? @updatedAt
 }
 
 // Define the Token table
 model Token {
-  id            Int      @id @default(autoincrement())
+  id            Int       @id @default(autoincrement())
   amount        Int
   currentAmount Int
   expiresAt     DateTime
-  user          User?
-  userId        String   @unique
-  createdAt     DateTime @default(now())
+  user          User      @relation(fields: [userId], references: [id])
+  userId        String    @unique
+  createdAt     DateTime  @default(now())
   updatedAt     DateTime? @updatedAt
 }
 
 // Define the Conversation table with soft delete
 model Conversation {
-  id         Int      @id @default(autoincrement())
-  isDeleted  Boolean  @default(false)
+  id         Int       @id @default(autoincrement())
+  isDeleted  Boolean   @default(false)
   userId     String
-  user       User     @relation(fields: [userId], references: [id])
-  language   Language @relation(fields: [languageId], references: [id])
+  user       User      @relation(fields: [userId], references: [id])
+  language   Language  @relation(fields: [languageId], references: [id])
   languageId Int
-  posts      Post[]   @relation("ConversationToPosts")
-  createdAt  DateTime @default(now())
+  posts      Post[]    @relation("ConversationToPosts")
+  createdAt  DateTime  @default(now())
   updatedAt  DateTime? @updatedAt
   deletedAt  DateTime?
 }
@@ -80,7 +80,7 @@ model Post {
   conversation   Conversation @relation("ConversationToPosts", fields: [conversationId], references: [id])
   conversationId Int
   createdAt      DateTime     @default(now())
-  updatedAt      DateTime?     @updatedAt
+  updatedAt      DateTime?    @updatedAt
 }
 
 // Define the Language table with auto-generated ID
@@ -89,5 +89,5 @@ model Language {
   name          String         @unique
   conversations Conversation[]
   createdAt     DateTime       @default(now())
-  updatedAt     DateTime?       @updatedAt
+  updatedAt     DateTime?      @updatedAt
 }
