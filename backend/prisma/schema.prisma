@@ -39,7 +39,7 @@ model User {
 // Define the Group table
 model Group {
   id        Int      @id @default(autoincrement())
-  name      String
+  name      String   @unique
   area      String?
   users     User[]   @relation("UserToGroups")
   createdAt DateTime @default(now())
