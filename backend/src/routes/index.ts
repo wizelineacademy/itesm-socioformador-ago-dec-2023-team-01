@@ -1,11 +1,14 @@
 import express from 'express';
-import userRouter from './userRoutes';
-import loginRouter from './loginRoutes';
+import userRouter from '../controllers/userController';
+import loginRouter from '../controllers/loginController';
+import groupRouter from "../controllers/groupController";
 
 const router = express.Router();
 
 router.get('/', (req, res) => {
+  // eslint-disable-next-line no-console
   console.info(req.oidc.isAuthenticated());
+  // eslint-disable-next-line no-console
   console.info('user:', req.oidc.user);
   res.render('index', {
     title: 'Express',
@@ -14,6 +17,7 @@ router.get('/', (req, res) => {
   });
 });
 
+router.use('/group', groupRouter);
 router.use('/user', userRouter);
 router.use('/login', loginRouter);
 
