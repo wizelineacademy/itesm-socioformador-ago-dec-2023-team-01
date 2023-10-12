@@ -4,6 +4,7 @@ import { auth } from 'express-openid-connect';
 import config from './configs/auth0-config';
 import router from './routes/index';
 import swaggerDocument from './swagger_output.json';
+import swaggerDocs from './utils/swagger';
 
 
 const port = 8080;
@@ -21,8 +22,7 @@ app.set('views', './src/views');
 app.set('view engine', 'ejs');
 
 app.use('/', router);
-
 app.listen(port, () => {
-  // eslint-disable-next-line no-console
   console.info(`Example app listening on port ${port}`);
+  swaggerDocs(app, port);
 });
