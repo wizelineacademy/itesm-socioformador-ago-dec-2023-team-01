@@ -10,6 +10,7 @@ export default function WButton({ text }: ButtonProps) {
     <Button
       variant="contained"
       size="large"
+      href='/welcome'
       sx={{
         bgcolor: 'white',
         color: 'gray',

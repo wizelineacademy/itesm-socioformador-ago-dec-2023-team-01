@@ -67,7 +67,7 @@ export default function IsWelcome({
             >
               Not you?
               {' '}
-              <Link href="/">Return to Sign-in</Link>
+              <Link href="/" className={styles.return}>Return to Sign-in</Link>
             </Typography>
           </Grid>
           <Grid>
@@ -75,12 +75,13 @@ export default function IsWelcome({
                         && (
                         <Button
                           variant="contained"
+                          href='/admin'
                           sx={{
                             borderRadius: '20px',
                             textTransform: 'none',
                             bgcolor: '#E93D44',
                             fontWeight: 'bold',
-                            '&hover': {
+                            '&:hover': {
                               bgcolor: 'red',
                             },
                           }}
