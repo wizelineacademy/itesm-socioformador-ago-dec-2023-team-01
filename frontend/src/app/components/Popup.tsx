@@ -3,9 +3,12 @@ import {
   Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Typography, Box,
 } from '@mui/material';
 
+import { Inter } from 'next/font/google';
+
+const inter = Inter({ subsets: ['latin'] });
+
 interface PopupProps {
-  titleBlack: string;
-  titleRed: string;
+  title: string[]; // Change title properties to an array of strings
   content: string[]; // Change content properties to an array of strings
   badButtonTitle: string;
   goodButtonTitle: string;
@@ -15,8 +18,7 @@ interface PopupProps {
 }
 
 export default function Popup({
-  titleBlack,
-  titleRed,
+  title,
   content,
   badButtonTitle,
   goodButtonTitle,
@@ -25,37 +27,73 @@ export default function Popup({
   onGoodButtonClick,
 }: PopupProps) {
   return (
-    <Dialog maxWidth="xs" open={open} onClose={onClose}>
-      <Box borderRadius={16}>
+    <Dialog
+      maxWidth="xs"
+      open={open}
+      onClose={onClose}
+      PaperProps={{
+        sx: {
+          borderRadius: '20px', background: 'linear-gradient(#343541, #172339)',
+        },
+      }}
+    >
+      <Box>
         <DialogTitle style={{ textAlign: 'center' }}>
-          <Typography variant="h6" style={{ color: 'black', display: 'inline' }}>
-            {titleBlack}
-          </Typography>
-          <Typography variant="h6" style={{ color: '#E93D44', display: 'inline' }}>
-            {titleRed}
-          </Typography>
+          {title.map((text, index) => (
+            <React.Fragment key={index}>
+              <Typography
+                variant="h5"
+                style={{ fontWeight: 'bold', color: index % 2 === 0 ? 'white' : '#E93D44', display: 'inline' }}
+                className={`${inter.className}`}
+              >
+                {text}
+              </Typography>
+            </React.Fragment>
+          ))}
         </DialogTitle>
         <DialogContent>
           <DialogContentText>
             {content.map((text, index) => (
-              <Typography
-                variant="body1"
-                key={index}
-                style={{ color: index % 2 === 0 ? 'black' : '#E93D44', display: 'inline' }}
-              >
-                {text}
-              </Typography>
+              <React.Fragment key={index}>
+                <Typography
+                  variant="body1"
+                  style={{ color: index % 2 === 0 ? 'white' : '#E93D44', display: 'inline' }}
+                  className={`${inter.className}`}
+                >
+                  {text}
+                </Typography>
+              </React.Fragment>
             ))}
           </DialogContentText>
         </DialogContent>
         <DialogActions style={{ justifyContent: 'space-between' }}>
-          <Box borderRadius={16}>
-            <Button onClick={onClose} style={{ color: 'white', backgroundColor: '#E93D44' }}>
+          <Box>
+            <Button
+              onClick={onClose}
+              style={{
+                color: 'white',
+                backgroundColor: '#E93D44',
+                borderRadius: '10px', // Add the border radius to the button
+                textTransform: 'none', // Set textTransform to 'none' to prevent all caps
+                padding: '2px 12px',
+              }}
+              className={`${inter.className}`}
+            >
               {badButtonTitle}
             </Button>
           </Box>
-          <Box borderRadius={16}>
-            <Button onClick={onGoodButtonClick} style={{ color: 'white', backgroundColor: 'green' }}>
+          <Box>
+            <Button
+              onClick={onGoodButtonClick}
+              style={{
+                color: 'white',
+                backgroundColor: '#4BE93D',
+                borderRadius: '10px', // Add the border radius to the button
+                textTransform: 'none', // Set textTransform to 'none' to prevent all caps
+                padding: '2px 12px',
+              }}
+              className={`${inter.className}`}
+            >
               {goodButtonTitle}
             </Button>
           </Box>
