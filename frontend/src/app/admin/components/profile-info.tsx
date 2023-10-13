@@ -14,7 +14,7 @@ export default function ProfileInfo({
                 <Grid>
                     <Typography sx={{fontStyle: 'bold', color: 'white', fontSize:'25px'}}>{`${firstName} ${lastName}`}</Typography>
                     <Stack direction={'row'} alignItems={'center'} justifyContent={'flex-end'}>
-                        <object data="./wizecoin.svg" className={styles.smallimage} title="wizecoin" />
+                        <object data="/wizecoin.svg" className={styles.smallimage} title="wizecoin" />
                         <Typography sx={{color: '#4BE93D', fontSize:'25px'}}>{wizecoins}</Typography>
                     </Stack>
                 </Grid>
