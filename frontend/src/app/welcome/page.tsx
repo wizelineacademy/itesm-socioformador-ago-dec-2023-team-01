@@ -7,7 +7,7 @@ import { WelcomeProps } from '../components/types';
 
 export default function Welcome() {
   const wizeliner: WelcomeProps = {
-    admin: false,
+    admin: true,
     firstName: 'Thomas',
     lastName: 'Anderson',
     wizecoins: '120',
