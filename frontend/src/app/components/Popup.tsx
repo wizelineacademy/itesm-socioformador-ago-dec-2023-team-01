@@ -73,9 +73,9 @@ export default function Popup({
               style={{
                 color: 'white',
                 backgroundColor: '#E93D44',
-                borderRadius: '10px', // Add the border radius to the button
+                borderRadius: '8px', // Add the border radius to the button
                 textTransform: 'none', // Set textTransform to 'none' to prevent all caps
-                padding: '2px 12px',
+                padding: '0px 12px',
               }}
               className={`${inter.className}`}
             >
@@ -88,9 +88,9 @@ export default function Popup({
               style={{
                 color: 'white',
                 backgroundColor: '#4BE93D',
-                borderRadius: '10px', // Add the border radius to the button
+                borderRadius: '8px', // Add the border radius to the button
                 textTransform: 'none', // Set textTransform to 'none' to prevent all caps
-                padding: '2px 12px',
+                padding: '0px 12px',
               }}
               className={`${inter.className}`}
             >
