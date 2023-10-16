@@ -40,6 +40,10 @@
   border-radius: 50%;
 }
 
+.return {
+  color: #E93D44;
+}
+
 @media screen and (max-width: 1000px) {
   .apologytext {
     font-size: 20px;

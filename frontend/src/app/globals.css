@@ -27,19 +27,3 @@ span {
     font-size: 10vw;
   }
 }
-
-a:link {
-  color: #e93d44;
-}
-
-a:visited {
-  color: #e93d44;
-}
-
-a:hover {
-  color: #ec1017;
-}
-
-a:active {
-  color: rgb(165, 44, 48);
-}
