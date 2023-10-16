@@ -1,4 +1,4 @@
-import prisma from '../../prisma/prisma-client';
+import prisma from '../../../prisma/prisma-client';
 
 // Create group
 export async function createGroup(name: string, area: string) {
@@ -38,6 +38,8 @@ export async function deleteGroupById(id: number) {
         }
     });
 }
+
+
 
 export async function deleteGroupByName(name: string) {
     const group = await prisma.group.findUnique({

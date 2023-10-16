@@ -6,7 +6,7 @@
   "scripts": {
     "tsc": "tsc",
     "dev": "node swagger.js && ts-node-dev --respawn --pretty --transpile-only src/server.ts",
-    "start": "node build/src/server.js",
+    "start": "node build/src/server.ts",
     "test": "echo \"Error: no test specified\" && exit 1",
     "swagger-autogen": "node swagger.js"
   },

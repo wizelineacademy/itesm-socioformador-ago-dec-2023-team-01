@@ -1,5 +1,5 @@
 import express from 'express';
-import {createGroup, listAllGroups} from "../services/groupService";
+import {createGroup, listAllGroups} from "./groupRepository";
 
 const groupRouter = express.Router();
 
