@@ -75,7 +75,7 @@ export default function IsWelcome({
                         && (
                         <Button
                           variant="contained"
-                          href='/admin'
+                          href="/admin"
                           sx={{
                             borderRadius: '20px',
                             textTransform: 'none',
