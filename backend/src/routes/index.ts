@@ -1,5 +1,5 @@
 import express from 'express';
-import userRouter from '../controllers/userController';
+import userRouter from '../modules/user/userController';
 import loginRouter from '../controllers/loginController';
 import groupRouter from '../controllers/groupController';
 import rolesRouter from '../modules/role/roleController';

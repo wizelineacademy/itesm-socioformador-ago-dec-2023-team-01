@@ -33,20 +33,12 @@ export const roleRepository = {
   },
 
   async getRoleByIdOrName(roleIdOrName: string): Promise<Role> {
-    let role = null;
-    if (Number.isNaN(Number(roleIdOrName))) {
-      role = await prisma.role.findUnique({
-        where: {
-          name: roleIdOrName,
-        },
-      });
-    } else {
-      role = await prisma.role.findUnique({
-        where: {
-          id: Number(roleIdOrName),
-        },
-      });
-    }
+    const role = await prisma.role.findUnique({
+      where: Number.isNaN(Number(roleIdOrName))
+        ? { name: roleIdOrName.toLowerCase() }
+        : { id: Number(roleIdOrName) },
+    });
+
     if (!role) {
       throw new CustomError(
         404,
