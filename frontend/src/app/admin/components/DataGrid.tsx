@@ -5,6 +5,7 @@ import Box from '@mui/material/Box';
 import { DataGrid, GridColDef } from '@mui/x-data-grid';
 import Button from '@mui/material/Button';
 import Image from 'next/image';
+import Styles from './DataGrid.module.css';
 
 const columns: GridColDef[] = [
   {
@@ -129,6 +130,7 @@ export default function DataTable() {
   return (
     <Box sx={{ height: 400, width: '100%', overflow: 'hidden' }}>
       <DataGrid
+        className={Styles.MenuSpan}
         sx={{
           backgroundColor: '#111823',
           fontWeight: 'bold',
