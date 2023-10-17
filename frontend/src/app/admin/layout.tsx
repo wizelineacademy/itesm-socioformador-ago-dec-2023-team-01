@@ -1,7 +1,6 @@
 "use client"
 import { Box, Stack } from "@mui/material";
 import SideNav from "./components/side-nav";
-import Grid from '@mui/material/Unstable_Grid2';
 import ProfileInfo from "./components/profile-info";
 import { WelcomeProps } from "../components/types";
 
@@ -19,26 +18,18 @@ export default function AdminLayout({
     };
 
     return (
-      <Grid container direction={'row'}>
-        <Grid>
-          <Box sx={{
-            display: 'flex',
-            height: '100vh',
-            gap: '2rem',
-            margin: '0',
-          }}>
-            <SideNav />
-          </Box>
-        </Grid>
-        <Grid>
-          <Stack>
-            <ProfileInfo {...wizeliner} />
-            <Box>
-              {children}
+      <Stack direction={'row'}>
+        <Box sx={{height: '100vh', position: 'sticky', top: '0'}}>
+          <SideNav/>
+        </Box>
+        <Stack>
+          <Box sx={{position: 'sticky', top: '0', background: 'linear-gradient(rgba(0,0,0,0.5) 30%, transparent)', zIndex:'100'}}>
+            <Box sx={{position: 'relative', right:'3.3rem'}}>
+              <ProfileInfo {...wizeliner} />
             </Box>
-          </Stack>
-        </Grid>
-      </Grid>
-
+          </Box>
+          <Box>{children}</Box>
+        </Stack>
+      </Stack>
     );
   }
