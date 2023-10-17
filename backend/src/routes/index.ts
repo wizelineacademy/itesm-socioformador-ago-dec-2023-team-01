@@ -1,7 +1,8 @@
 import express from 'express';
 import userRouter from '../controllers/userController';
 import loginRouter from '../controllers/loginController';
-import groupRouter from "../modules/group/groupController";
+import groupRouter from '../controllers/groupController';
+import rolesRouter from '../modules/role/roleController';
 
 const router = express.Router();
 
@@ -20,5 +21,6 @@ router.get('/', (req, res) => {
 router.use('/group', groupRouter);
 router.use('/user', userRouter);
 router.use('/login', loginRouter);
+router.use('/roles/', rolesRouter);
 
 export default router;
