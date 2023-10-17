@@ -1,7 +1,7 @@
 import express from 'express';
 import userRouter from '../controllers/userController';
 import loginRouter from '../controllers/loginController';
-import groupRouter from "../modules/groups/groupController";
+import groupRouter from "../modules/group/groupController";
 
 const router = express.Router();
 
