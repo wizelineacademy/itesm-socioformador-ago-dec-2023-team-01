@@ -30,7 +30,7 @@ model User {
   token         Token[]
   tokenId       Int?           @unique
   role          Role?          @relation(fields: [roleId], references: [id])
-  roleId        Int
+  roleId        Int?
   conversations Conversation[]
   createdAt     DateTime       @default(now())
   updatedAt     DateTime?      @updatedAt
@@ -76,7 +76,6 @@ model Conversation {
 model Post {
   id             Int          @id @default(autoincrement())
   content        String
-  prompt         String
   tokenCost      Int
   conversation   Conversation @relation("ConversationToPosts", fields: [conversationId], references: [id])
   conversationId Int
