@@ -40,6 +40,7 @@ const columns: GridColDef[] = [
       <Box
         display="flex"
         alignItems="center"
+        color="#4BE93D"
       >
         <Box
           sx={{ marginRight: '5px' }}
