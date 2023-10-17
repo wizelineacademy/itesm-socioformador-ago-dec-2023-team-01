@@ -51,7 +51,7 @@ export default function UserProfile({
           </Stack>
         </Grid>
 
-        <Paper elevation={0} style={{ borderRadius: '10px', background: 'linear-gradient(#111823, #172339)' }}>
+        <Paper elevation={0} style={{ borderRadius: '20px', background: 'linear-gradient(#111823, #172339)' }}>
           <Box sx={{
             display: 'flex', justifyContent: 'center', alignItems: 'center', margin: '0 30px', paddingTop: '1rem', paddingBottom: '3rem', width: '600px', height: '300px',
           }}
