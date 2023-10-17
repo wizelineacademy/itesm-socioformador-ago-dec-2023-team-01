@@ -7,11 +7,6 @@ interface DoughnutChartDataset {
     borderRadius: number;
 }
 
-interface DoughnutChartData {
-    labels: string[]
-    datasets: DoughnutChartDataset
-}
-
 export interface GroupProps {
     title: String
     members: Number
