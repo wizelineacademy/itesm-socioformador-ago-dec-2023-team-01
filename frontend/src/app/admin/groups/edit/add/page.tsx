@@ -12,26 +12,29 @@ import DataGridAdd from '@/app/admin/components/DataGridAdd';
 
 export default function addWizeliner() {
   const groupName = 'Software Engineers';
+
   return (
     <Container>
       <Box
         display="flex"
-        alignItems="flex-end"
+        flexDirection="column"
+        alignItems="center"
         justifyContent="space-between"
         marginBottom={3}
       >
-        <WTitle1 text="Edit" redText=" Groups" />
+        <WTitle1 text="Add" redText=" Wizeliner" />
         <Paper
           sx={{
-            marginTop: 1,
+            marginTop: 0,
             padding: '10px',
             width: '100%',
+            maxWidth: 400,
             backgroundColor: '#111823',
             borderRadius: '20px',
             boxShadow: '0px 4px 4px rgba(0, 0, 0, 0.25)',
           }}
         >
-          <Box display="flex" alignItems="center" marginLeft={1}>
+          <Box display="flex" justifyContent="center">
             <Typography
               variant="h4"
               sx={{

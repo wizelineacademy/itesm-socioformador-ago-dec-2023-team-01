@@ -5,6 +5,7 @@ import Box from '@mui/material/Box';
 import { DataGrid, GridColDef } from '@mui/x-data-grid';
 import Button from '@mui/material/Button';
 import Image from 'next/image';
+import AddIcon from '@mui/icons-material/Add';
 import Styles from './DataGrid.module.css';
 
 const columns: GridColDef[] = [
@@ -63,7 +64,7 @@ const columns: GridColDef[] = [
     width: 200,
     sortable: false,
     filterable: false,
-    renderCell: (params) => (
+    renderCell: () => (
       <Box
         display="flex"
         alignItems="center"
@@ -72,22 +73,22 @@ const columns: GridColDef[] = [
         width="100%"
       >
         <Button
-          variant="contained"
-          color="primary"
-          size="small"
+          variant="outlined"
           sx={{
             textTransform: 'none',
-            backgroundColor: '#E93D44',
-            color: 'white',
+            color: '#ffffff',
+            borderColor: '#4BE93D',
+            borderRadius: '20px',
             '&:hover': {
-              backgroundColor: 'rgba(233, 61, 68, 0.7)',
+              borderColor: 'green',
+            },
+            '& .MuiTouchRipple-root span': {
+              backgroundColor: '#4BE93D',
             },
           }}
-          onClick={() => {
-            console.log(`Viewing user ${params.row.id}`);
-          }}
         >
-          Add
+          <AddIcon />
+          Add Wizeliner
         </Button>
       </Box>
     ),
