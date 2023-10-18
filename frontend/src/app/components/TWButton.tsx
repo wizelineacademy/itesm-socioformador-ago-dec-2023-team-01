@@ -5,12 +5,12 @@ interface ButtonProps {
   text: String;
 }
 
-export default function WButton({ text }: ButtonProps) {
+export default function TWButton({ text }: ButtonProps) {
+
   return (
     <Button
       variant="contained"
       size="large"
-      href='/welcome'
       sx={{
         bgcolor: 'white',
         color: 'gray',

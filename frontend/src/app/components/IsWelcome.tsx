@@ -13,6 +13,7 @@ export default function IsWelcome({
   wizecoins,
 }: WelcomeProps) {
   return (
+    
     <Box sx={{
       display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '100vh',
     }}
@@ -67,7 +68,7 @@ export default function IsWelcome({
             >
               Not you?
               {' '}
-              <Link href="/" className={styles.return}>Return to Sign-in</Link>
+              <Link href="/api/auth/logout" className={styles.return}>Return to Sign-in</Link>
             </Typography>
           </Grid>
           <Grid>
