@@ -44,6 +44,7 @@ export default function EditGroups() {
                 width: '100%',
                 backgroundColor: '#111823',
                 borderRadius: '20px',
+                boxShadow: '0px 4px 4px rgba(0, 0, 0, 0.25)',
               }}
             >
               <Box display="flex" alignItems="center" marginLeft={1}>
@@ -83,6 +84,7 @@ export default function EditGroups() {
               width: '30%',
               backgroundColor: '#111823',
               borderRadius: '20px',
+              boxShadow: '0px 4px 4px rgba(0, 0, 0, 0.25)',
             }}
           >
             <Box
