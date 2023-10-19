@@ -1,5 +1,6 @@
 import React from 'react';
-import { Button } from '@mui/material';
+import GoogleIcon from '@mui/icons-material/Google';
+import { Button, Stack } from '@mui/material';
 
 interface ButtonProps {
   text: String;
@@ -12,12 +13,15 @@ export default function TWButton({ text }: ButtonProps) {
       variant="contained"
       size="large"
       sx={{
+        textTransform: 'none',
         bgcolor: 'white',
-        color: 'gray',
+        color: 'black',
+        fontWeight: 'bold',
         '&:hover': { bgcolor: 'gray', color: 'white' },
         padding: '0.7rem 2rem',
       }}
     >
+      <GoogleIcon sx={{paddingRight: '10px'}}/>
       {text}
     </Button>
   );

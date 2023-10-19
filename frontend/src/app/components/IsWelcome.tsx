@@ -8,10 +8,13 @@ import { WelcomeProps } from './types';
 
 export default function IsWelcome({
   admin,
-  firstName,
-  lastName,
+  name,
   wizecoins,
+  picSource
 }: WelcomeProps) {
+  const nameParts = name.split(' ');
+  const firstName = nameParts[0];
+  const lastName = nameParts.splice(1).join(' ');
   return (
     
     <Box sx={{
@@ -21,7 +24,7 @@ export default function IsWelcome({
       <Stack justifyContent="center" alignItems="center" spacing={3}>
         <Grid container spacing={4} display="flex" justifyContent="center" alignItems="center">
           <Grid direction="column">
-            <img src="./mockWizeliner.jpg" className={styles.image} alt="Mock Wizeliner" />
+            <img src={picSource} className={styles.image} alt="Mock Wizeliner" />
           </Grid>
           <Grid>
             <Typography
