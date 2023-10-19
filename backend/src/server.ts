@@ -1,5 +1,6 @@
 import express from 'express';
 import { auth } from 'express-openid-connect';
+import dotenv from 'dotenv';
 import axios from 'axios';
 import config from './configs/auth0-config';
 // import guard from 'express-jwt-permissions';
@@ -7,6 +8,7 @@ import router from './routes/index';
 import swaggerDocs from './utils/swagger';
 import errorMiddleware from './middlewares/errorMiddleware';
 
+dotenv.config({ path: '../.env' });
 const port = Number(process.env.PORT) || 8080;
 const app = express();
 // const appGuard = guard();
