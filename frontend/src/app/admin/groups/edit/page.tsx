@@ -12,6 +12,7 @@ import EditIcon from '@mui/icons-material/Edit';
 import AddIcon from '@mui/icons-material/Add';
 import WTitle1 from '@/app/components/WTitle1';
 import DataGrid from '@/app/admin/components/DataGrid';
+import Popup from '@/app/components/Popup';
 
 export default function EditGroups() {
   const totalWizecoins = 2500;
@@ -25,6 +26,20 @@ export default function EditGroups() {
 
   const toggleEditing = () => {
     setIsEditing(!isEditing);
+  };
+
+  const [isPopupOpen, setPopupOpen] = useState(false);
+
+  const handleOpenPopup = () => {
+    setPopupOpen(true);
+  };
+
+  const handleClosePopup = () => {
+    setPopupOpen(false);
+  };
+
+  const handleGoodButtonClick = () => {
+    handleClosePopup();
   };
 
   return (
@@ -103,9 +118,28 @@ export default function EditGroups() {
                     borderColor: 'red',
                   },
                 }}
+                onClick={handleOpenPopup}
               >
                 Remove
               </Button>
+              <Popup
+                title={[
+                  'Remove ',
+                  'Wizeliner',
+                ]}
+                content={[
+                  'You are about to ',
+                  'remove Thomas Anderson ',
+                  'from the ',
+                  'group ',
+                  ', proceed?',
+                ]}
+                badButtonTitle="Cancel"
+                goodButtonTitle="Remove"
+                open={isPopupOpen}
+                onClose={handleClosePopup}
+                onGoodButtonClick={handleGoodButtonClick}
+              />
               <Link href="/admin/groups/edit/add" passHref>
                 <Button
                   variant="outlined"
