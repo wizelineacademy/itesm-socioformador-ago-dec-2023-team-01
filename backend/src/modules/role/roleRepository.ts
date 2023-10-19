@@ -2,9 +2,10 @@ import { Prisma } from '@prisma/client';
 import prisma from '../../../prisma/prisma-client';
 import { CreateRoleInput, Role } from './roleModel';
 import CustomError from '../../utils/errorModel';
+import { PostResponse } from '../../shared/models/responseModel';
 
 export const roleRepository = {
-  async createRole(roleInput: CreateRoleInput): Promise<Role> {
+  async createRole(roleInput: CreateRoleInput): Promise<PostResponse> {
     try {
       const role = await prisma.role.create({
         data: {
@@ -12,12 +13,8 @@ export const roleRepository = {
           description: roleInput.description,
         },
       });
-      const newRole: Role = {
+      const newRole: PostResponse = {
         id: role.id,
-        name: role.name,
-        description: role.description ?? '',
-        createdAt: role.createdAt,
-        updatedAt: role.updatedAt ?? new Date(),
       };
       return newRole;
     } catch (error) {

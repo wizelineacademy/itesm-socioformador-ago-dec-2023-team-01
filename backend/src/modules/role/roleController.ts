@@ -16,7 +16,7 @@ const rolesRouter = express.Router();
  *           schema:
  *              $ref: '#/components/schemas/CreateRole'
  *     responses:
- *      201:
+ *      200:
  *        description: Success
  *        content:
  *          application/json:
@@ -26,7 +26,7 @@ const rolesRouter = express.Router();
 rolesRouter.post('/', async (req: Request, res: Response) => {
   try {
     const role = await roleRepository.createRole(req.body);
-    res.status(201).json(role);
+    res.status(200).json(role);
   } catch (error) {
     if (error instanceof CustomError) {
       res

@@ -11,6 +11,10 @@
  *          type: string
  *        lastName:
  *          type: string
+ *        email:
+ *          type: string
+ *        role:
+ *          type: string
  *        createdAt:
  *          type: string
  *        updatedAt:
@@ -21,25 +25,46 @@ export interface User {
   firstName: string;
   lastName: string;
   email: string;
+  role: string;
+  createdAt: Date;
+  updatedAt: Date;
 }
 
 /**
  * @openapi
  * components:
  *  schemas:
- *    CreateRole:
+ *    CreateUser:
  *      type: object
  *      required:
- *        - name
+ *        - id
+ *        - email
  *      properties:
- *        name:
+ *        id:
  *          type: string
- *        description:
+ *        firstName:
  *          type: string
+ *        lastName:
+ *          type: string
+ *        email:
+ *          type: string
+ *        roleId:
+ *          type: integer
  */
 export interface CreateUserInput {
   id: string;
   firstName: string;
   lastName: string;
   email: string;
+  roleId: number;
+}
+
+export interface UserDto {
+  id: string;
+  firstName: string;
+  lastName: string;
+  email: string;
+  roleId: number;
+  createdAt: Date;
+  updatedAt: Date;
 }
