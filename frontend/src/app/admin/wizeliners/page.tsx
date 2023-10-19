@@ -1,7 +1,8 @@
-import WTitle1 from "@/app/components/WTitle1"
+'use client';
+
+import React from 'react';
+import WTitle1 from '@/app/components/WTitle1';
 
 export default function Wizeliners() {
-    return (
-        <WTitle1 text={'Wizeliners.'} redText={''} />
-    )
+  return <WTitle1 text="Wizeliners." redText="" />;
 }
