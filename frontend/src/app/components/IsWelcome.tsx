@@ -1,5 +1,5 @@
 import React from 'react';
-import { Typography, Box, Button } from '@mui/material';
+import { Typography, Box, Button, Paper, Tooltip } from '@mui/material';
 import Link from 'next/link';
 import Grid from '@mui/material/Unstable_Grid2'; // Grid version 2
 import Stack from '@mui/material/Stack';
@@ -54,7 +54,13 @@ export default function IsWelcome({
         </Grid>
         <Grid container spacing={7} display="flex" justifyContent="center" alignItems="center">
           <Grid>
-            <img src="./chatgptGreen.png" className={styles.roundedimage} alt="Chat GPT Green" />
+            <Tooltip title="ChatGPT">
+              <Link href='/mainpage'>
+                <Paper sx={{borderRadius: '20px', height: '28vh'}} elevation={8}>
+                  <img src="./chatgptGreen.png" className={styles.roundedimage} alt="Chat GPT Green" />
+                </Paper>
+              </Link>
+            </Tooltip>
           </Grid>
           <Grid>
             <img src="./Bard.png" className={styles.roundedimage} alt="Bard" />

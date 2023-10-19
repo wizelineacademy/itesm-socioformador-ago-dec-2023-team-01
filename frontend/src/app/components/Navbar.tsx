@@ -13,9 +13,8 @@ import MenuIcon from '@mui/icons-material/Menu';
 import WTitle1 from './WTitle1';
 
 interface NavbarProps {
-  profileSrc: string;
-  name: string;
-  surname: string;
+  profileSrc: any;
+  name: any;
   number: string | number;
   onBurgerClick: () => void;
 }
@@ -23,10 +22,16 @@ interface NavbarProps {
 export default function Navbar({
   profileSrc,
   name,
-  surname,
   number,
   onBurgerClick,
 }: NavbarProps) {
+
+  const nameParts = name.split(' ');
+  const firstName = nameParts[0];
+  const lastName = nameParts.splice(1).join(' ');
+
+  console.log(name)
+
   return (
     <Box
       display="flex"
@@ -53,9 +58,9 @@ export default function Navbar({
       <Box display="flex" alignItems="center">
         <Box marginRight="10px" display="flex" flexDirection="column">
           <Typography variant="h6" fontWeight="bold" color="white">
-            {name}
+            {firstName}
             {' '}
-            {surname}
+            {lastName}
           </Typography>
           <Box
             display="flex"
@@ -78,11 +83,12 @@ export default function Navbar({
 
         <Box position="relative">
           <Avatar
-            alt={`${name} ${surname}`}
+            alt={`${firstName} ${lastName}`}
             src={profileSrc}
             sx={{ width: 56, height: 56 }}
           />
           <IconButton
+            href='/profile'
             size="small"
             sx={{
               position: 'absolute',

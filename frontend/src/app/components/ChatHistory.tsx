@@ -167,6 +167,7 @@ export default function ChatHistory({ closeChatHistory }: ChatHistoryProps) {
 
       <Box display="flex" justifyContent="center" marginTop="20px">
         <Button
+          href='/welcome'
           variant="contained"
           color="error"
           sx={{
@@ -174,7 +175,7 @@ export default function ChatHistory({ closeChatHistory }: ChatHistoryProps) {
             textTransform: 'none',
           }}
         >
-          Get Coins
+          Return Home
         </Button>
       </Box>
     </Box>

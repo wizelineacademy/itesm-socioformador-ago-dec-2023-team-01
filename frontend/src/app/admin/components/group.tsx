@@ -1,8 +1,8 @@
 "use client"
-import { Paper, Typography, Stack, Box, Tooltip, IconButton} from "@mui/material"
+import { Paper, Typography, Stack, Box, Tooltip, IconButton} from "@mui/material";
 import CodeIcon from '@mui/icons-material/Code';
 import { Doughnut } from 'react-chartjs-2';
-import {Chart, ArcElement} from 'chart.js'
+import {Chart, ArcElement} from 'chart.js';
 import { GroupProps } from "./types";
 
 import EditIcon from '@mui/icons-material/Edit';

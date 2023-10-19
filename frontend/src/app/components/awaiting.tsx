@@ -6,7 +6,8 @@ export default function Awaiting() {
             alignItems:'center',
             justifyContent:'center',
             width:'100vw',
-            height:'100vh'
+            height:'100vh',
+            overflow: 'hidden'
           }}>
             <CircularProgress size={100} color='error'/>
           </Stack>

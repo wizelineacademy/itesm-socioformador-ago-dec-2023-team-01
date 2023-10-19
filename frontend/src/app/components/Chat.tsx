@@ -10,7 +10,7 @@ import SendIcon from '@mui/icons-material/Send';
 import IconButton from '@mui/material/IconButton';
 import InputAdornment from '@mui/material/InputAdornment';
 
-export default function Chat() {
+export default function Chat({profileSrc}:any) {
   const messages = [
     { from: 'user', text: 'Hello ChatGPT!' },
     { from: 'chatgpt', text: 'Hello! How can I assist you today?' },
@@ -87,7 +87,7 @@ export default function Chat() {
             {message.from === 'user' && (
               <Avatar
                 alt="User Picture"
-                src="./tommy.png"
+                src={profileSrc}
                 sx={{
                   width: 40,
                   height: 40,
