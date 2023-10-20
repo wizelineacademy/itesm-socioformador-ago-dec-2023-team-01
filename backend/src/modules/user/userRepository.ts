@@ -24,6 +24,8 @@ export const userRepository = {
       if (error instanceof Prisma.PrismaClientKnownRequestError) {
         if (error.code === 'P2002') {
           throw new CustomError(409, 'Role already exists');
+        } else if (error.code === 'P2003') {
+          throw new CustomError(400, `Invalid role id:${userInput.roleId}`);
         }
       } else if (error instanceof Prisma.PrismaClientValidationError) {
         throw new CustomError(400, 'Invalid input');
@@ -53,6 +55,20 @@ export const userRepository = {
       updatedAt: user.updatedAt ?? new Date(),
     };
     return newUser;
+  },
+
+  async getUsers(): Promise<UserDto[]> {
+    const users = await prisma.user.findMany();
+    const newUsers: UserDto[] = users.map(user => ({
+      id: user.id,
+      firstName: user.firstName,
+      lastName: user.lastName,
+      email: user.email,
+      roleId: user.roleId,
+      createdAt: user.createdAt,
+      updatedAt: user.updatedAt ?? new Date(),
+    }));
+    return newUsers;
   },
 };
 

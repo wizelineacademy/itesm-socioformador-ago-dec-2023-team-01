@@ -21,10 +21,6 @@ const userRouter = express.Router();
  *     responses:
  *      200:
  *        description: Success
- *        content:
- *          application/json:
- *            schema:
- *              $ref: '#/components/schemas/PostResponse'
  */
 userRouter.post('/', async (req: Request, res: Response) => {
   try {
@@ -81,32 +77,29 @@ userRouter.get('/:userId', async (req: Request, res: Response) => {
   }
 });
 
-// userRouter.get('/create', async (req, res) => {
-//   try {
-//     console.info('Creating', req.oidc.user, req.oidc.isAuthenticated());
-//     if (req.oidc.isAuthenticated()) {
-//       const authUser = req.oidc.user;
-//       const user = await getUserByAuth0Id(authUser?.sub);
-//       if (user !== null) {
-//         return res.redirect('http://localhost:8080/');
-//       }
-//       if (authUser) {
-//         await createUser({
-//           id: authUser.sub,
-//           email: authUser.email,
-//           name: authUser.given_name,
-//           lastName: authUser.family_name,
-//         });
-//         return res.redirect('http://localhost:8080/');
-//       }
-//     } else {
-//       return res.status(401).json({ message: 'User is not authenticated' });
-//     }
-//   } catch (error) {
-//     console.error('Error creating user:', error);
-//     return res.status(500).json({ message: 'Internal server error' });
-//   }
-//   return res.status(201);
-// });
+/**
+ * @openapi
+ * '/api/users/':
+ *  get:
+ *     tags:
+ *       - Users
+ *     responses:
+ *      200:
+ *        description: Success
+ */
+userRouter.get('/', async (_req: Request, res: Response) => {
+  try {
+    const users = await userRepository.getUsers();
+    res.status(200).json(users);
+  } catch (error) {
+    if (error instanceof CustomError) {
+      res
+        .status(error.status)
+        .json({ error: error.message, code: error.status });
+    } else {
+      res.status(500).json({ error: 'Internal server error' });
+    }
+  }
+});
 
 export default userRouter;

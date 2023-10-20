@@ -51,6 +51,18 @@ export const roleRepository = {
     };
     return newRole;
   },
+
+  async getRoles(): Promise<Role[]> {
+    const roles = await prisma.role.findMany();
+    const newRoles: Role[] = roles.map(role => ({
+      id: role.id,
+      name: role.name,
+      description: role.description ?? '',
+      createdAt: role.createdAt,
+      updatedAt: role.updatedAt ?? new Date(),
+    }));
+    return newRoles;
+  },
 };
 
 export default roleRepository;

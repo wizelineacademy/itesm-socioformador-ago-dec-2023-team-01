@@ -18,10 +18,6 @@ const rolesRouter = express.Router();
  *     responses:
  *      200:
  *        description: Success
- *        content:
- *          application/json:
- *            schema:
- *              $ref: '#/components/schemas/Role'
  */
 rolesRouter.post('/', async (req: Request, res: Response) => {
   try {
@@ -57,6 +53,31 @@ rolesRouter.get('/:roleIdName', async (req: Request, res: Response) => {
   try {
     const role = await roleRepository.getRoleByIdOrName(req.params.roleIdName);
     res.status(200).json(role);
+  } catch (error) {
+    if (error instanceof CustomError) {
+      res
+        .status(error.status)
+        .json({ error: error.message, code: error.status });
+    } else {
+      res.status(500).json({ error: 'Internal server error' });
+    }
+  }
+});
+
+/**
+ * @openapi
+ * '/api/roles/':
+ *  get:
+ *     tags:
+ *       - Roles
+ *     responses:
+ *      200:
+ *        description: Success
+ */
+rolesRouter.get('/', async (_req: Request, res: Response) => {
+  try {
+    const roles = await roleRepository.getRoles();
+    res.status(200).json(roles);
   } catch (error) {
     if (error instanceof CustomError) {
       res

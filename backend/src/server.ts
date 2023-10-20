@@ -1,14 +1,13 @@
 import express from 'express';
 import { auth } from 'express-openid-connect';
-import dotenv from 'dotenv';
-import axios from 'axios';
+// import axios from 'axios';
 import config from './configs/auth0-config';
 // import guard from 'express-jwt-permissions';
 import router from './routes/index';
 import swaggerDocs from './utils/swagger';
 import errorMiddleware from './middlewares/errorMiddleware';
+import userRouter from './modules/user/userController';
 
-dotenv.config({ path: '../.env' });
 const port = Number(process.env.PORT) || 8080;
 const app = express();
 // const appGuard = guard();
@@ -33,9 +32,12 @@ app.get('/', (req, res) => {
   // console.info('user:', req.oidc.user);
   if (req.oidc.isAuthenticated()) {
     const { user } = req.oidc;
-    axios.get(`http://localhost:8080/api/users/${user?.sub}`).then(response => {
-      console.info('responsedata:', response.data);
-    });
+    try {
+      const userInfo = userRouter.get(user?.sub);
+      console.info(userInfo);
+    } catch (error) {
+      console.info('error:', error);
+    }
   }
   res.render('index', {
     title: 'Express',
