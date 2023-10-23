@@ -12,7 +12,7 @@ export async function createUser(data: User) {
             firstName: data.name,
             lastName: data.lastName,
         },
-        // groups: { connect: {  id: ''} } need to check this in the future, typescript is not recognizing the id
+        // group: { connect: {  id: ''} } need to check this in the future, typescript is not recognizing the id
     });
 }
 

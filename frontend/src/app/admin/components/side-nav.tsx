@@ -14,7 +14,7 @@ const sidebarItems = [
     },
     {
         name: "Groups",
-        href: '/admin/groups',
+        href: '/admin/group',
         icon: GroupsIcon
     },
     {
