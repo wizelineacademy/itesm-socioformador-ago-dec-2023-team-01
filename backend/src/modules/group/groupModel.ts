@@ -17,11 +17,11 @@
  *          type: string
  */
 export interface Group {
-    id: number,
-    name: string,
-    area: string,
-    createdAt: Date;
-    updatedAt: Date | null;
+  id: number;
+  name: string;
+  area: string;
+  createdAt: Date;
+  updatedAt: Date | null;
 }
 /**
  * @openapi
@@ -38,6 +38,6 @@ export interface Group {
  *          type: string
  */
 export interface createGroupInput {
-    name: string,
-    area?: string
+  name: string;
+  area?: string;
 }
