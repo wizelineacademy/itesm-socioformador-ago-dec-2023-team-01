@@ -1,12 +1,10 @@
 import express from 'express';
 import { auth } from 'express-openid-connect';
-// import axios from 'axios';
+import axios from 'axios';
 import config from './configs/auth0-config';
-// import guard from 'express-jwt-permissions';
 import router from './routes/index';
 import swaggerDocs from './utils/swagger';
 import errorMiddleware from './middlewares/errorMiddleware';
-import userRouter from './modules/user/userController';
 
 const port = Number(process.env.PORT) || 8080;
 const app = express();
@@ -24,17 +22,17 @@ app.set('view engine', 'ejs');
 app.use('/api/', router);
 
 app.get('/', (req, res) => {
-  // eslint-disable-next-line no-console
   console.info(req.oidc.isAuthenticated());
-  // eslint-disable-next-line no-console
-  // console.info('tokenId:', req.oidc.idToken);
-  // console.info('toke claims:', req.oidc.idTokenClaims);
-  // console.info('user:', req.oidc.user);
   if (req.oidc.isAuthenticated()) {
+    console.info('tokenId:', req.oidc.idToken);
+    console.info('toke claims:', req.oidc.idTokenClaims);
     const { user } = req.oidc;
     try {
-      const userInfo = userRouter.get(user?.sub);
-      console.info(userInfo);
+      axios
+        .get(`${process.env.BASE_URL}/api/users/${user?.sub}`)
+        .then(response => {
+          console.info(response.data);
+        });
     } catch (error) {
       console.info('error:', error);
     }

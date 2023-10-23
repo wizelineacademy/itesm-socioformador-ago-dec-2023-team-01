@@ -23,7 +23,7 @@ export const userRepository = {
     } catch (error) {
       if (error instanceof Prisma.PrismaClientKnownRequestError) {
         if (error.code === 'P2002') {
-          throw new CustomError(409, 'Role already exists');
+          throw new CustomError(409, 'User already exists');
         } else if (error.code === 'P2003') {
           throw new CustomError(400, `Invalid role id:${userInput.roleId}`);
         }
