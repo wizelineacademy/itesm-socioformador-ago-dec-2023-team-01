@@ -9,11 +9,11 @@ export default function ProfileInfo({
 }: WelcomeProps) {
     return (
         <Box sx={{
-            width: 'calc(100vw - 18rem)', paddingTop: '1rem'}}>
+            width: 'calc(100vw - 16.1rem)', paddingTop: '1rem'}}>
             <Grid container justifyContent={'flex-end'}>
                 <Grid>
                     <Typography sx={{fontStyle: 'bold', color: 'white', fontSize:'25px'}}>{`${firstName} ${lastName}`}</Typography>
-                    <Stack direction={'row'} alignItems={'center'} justifyContent={'flex-end'}>
+                    <Stack gap={0} direction={'row'} alignItems={'center'} justifyContent={'flex-end'}>
                         <object data="/wizecoin.svg" className={styles.smallimage} title="wizecoin" />
                         <Typography sx={{color: '#4BE93D', fontSize:'25px'}}>{wizecoins}</Typography>
                     </Stack>

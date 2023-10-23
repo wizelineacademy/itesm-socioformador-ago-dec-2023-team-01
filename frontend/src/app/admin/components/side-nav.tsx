@@ -26,7 +26,7 @@ const sidebarItems = [
 
 export default function Sidebar() {
     return (
-        <Stack sx={{backgroundColor: '#111823', width: '15rem'}} justifyContent={'space-between'}>
+        <Stack sx={{backgroundColor: '#111823', width: '15rem', height: '100%'}} justifyContent={'space-between'}>
             <Box>
                 <Stack direction={'row'} alignItems={'center'} justifyContent={'space-evenly'} padding={'2rem'}>
                     <Image
