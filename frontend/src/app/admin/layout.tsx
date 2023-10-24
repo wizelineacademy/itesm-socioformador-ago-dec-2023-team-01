@@ -1,10 +1,12 @@
-"use client"
-import { Box, Stack, Skeleton } from "@mui/material";
-import SideNav from "./components/side-nav";
-import ProfileInfo from "./components/profile-info";
+'use client';
+
+import React from 'react';
+import { Box, Stack, Skeleton } from '@mui/material';
+import SideNav from './components/side-nav';
+import ProfileInfo from './components/profile-info';
 import { useUser } from '@auth0/nextjs-auth0/client';
 import Awaiting from '../components/awaiting';
-import NotWelcome from "../components/NotWelcome";
+import NotWelcome from '../components/NotWelcome';
 
 export default function AdminLayout({
     children,
