@@ -27,7 +27,7 @@ export interface Group {
  * @openapi
  * components:
  *  schemas:
- *    CreateRole:
+ *    CreateGroup:
  *      type: object
  *      required:
  *        - name

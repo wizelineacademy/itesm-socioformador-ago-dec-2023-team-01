@@ -1,28 +1,31 @@
 import express, { Request, Response } from 'express';
 import CustomError from '../../utils/errorModel';
-import roleRepository from './roleRepository';
+import userRepository from './userRepository';
+import roleRepository from '../role/roleRepository';
+import { User } from './userModel';
 
-const rolesRouter = express.Router();
+const userRouter = express.Router();
+
 /**
  * @openapi
- * '/api/roles/':
+ * '/api/users/':
  *  post:
  *     tags:
- *     - Roles
+ *     - Users
  *     requestBody:
  *      required: true
  *      content:
  *        application/json:
  *           schema:
- *              $ref: '#/components/schemas/CreateRole'
+ *              $ref: '#/components/schemas/CreateUser'
  *     responses:
  *      200:
  *        description: Success
  */
-rolesRouter.post('/', async (req: Request, res: Response) => {
+userRouter.post('/', async (req: Request, res: Response) => {
   try {
-    const role = await roleRepository.createRole(req.body);
-    res.status(200).json(role);
+    const user = await userRepository.createUser(req.body);
+    res.status(200).json(user);
   } catch (error) {
     if (error instanceof CustomError) {
       res
@@ -36,23 +39,33 @@ rolesRouter.post('/', async (req: Request, res: Response) => {
 
 /**
  * @openapi
- * '/api/roles/{roleIdName}':
+ * '/api/users/{userId}':
  *  get:
  *     tags:
- *       - Roles
+ *       - Users
  *     parameters:
- *       - name: roleIdName
+ *       - name: userId
  *         in: path
- *         description: Get Role by Id or Name
+ *         description: Get user by Id
  *         required: true
  *     responses:
  *      200:
  *        description: Success
  */
-rolesRouter.get('/:roleIdName', async (req: Request, res: Response) => {
+userRouter.get('/:userId', async (req: Request, res: Response) => {
   try {
-    const role = await roleRepository.getRoleByIdOrName(req.params.roleIdName);
-    res.status(200).json(role);
+    const user = await userRepository.getUserById(req.params.userId);
+    const role = await roleRepository.getRoleByIdOrName(user.roleId.toString());
+    const newUser: User = {
+      id: user.id,
+      firstName: user.firstName,
+      lastName: user.lastName,
+      email: user.email,
+      role: role.name,
+      createdAt: user.createdAt,
+      updatedAt: user.updatedAt ?? new Date(),
+    };
+    res.status(200).json(newUser);
   } catch (error) {
     if (error instanceof CustomError) {
       res
@@ -66,18 +79,18 @@ rolesRouter.get('/:roleIdName', async (req: Request, res: Response) => {
 
 /**
  * @openapi
- * '/api/roles/':
+ * '/api/users/':
  *  get:
  *     tags:
- *       - Roles
+ *       - Users
  *     responses:
  *      200:
  *        description: Success
  */
-rolesRouter.get('/', async (_req: Request, res: Response) => {
+userRouter.get('/', async (_req: Request, res: Response) => {
   try {
-    const roles = await roleRepository.getRoles();
-    res.status(200).json(roles);
+    const users = await userRepository.getUsers();
+    res.status(200).json(users);
   } catch (error) {
     if (error instanceof CustomError) {
       res
@@ -89,4 +102,4 @@ rolesRouter.get('/', async (_req: Request, res: Response) => {
   }
 });
 
-export default rolesRouter;
+export default userRouter;

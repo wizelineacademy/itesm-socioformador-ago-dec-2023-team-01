@@ -3,7 +3,7 @@ import dotenv from 'dotenv';
 dotenv.config();
 
 const config = {
-  routes: {login: false},
+  // routes: { login: false },
   authRequired: false,
   auth0Logout: true,
   secret: process.env.SECRET,
@@ -12,6 +12,5 @@ const config = {
   issuerBaseURL: process.env.ISSUER_BASE_URL,
   idpLogout: true,
 };
-
 
 export default config;
