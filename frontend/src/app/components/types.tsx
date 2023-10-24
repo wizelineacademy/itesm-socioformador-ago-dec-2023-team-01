@@ -1,7 +1,7 @@
 export interface WelcomeProps {
   admin: Boolean;
-  firstName: String;
-  lastName: String;
+  name: any;
   wizecoins: String;
   IsWizeliner: Boolean;
+  picSource: any;
 }

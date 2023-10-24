@@ -10,7 +10,7 @@ const inter = Inter({ subsets: ['latin'] });
 
 interface CreateGroupPopupProps {
   groupName: string;
-  defaultMonthlyWizecoins: string;
+  defaultMonthlyWizecoins: number;
   open: boolean;
   onClose: () => void;
   onGoodButtonClick: () => void;

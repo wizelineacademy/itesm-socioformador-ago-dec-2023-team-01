@@ -3,10 +3,13 @@ import styles from './sidenav.module.css'
 import { WelcomeProps } from '@/app/components/types'
 
 export default function ProfileInfo({
-    firstName,
-    lastName,
-    wizecoins
+    name,
+    wizecoins,
+    picSource
 }: WelcomeProps) {
+    const nameParts = name.split(' ');
+    const firstName = nameParts[0];
+    const lastName = nameParts.splice(1).join(' ');
     return (
         <Box sx={{
             width: 'calc(100vw - 16.1rem)', paddingTop: '1rem'}}>
@@ -19,7 +22,7 @@ export default function ProfileInfo({
                     </Stack>
                 </Grid>
                 <Grid paddingLeft={'1rem'}>
-                    <img src='/tommy.png' className={styles.images}/>
+                    <img src={picSource} className={styles.images}/>
                 </Grid>
             </Grid>
         </Box>
