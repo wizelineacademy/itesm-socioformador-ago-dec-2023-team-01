@@ -2,9 +2,10 @@ import { Prisma } from '@prisma/client';
 import prisma from '../../../prisma/prisma-client';
 import { CreateRoleInput, Role } from './roleModel';
 import CustomError from '../../utils/errorModel';
+import { PostResponse } from '../../shared/models/responseModel';
 
 export const roleRepository = {
-  async createRole(roleInput: CreateRoleInput): Promise<Role> {
+  async createRole(roleInput: CreateRoleInput): Promise<PostResponse> {
     try {
       const role = await prisma.role.create({
         data: {
@@ -12,12 +13,8 @@ export const roleRepository = {
           description: roleInput.description,
         },
       });
-      const newRole: Role = {
+      const newRole: PostResponse = {
         id: role.id,
-        name: role.name,
-        description: role.description ?? '',
-        createdAt: role.createdAt,
-        updatedAt: role.updatedAt ?? new Date(),
       };
       return newRole;
     } catch (error) {
@@ -33,20 +30,12 @@ export const roleRepository = {
   },
 
   async getRoleByIdOrName(roleIdOrName: string): Promise<Role> {
-    let role = null;
-    if (Number.isNaN(Number(roleIdOrName))) {
-      role = await prisma.role.findUnique({
-        where: {
-          name: roleIdOrName,
-        },
-      });
-    } else {
-      role = await prisma.role.findUnique({
-        where: {
-          id: Number(roleIdOrName),
-        },
-      });
-    }
+    const role = await prisma.role.findUnique({
+      where: Number.isNaN(Number(roleIdOrName))
+        ? { name: roleIdOrName.toLowerCase() }
+        : { id: Number(roleIdOrName) },
+    });
+
     if (!role) {
       throw new CustomError(
         404,
@@ -61,6 +50,18 @@ export const roleRepository = {
       updatedAt: role.updatedAt ?? new Date(),
     };
     return newRole;
+  },
+
+  async getRoles(): Promise<Role[]> {
+    const roles = await prisma.role.findMany();
+    const newRoles: Role[] = roles.map(role => ({
+      id: role.id,
+      name: role.name,
+      description: role.description ?? '',
+      createdAt: role.createdAt,
+      updatedAt: role.updatedAt ?? new Date(),
+    }));
+    return newRoles;
   },
 };
 

@@ -16,11 +16,10 @@ module.exports = {
   plugins: ['@typescript-eslint', 'prettier'],
   rules: {
     "prettier/prettier": "error",
+    "import/no-extraneous-dependencies": 0,
     'import/extensions': ['error', 'ignorePackages', { ts: 'never' }],
     'no-underscore-dangle': ['error', { allow: ['_count'] }],
-    'no-console': ['error', { allow: ['info', 'error'] }],
-    'import/no-extraneous-dependencies': ['error', { devDependencies: true, optionalDependencies: true, peerDependencies: true }],
-  },
+    'no-console': ['error', { allow: ['info', 'error'] }],  },
   settings: {
     'import/resolver': {
       node: {

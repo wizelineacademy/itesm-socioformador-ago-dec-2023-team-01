@@ -16,7 +16,7 @@ CREATE TABLE "User" (
     "lastName" TEXT NOT NULL,
     "email" TEXT NOT NULL,
     "tokenId" INTEGER,
-    "roleId" INTEGER,
+    "roleId" INTEGER NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3),
 
@@ -64,6 +64,7 @@ CREATE TABLE "Conversation" (
 CREATE TABLE "Post" (
     "id" SERIAL NOT NULL,
     "content" TEXT NOT NULL,
+    "prompt" TEXT NOT NULL,
     "tokenCost" INTEGER NOT NULL,
     "conversationId" INTEGER NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -113,7 +114,7 @@ CREATE UNIQUE INDEX "_UserToGroups_AB_unique" ON "_UserToGroups"("A", "B");
 CREATE INDEX "_UserToGroups_B_index" ON "_UserToGroups"("B");
 
 -- AddForeignKey
-ALTER TABLE "User" ADD CONSTRAINT "User_roleId_fkey" FOREIGN KEY ("roleId") REFERENCES "Role"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+ALTER TABLE "User" ADD CONSTRAINT "User_roleId_fkey" FOREIGN KEY ("roleId") REFERENCES "Role"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "Token" ADD CONSTRAINT "Token_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
