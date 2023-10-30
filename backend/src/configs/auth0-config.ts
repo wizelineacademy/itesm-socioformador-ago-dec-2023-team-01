@@ -2,8 +2,8 @@ import dotenv from 'dotenv';
 
 dotenv.config();
 
-const config = {
-  // routes: { login: false },
+const Auth0Config = {
+  // routes: { login: 'false' },
   authRequired: false,
   auth0Logout: true,
   secret: process.env.SECRET,
@@ -11,6 +11,12 @@ const config = {
   clientID: process.env.CLIENT_ID,
   issuerBaseURL: process.env.ISSUER_BASE_URL,
   idpLogout: true,
+  clientSecret: process.env.CLIENT_SECRET,
+  authorizationParams: {
+    response_type: 'code',
+    audience: process.env.AUTH0_AUDIENCE,
+    scope: 'openid profile email',
+  },
 };
 
-export default config;
+export default Auth0Config;
