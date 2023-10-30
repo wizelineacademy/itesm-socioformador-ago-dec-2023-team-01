@@ -10,23 +10,26 @@ import styles from './iswelcome.module.css';
 const inter = Inter({ subsets: ['latin'] });
 
 interface ProfileInformationProps {
-  firstName: string;
-  lastName: string;
-  email: string;
+  name: any;
+  email: any;
   areas: string;
+  profileSrc: any;
   currentWizecoins: string;
   monthlyWizecoins: string;
 }
 
 export default function UserProfile({
-  firstName,
-  lastName,
+  name,
   email,
   areas,
+  profileSrc,
   currentWizecoins,
   monthlyWizecoins,
 }: ProfileInformationProps) {
   const [emailPartBeforeAt, emailPartAfterAt] = email.split('@');
+  const nameParts = name.split(' ');
+  const firstName = nameParts[0];
+  const lastName = nameParts.splice(1).join(' ');
 
   return (
     <Box sx={{
@@ -35,7 +38,7 @@ export default function UserProfile({
     >
       <Stack justifyContent="center" alignItems="center" spacing={3}>
         <Grid direction="column">
-          <img src="./mockWizeliner.jpg" className={styles.image} alt="Mock Wizeliner" />
+          <img src={profileSrc} className={styles.image} alt="Mock Wizeliner" />
         </Grid>
         <Grid>
           <Stack direction="column" justifyContent="space-between">
@@ -138,6 +141,7 @@ export default function UserProfile({
               }}
               >
                 <Button
+                href='/mainpage'
                   style={{
                     color: 'white',
                     backgroundColor: '#E93D44',

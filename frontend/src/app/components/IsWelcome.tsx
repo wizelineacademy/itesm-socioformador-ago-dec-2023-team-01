@@ -1,5 +1,5 @@
 import React from 'react';
-import { Typography, Box, Button } from '@mui/material';
+import { Typography, Box, Button, Paper, Tooltip } from '@mui/material';
 import Link from 'next/link';
 import Grid from '@mui/material/Unstable_Grid2'; // Grid version 2
 import Stack from '@mui/material/Stack';
@@ -8,11 +8,15 @@ import { WelcomeProps } from './types';
 
 export default function IsWelcome({
   admin,
-  firstName,
-  lastName,
+  name,
   wizecoins,
+  picSource
 }: WelcomeProps) {
+  const nameParts = name.split(' ');
+  const firstName = nameParts[0];
+  const lastName = nameParts.splice(1).join(' ');
   return (
+    
     <Box sx={{
       display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '100vh',
     }}
@@ -20,7 +24,7 @@ export default function IsWelcome({
       <Stack justifyContent="center" alignItems="center" spacing={3}>
         <Grid container spacing={4} display="flex" justifyContent="center" alignItems="center">
           <Grid direction="column">
-            <img src="./mockWizeliner.jpg" className={styles.image} alt="Mock Wizeliner" />
+            <img src={picSource} className={styles.image} alt="Mock Wizeliner" />
           </Grid>
           <Grid>
             <Typography
@@ -50,7 +54,13 @@ export default function IsWelcome({
         </Grid>
         <Grid container spacing={7} display="flex" justifyContent="center" alignItems="center">
           <Grid>
-            <img src="./chatgptGreen.png" className={styles.roundedimage} alt="Chat GPT Green" />
+            <Tooltip title="ChatGPT">
+              <Link href='/mainpage'>
+                <Paper sx={{borderRadius: '20px', height: '28vh'}} elevation={8}>
+                  <img src="./chatgptGreen.png" className={styles.roundedimage} alt="Chat GPT Green" />
+                </Paper>
+              </Link>
+            </Tooltip>
           </Grid>
           <Grid>
             <img src="./Bard.png" className={styles.roundedimage} alt="Bard" />
@@ -67,7 +77,7 @@ export default function IsWelcome({
             >
               Not you?
               {' '}
-              <Link href="/" className={styles.return}>Return to Sign-in</Link>
+              <Link href="/api/auth/logout" className={styles.return}>Return to Sign-in</Link>
             </Typography>
           </Grid>
           <Grid>
