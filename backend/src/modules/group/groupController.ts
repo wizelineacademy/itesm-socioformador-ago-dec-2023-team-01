@@ -11,6 +11,8 @@ const groupRouter = express.Router();
  *     tags:
  *       - Groups
  *     operationId: getAllGroups
+ *     security:
+ *       - bearerAuth: []
  *     responses:
  *       200:
  *         description: Success
@@ -37,6 +39,8 @@ groupRouter.get('/getAllGroups', async (_, res) => {
  *     tags:
  *       - Groups
  *     operationId: getUsersInGroup
+ *     security:
+ *       - bearerAuth: []
  *     parameters:
  *      - name: groupIdOrName
  *        in: path
@@ -70,11 +74,13 @@ groupRouter.get('/findUsersInGroup/:groupIdOrName', async (req, res) => {
  * '/api/group/':
  *  post:
  *     tags:
- *     - Groups
+ *       - Groups
+ *     security:
+ *       - bearerAuth: []
  *     requestBody:
- *      required: true
- *      content:
- *        application/json:
+ *       required: true
+ *       content:
+ *         application/json:
  *           schema:
  *              $ref: '#/components/schemas/CreateGroup'
  *     responses:
@@ -103,6 +109,8 @@ groupRouter.post('/', async (req, res) => {
  *     tags:
  *       - Groups
  *     operationId: deleteGroup
+ *     security:
+ *       - bearerAuth: []
  *     parameters:
  *       - name: id
  *         in: path
@@ -139,6 +147,8 @@ groupRouter.delete('/delete/:id', async (req, res) => {
  *     tags:
  *       - Groups
  *     operationId: addUserToGroup
+ *     security:
+ *       - bearerAuth: []
  *     requestBody:
  *       description: User and group information to add to the group
  *       required: true
@@ -166,7 +176,7 @@ groupRouter.delete('/delete/:id', async (req, res) => {
 groupRouter.post('/addUser', async (req, res) => {
   try {
     const { userId, groupIdOrName } = req.body;
-    await groupRepository.addUserToGroupByIdOrName(userId, groupIdOrName);
+    await groupRepository.addUserToGroupByIdOrName(groupIdOrName, userId);
     return res.status(201);
   } catch (error) {
     if (error instanceof CustomError) {
@@ -184,6 +194,8 @@ groupRouter.post('/addUser', async (req, res) => {
  *     tags:
  *       - Groups
  *     operationId: removeUserFromGroup
+ *     security:
+ *       - bearerAuth: []
  *     requestBody:
  *       description: User and group information to remove from the group
  *       required: true
@@ -229,6 +241,8 @@ groupRouter.put('/removeUser', async (req, res) => {
  *     tags:
  *       - Groups
  *     operationId: addAreaToGroup
+ *     security:
+ *       - bearerAuth: []
  *     requestBody:
  *       description: Group information to add area
  *       required: true

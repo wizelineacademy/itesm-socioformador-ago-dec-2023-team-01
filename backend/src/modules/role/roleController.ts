@@ -8,7 +8,9 @@ const rolesRouter = express.Router();
  * '/api/roles/':
  *  post:
  *     tags:
- *     - Roles
+ *       - Roles
+ *     security:
+ *       - bearerAuth: []
  *     requestBody:
  *      required: true
  *      content:
@@ -40,6 +42,8 @@ rolesRouter.post('/', async (req: Request, res: Response) => {
  *  get:
  *     tags:
  *       - Roles
+ *     security:
+ *       - bearerAuth: []
  *     parameters:
  *       - name: roleIdName
  *         in: path
@@ -70,6 +74,8 @@ rolesRouter.get('/:roleIdName', async (req: Request, res: Response) => {
  *  get:
  *     tags:
  *       - Roles
+ *     security:
+ *       - bearerAuth: []
  *     responses:
  *      200:
  *        description: Success

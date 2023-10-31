@@ -43,6 +43,8 @@ userRouter.post('/', async (req: Request, res: Response) => {
  *  get:
  *     tags:
  *       - Users
+ *     security:
+ *       - bearerAuth: []
  *     parameters:
  *       - name: userId
  *         in: path
@@ -83,6 +85,8 @@ userRouter.get('/:userId', async (req: Request, res: Response) => {
  *  get:
  *     tags:
  *       - Users
+ *     security:
+ *       - bearerAuth: []
  *     responses:
  *      200:
  *        description: Success
