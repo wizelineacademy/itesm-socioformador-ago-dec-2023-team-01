@@ -130,8 +130,9 @@ groupRouter.delete('/delete/:id', async (req, res) => {
       res
         .status(error.status)
         .json({ error: error.message, code: error.status });
+    } else {
+      res.status(500).json({ error: 'Internal server error' });
     }
-    res.status(500).json({ error: 'Internal server error' });
   }
 });
 /**
