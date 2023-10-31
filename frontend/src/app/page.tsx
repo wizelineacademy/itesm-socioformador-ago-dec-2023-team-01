@@ -1,13 +1,13 @@
 'use client';
 
 import React, { useEffect } from 'react';
-import { useRouter } from 'next/navigation'
+import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import Grid from '@mui/material/Unstable_Grid2'; // Grid version 2
+import { useUser } from '@auth0/nextjs-auth0/client';
 import styles from './page.module.css';
 import TWButton from './components/TWButton';
 import WTitle1 from './components/WTitle1';
-import { useUser } from '@auth0/nextjs-auth0/client';
 
 export default function Home() {
   const { user, error, isLoading } = useUser();
