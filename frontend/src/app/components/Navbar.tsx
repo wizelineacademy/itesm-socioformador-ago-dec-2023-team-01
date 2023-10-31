@@ -25,12 +25,11 @@ export default function Navbar({
   number,
   onBurgerClick,
 }: NavbarProps) {
-
   const nameParts = name.split(' ');
   const firstName = nameParts[0];
   const lastName = nameParts.splice(1).join(' ');
 
-  console.log(name)
+  console.log(name);
 
   return (
     <Box
@@ -88,7 +87,7 @@ export default function Navbar({
             sx={{ width: 56, height: 56 }}
           />
           <IconButton
-            href='/profile'
+            href="/profile"
             size="small"
             sx={{
               position: 'absolute',

@@ -1,15 +1,15 @@
 'use client';
 
 import React from 'react';
-import UserProfile from '../components/ProfileInformationPage';
 import { useUser } from '@auth0/nextjs-auth0/client';
+import UserProfile from '../components/ProfileInformationPage';
 import Awaiting from '../components/awaiting';
 import NotWelcome from '../components/NotWelcome';
 
 export default function ShowProfileInformation() {
   const { user, error, isLoading } = useUser();
 
-  if (isLoading) return <Awaiting />
+  if (isLoading) return <Awaiting />;
   if (error) return <div>{error.message}</div>;
 
   if (user) {
@@ -26,5 +26,5 @@ export default function ShowProfileInformation() {
       </div>
     );
   }
-  return <NotWelcome/>
+  return <NotWelcome />;
 }

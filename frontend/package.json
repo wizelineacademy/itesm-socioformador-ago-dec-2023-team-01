@@ -3,10 +3,11 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev",
     "build": "next build",
+    "lint": "next lint",
+    "type-check": "tsc --noEmit",
     "start": "next start",
-    "lint": "next lint"
+    "dev": "next lint && tsc --noEmit && next dev"
   },
   "dependencies": {
     "@auth0/nextjs-auth0": "^3.2.0",

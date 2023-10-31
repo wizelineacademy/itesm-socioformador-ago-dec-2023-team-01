@@ -10,12 +10,12 @@ import MenuIcon from '@mui/icons-material/Menu';
 import IconButton from '@mui/material/IconButton';
 import React, { useState } from 'react';
 import { Hidden } from '@mui/material';
+import { useUser } from '@auth0/nextjs-auth0/client';
 import ChatHeader from '@/app/components/ChatHeader';
 import Chat from '@/app/components/Chat';
 import ChatInput from '@/app/components/ChatInput';
 import ChatHistory from '@/app/components/ChatHistory';
 import Navbar from '@/app/components/Navbar';
-import { useUser } from '@auth0/nextjs-auth0/client';
 import Awaiting from '../components/awaiting';
 import NotWelcome from '../components/NotWelcome';
 
@@ -23,7 +23,7 @@ function Mainpage() {
   const [showChatHistory, setShowChatHistory] = useState(false);
   const { user, error, isLoading } = useUser();
 
-  if (isLoading) return <Awaiting/>;
+  if (isLoading) return <Awaiting />;
   if (error) return <div>{error.message}</div>;
 
   if (user) {
@@ -35,7 +35,7 @@ function Mainpage() {
           number="9891"
           onBurgerClick={() => setShowChatHistory((prev) => !prev)}
         />
-  
+
         <Grid container spacing={1}>
           {/* ChatHistory for larger screens (displayed by default) */}
           <Hidden only={['xs']}>
@@ -43,12 +43,11 @@ function Mainpage() {
               <ChatHistory />
             </Grid>
           </Hidden>
-  
+
           <Grid item xs={12} sm={9}>
             <Chat profileSrc={user.picture} />
           </Grid>
-  
-          {/* ChatHistory for small screens (hidden by default and displayed on burger icon click) */}
+
           <Hidden mdUp>
             {showChatHistory && (
               <div
@@ -66,7 +65,7 @@ function Mainpage() {
               </div>
             )}
           </Hidden>
-  
+
           <Hidden smUp>
             {showChatHistory && (
               <div
@@ -88,7 +87,7 @@ function Mainpage() {
       </Container>
     );
   }
-  return <NotWelcome />
+  return <NotWelcome />;
 }
 
 export default Mainpage;
