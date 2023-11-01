@@ -45,16 +45,6 @@ app.get('/', (req, res) => {
     } catch (error) {
       console.error('JWT verification failed:', error);
     }
-    // const { user } = req.oidc;
-    // try {
-    //   axios
-    //     .get(`${process.env.BASE_URL}/api/users/${user?.sub}`)
-    //     .then(response => {
-    //       console.info(response.data);
-    //     });
-    // } catch (error) {
-    //   console.info('error:', error);
-    // }
   }
   res.render('index', {
     title: 'Express',

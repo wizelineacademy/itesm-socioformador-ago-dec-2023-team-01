@@ -1,5 +1,7 @@
 import React from 'react';
-import { Typography, Box, Button, Paper, Tooltip } from '@mui/material';
+import {
+  Typography, Box, Button, Paper, Tooltip,
+} from '@mui/material';
 import Link from 'next/link';
 import Grid from '@mui/material/Unstable_Grid2'; // Grid version 2
 import Stack from '@mui/material/Stack';
@@ -10,13 +12,13 @@ export default function IsWelcome({
   admin,
   name,
   wizecoins,
-  picSource
+  picSource,
 }: WelcomeProps) {
   const nameParts = name.split(' ');
   const firstName = nameParts[0];
   const lastName = nameParts.splice(1).join(' ');
   return (
-    
+
     <Box sx={{
       display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '100vh',
     }}
@@ -55,8 +57,8 @@ export default function IsWelcome({
         <Grid container spacing={7} display="flex" justifyContent="center" alignItems="center">
           <Grid>
             <Tooltip title="ChatGPT">
-              <Link href='/mainpage'>
-                <Paper sx={{borderRadius: '20px', height: '28vh'}} elevation={8}>
+              <Link href="/mainpage">
+                <Paper sx={{ borderRadius: '20px', height: '28vh' }} elevation={8}>
                   <img src="./chatgptGreen.png" className={styles.roundedimage} alt="Chat GPT Green" />
                 </Paper>
               </Link>

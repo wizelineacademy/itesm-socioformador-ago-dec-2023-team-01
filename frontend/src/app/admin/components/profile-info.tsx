@@ -7,8 +7,8 @@ import {
   Typography,
   Stack,
 } from '@mui/material';
-import styles from './sidenav.module.css';
 import { WelcomeProps } from '@/app/components/types';
+import styles from './sidenav.module.css';
 
 export default function ProfileInfo({
   firstName,
@@ -46,7 +46,7 @@ export default function ProfileInfo({
           </Stack>
         </Grid>
         <Grid paddingLeft="1rem">
-          <img src="/tommy.png" className={styles.images} />
+          <img src="/tommy.png" className={styles.images} alt="" />
         </Grid>
       </Grid>
     </Box>

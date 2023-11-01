@@ -167,7 +167,7 @@ export default function ChatHistory({ closeChatHistory }: ChatHistoryProps) {
 
       <Box display="flex" justifyContent="center" marginTop="20px">
         <Button
-          href='/welcome'
+          href="/welcome"
           variant="contained"
           color="error"
           sx={{

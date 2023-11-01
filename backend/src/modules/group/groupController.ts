@@ -11,6 +11,8 @@ const groupRouter = express.Router();
  *     tags:
  *       - Groups
  *     operationId: getAllGroups
+ *     security:
+ *       - bearerAuth: []
  *     responses:
  *       200:
  *         description: Success
@@ -36,6 +38,8 @@ groupRouter.get('/getAllGroups', async (_req, res) => {
  *     tags:
  *       - Groups
  *     operationId: getUsersInGroup
+ *     security:
+ *       - bearerAuth: []
  *     parameters:
  *      - name: groupIdOrName
  *        in: path
@@ -69,11 +73,13 @@ groupRouter.get('/findUsersInGroup/:groupIdOrName', async (req, res) => {
  * '/api/group/':
  *  post:
  *     tags:
- *     - Groups
+ *       - Groups
+ *     security:
+ *       - bearerAuth: []
  *     requestBody:
- *      required: true
- *      content:
- *        application/json:
+ *       required: true
+ *       content:
+ *         application/json:
  *           schema:
  *              $ref: '#/components/schemas/CreateGroup'
  *     responses:
@@ -105,6 +111,8 @@ groupRouter.post('/', async (req, res) => {
  *     tags:
  *       - Groups
  *     operationId: deleteGroup
+ *     security:
+ *       - bearerAuth: []
  *     parameters:
  *       - name: id
  *         in: path
@@ -142,6 +150,8 @@ groupRouter.delete('/delete/:id', async (req, res) => {
  *     tags:
  *       - Groups
  *     operationId: addUserToGroup
+ *     security:
+ *       - bearerAuth: []
  *     requestBody:
  *       description: User and group information to add to the group
  *       required: true
@@ -191,6 +201,8 @@ groupRouter.post('/addUser', async (req, res) => {
  *     tags:
  *       - Groups
  *     operationId: removeUserFromGroup
+ *     security:
+ *       - bearerAuth: []
  *     requestBody:
  *       description: User and group information to remove from the group
  *       required: true
@@ -236,6 +248,8 @@ groupRouter.put('/removeUser', async (req, res) => {
  *     tags:
  *       - Groups
  *     operationId: addAreaToGroup
+ *     security:
+ *       - bearerAuth: []
  *     requestBody:
  *       description: Group information to add area
  *       required: true

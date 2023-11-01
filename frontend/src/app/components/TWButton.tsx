@@ -7,7 +7,6 @@ interface ButtonProps {
 }
 
 export default function TWButton({ text }: ButtonProps) {
-
   return (
     <Button
       variant="contained"
@@ -21,7 +20,7 @@ export default function TWButton({ text }: ButtonProps) {
         padding: '0.7rem 2rem',
       }}
     >
-      <GoogleIcon sx={{paddingRight: '10px'}}/>
+      <GoogleIcon sx={{ paddingRight: '10px' }} />
       {text}
     </Button>
   );

@@ -1,6 +1,6 @@
 import React from 'react';
 import {
-  Typography, Stack, Button
+  Typography, Stack, Button,
 } from '@mui/material';
 import styles from './iswelcome.module.css';
 
@@ -44,7 +44,7 @@ export default function NotWelcome() {
         employees.
       </Typography>
       <Button
-        href='/'
+        href="/"
         variant="contained"
         sx={{
           borderRadius: '20px',

@@ -17,6 +17,8 @@ export default function AdminLayout({
     lastName: 'Anderson',
     wizecoins: '120',
     IsWizeliner: true,
+    name: 'Thomas Anderson',
+    picSource: 'https://i0.wp.com/imgs.hipertextual.com/wp-content/uploads/2015/11/albert-einstein-retrato-scaled.jpg?fit=2560%2C1985&quality=50&strip=all&ssl=1',
   };
 
   return (

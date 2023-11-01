@@ -32,7 +32,7 @@ export default function CreateGroupPopup({
   };
 
   const handleDefaultMonthlyWizecoinsChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setDefaultMonthlyWizecoinsInput(event.target.value);
+    setDefaultMonthlyWizecoinsInput(Number(event.target.value));
   };
 
   return (
