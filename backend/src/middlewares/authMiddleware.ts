@@ -21,7 +21,7 @@ function verifyToken(token: string): JwtPayload | null {
   }
 }
 
-export default function checkAuthorization(
+export default function checkAuthorizationMiddleware(
   req: Request,
   res: Response,
   next: NextFunction,
