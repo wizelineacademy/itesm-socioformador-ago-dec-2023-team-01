@@ -3,6 +3,7 @@ import { auth as authOpenId } from 'express-openid-connect';
 import dotenv from 'dotenv';
 import jwt from 'jsonwebtoken';
 // import axios from 'axios';
+import cors from 'cors';
 import Auth0Config from './configs/auth0-config';
 import router from './routes/index';
 import swaggerDocs from './utils/swagger';
@@ -13,7 +14,7 @@ const app = express();
 
 dotenv.config();
 app.use(express.json());
-
+app.use(cors());
 app.use(authOpenId(Auth0Config));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
