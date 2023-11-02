@@ -12,13 +12,15 @@ const initialState = {
     profilePic: '',
     role: 'wizeliner',
   },
-  usersInfo: [] as UsersInfo[],
+  usersInfo: [{
+    fullName: 'Samuel Acosta', areas: ['Software Engineer'], isAdmin: true, monthlyWizecoins: 123,
+  }] as UsersInfo[],
   isLoading: true,
 };
 
 export const fetchUsers = createAsyncThunk('users/fetchUsers', async () => {
   try {
-    const response = await axios.get(`${process.env.API_URL}/users/`);
+    const response = await axios.get(`${process.env.API_URL}/users`);
 
     if (response.status !== 200) {
       throw new Error('Failed to fetch users');
