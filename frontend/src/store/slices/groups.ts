@@ -28,15 +28,6 @@ const slice = createSlice({
 
 export default slice.reducer;
 
-// export function getProfile() {
-//   return async () => {
-//     try {
-//       const response = await axios.get(`${process.env.API_URL}`)
-//     } catch (error) {
-//     }
-//   }
-// }
-
 export function setUserInfo(userInfo:object) {
-  dispatch(slice.actions.getProfile(userInfo));
+  return slice.actions.getProfile(userInfo);
 }

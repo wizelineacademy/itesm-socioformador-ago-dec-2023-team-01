@@ -8,12 +8,34 @@ import { useUser } from '@auth0/nextjs-auth0/client';
 import styles from './page.module.css';
 import TWButton from './components/TWButton';
 import WTitle1 from './components/WTitle1';
+import { useDispatch } from 'react-redux';
+import { setUserInfo } from '@/store/slices/users';
 
 export default function Home() {
   const { user, error, isLoading } = useUser();
   const router = useRouter();
-
+  const dispatch = useDispatch();
+  // useEffect(() => {
+  //   if (user) {
+  //     dispatch(setUserInfo({
+  //     firstName: user.given_name,
+  //     lastName: user.family_name,
+  //     fullName: user.name,
+  //     email: user.email,
+  //     profilePic: user.picture,
+  //     role: user.role,
+  //     }));
+  //   }
+  // }, [dispatch, user]);
   if (user) {
+    dispatch(setUserInfo({
+      firstName: user.given_name,
+      lastName: user.family_name,
+      fullName: user.name,
+      email: user.email,
+      profilePic: user.picture,
+      role: user.role,
+    }));
     router.push('/welcome');
     console.log('user', user);
   }
