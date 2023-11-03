@@ -1,6 +1,5 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import axios from '@/utils/axios';
-// import { dispatch } from '..';
+import axios from 'axios';
 import { UsersInfo } from '../interfaces/usersInterfaces';
 
 const initialState = {
@@ -20,8 +19,7 @@ const initialState = {
 
 export const fetchUsers = createAsyncThunk('users/fetchUsers', async () => {
   try {
-    const response = await axios.get(`${process.env.API_URL}/users`);
-
+    const response = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/users`);
     if (response.status !== 200) {
       throw new Error('Failed to fetch users');
     }
@@ -32,6 +30,7 @@ export const fetchUsers = createAsyncThunk('users/fetchUsers', async () => {
       isAdmin: user?.isAdmin ?? true,
       monthlyWizecoins: user?.monthlyWizecoins ?? 0,
     }));
+    console.log(users);
     return users;
   } catch (error) {
     console.log(error);
@@ -74,23 +73,3 @@ export default slice.reducer;
 export function setUserInfo(userInfo:object) {
   return slice.actions.getProfile(userInfo);
 }
-
-// export function getUsers() {
-//   return async () => {
-//     try {
-//       const res = await axios.get(`${process.env.API_URL}/users/`);
-//       const users = res.data.map((user:any) => {
-//         const userInfo: UsersInfo = {
-//           fullName: `${user.firstName} ${user.lastName}`,
-//           areas: user?.areas ?? [''],
-//           isAdmin: user?.isAdmin ?? true,
-//           monthlyWizecoins: user?.monthlyWizecoins ?? 0,
-//         };
-//         return userInfo;
-//       });
-//       dispatch(slice.actions.setUsers(users));
-//     } catch (error) {
-//       console.log(error);
-//     }
-//   };
-// }
