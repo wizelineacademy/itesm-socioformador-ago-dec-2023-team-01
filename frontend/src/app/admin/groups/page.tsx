@@ -7,16 +7,13 @@ import {
   TextField,
   Paper,
   Stack,
-  Typography,
   Button,
 } from '@mui/material';
-import { Inter } from 'next/font/google';
 import SearchIcon from '@mui/icons-material/Search';
 import AddIcon from '@mui/icons-material/Add';
 import mockData from '../components/data';
 import Group from '../components/group';
-
-const inter = Inter({ subsets: ['latin'] });
+import Title from '../components/Title';
 
 export default function Groups() {
   const [search, setSearch] = useState('');
@@ -30,17 +27,7 @@ export default function Groups() {
         alignItems="center"
         paddingRight="3.4rem"
       >
-        <Typography
-          variant="h1"
-          className={inter.className}
-          sx={{
-            paddingLeft: '3rem',
-            fontWeight: 'bold',
-            color: 'white',
-          }}
-        >
-          Groups.
-        </Typography>
+        <Title text="Groups." />
         <Paper
           elevation={8}
           sx={{

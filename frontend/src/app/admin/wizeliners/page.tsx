@@ -1,9 +1,8 @@
 'use client';
 
 import React, { useEffect } from 'react';
-import { Inter } from 'next/font/google';
 import { useDispatch, useSelector } from 'react-redux';
-import { Typography, Box, Button } from '@mui/material';
+import { Box, Button } from '@mui/material';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
 import TableCell from '@mui/material/TableCell';
@@ -13,8 +12,7 @@ import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 import { fetchUsers } from '@/store/slices/users';
 import { AppDispatch } from '@/store';
-
-const inter = Inter({ subsets: ['latin'] });
+import Title from '../components/Title';
 
 export default function Wizeliners() {
   const { usersInfo } = useSelector((store:any) => store.users);
@@ -26,17 +24,7 @@ export default function Wizeliners() {
 
   return (
     <>
-      <Typography
-        variant="h1"
-        className={inter.className}
-        sx={{
-          paddingLeft: '3rem',
-          fontWeight: 'bold',
-          color: 'white',
-        }}
-      >
-        Wizeliners.
-      </Typography>
+      <Title text="Wizeliners." />
       <Box sx={{ padding: '1rem 3rem 0 3rem' }}>
         <TableContainer component={Paper}>
           <Table sx={{ minWidth: 650 }} aria-label="simple table">

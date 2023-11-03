@@ -2,12 +2,12 @@
 
 import React from 'react';
 import { Box } from '@mui/material';
-import WTitle1 from '../components/WTitle1';
+import Title from './components/Title';
 
 export default function Admin() {
   return (
     <Box>
-      <WTitle1 text="Dashboard." redText="" />
+      <Title text="Dashboard." />
     </Box>
   );
 }
