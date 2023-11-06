@@ -20,6 +20,8 @@ export interface Group {
   id: number;
   name: string;
   area: string;
+  totalTokens?: number;
+  totalTokensUsed?: number;
   createdAt: Date;
   updatedAt: Date | null;
 }

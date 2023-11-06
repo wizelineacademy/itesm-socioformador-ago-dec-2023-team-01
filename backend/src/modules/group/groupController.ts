@@ -1,6 +1,7 @@
 import express from 'express';
 import { groupRepository } from './groupRepository';
 import CustomError from '../../utils/errorModel';
+import { groupService } from './groupService';
 
 const groupRouter = express.Router();
 
@@ -19,7 +20,7 @@ const groupRouter = express.Router();
  */
 groupRouter.get('/getAllGroups', async (_req, res) => {
   try {
-    const groups = await groupRepository.listAllGroups();
+    const groups = await groupService.getTotalTokensForGroup();
     res.status(200).json(groups);
   } catch (error) {
     if (error instanceof CustomError) {
