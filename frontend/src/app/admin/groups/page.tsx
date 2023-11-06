@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Grid from '@mui/material/Unstable_Grid2';
 import {
   Box,
@@ -9,15 +9,19 @@ import {
   Stack,
   Button,
 } from '@mui/material';
+// import { useDispatch, useSelector } from 'react-redux';
 import SearchIcon from '@mui/icons-material/Search';
 import AddIcon from '@mui/icons-material/Add';
 import mockData from '../components/data';
 import Group from '../components/group';
 import Title from '../components/Title';
+// import { AppDispatch } from '@/store';
+// import { fetchGroups } from '@/store/slices/groups';
 
 export default function Groups() {
+  // const { groupsInfo } = useSelector((store:any) => store.groups);
+  // const dispatch = useDispatch<AppDispatch>();
   const [search, setSearch] = useState('');
-  console.log(search);
 
   return (
     <Box>
