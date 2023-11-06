@@ -83,6 +83,10 @@ userRouter.get('/:userId', async (req: Request, res: Response) => {
  *  get:
  *     tags:
  *       - Users
+ *     requestBody:
+ *      required: true
+ *     parameters:
+ *        - userId: userId
  *     responses:
  *      200:
  *        description: Success
@@ -106,16 +110,20 @@ userRouter.get('/', async (_req: Request, res: Response) => {
  * '/api/users/makeAdmin':
  *  patch:
  *     tags:
- *       - Users
- *     summary: Make a user an admin
- *     description: Update a user's admin status.
+ *     - Users
+ *     requestBody:
+ *      required: true
+ *      content:
+ *        application/json:
+ *           schema:
+ *              $ref: '#/components/schemas/MakeAdminInput'
  *     responses:
- *       200:
- *         description: User's admin status updated successfully.
- *       404:
- *         description: Bad request - Invalid request body or parameters.
- *       500:
- *         description: Internal server error.
+ *      200:
+ *        description: Success
+ *      404:
+ *        description: User not found
+ *      500:
+ *        description: Internal server error
  */
 userRouter.patch('/makeAdmin', async (req: Request, res: Response) => {
   try {
