@@ -73,21 +73,13 @@ export const userRepository = {
   async makeAdmin(userId: string, isAdmin: boolean): Promise<UserDto> {
     let user = null;
     try {
-      if (isAdmin) {
-        user = await prisma.user.update({
-          where: { id: userId },
-          data: {
-            roleId: 1,
-          },
-        });
-      } else {
-        user = await prisma.user.update({
-          where: { id: userId },
-          data: {
-            roleId: 2,
-          },
-        });
-      }
+      const roleId = isAdmin ? 1 : 2;
+      user = await prisma.user.update({
+        where: { id: userId },
+        data: {
+          roleId,
+        },
+      });
     } catch (error) {
       if (error instanceof Prisma.PrismaClientKnownRequestError) {
         throw new CustomError(404, `Could not find user ${userId} to update`);
