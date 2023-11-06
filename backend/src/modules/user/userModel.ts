@@ -58,7 +58,6 @@ export interface CreateUserInput {
   email: string;
   roleId: number;
 }
-
 export interface UserDto {
   id: string;
   firstName: string;
@@ -67,4 +66,23 @@ export interface UserDto {
   roleId: number;
   createdAt: Date;
   updatedAt: Date;
+}
+/**
+ * @openapi
+ * components:
+ *  schemas:
+ *    MakeAdminInput:
+ *      type: object
+ *      required:
+ *        - userId
+ *        - isAdmin
+ *      properties:
+ *        userId:
+ *          type: string
+ *        isAdmin:
+ *          type: boolean
+ */
+export interface MakeAdminInput {
+  userId: string;
+  isAdmin: boolean;
 }
