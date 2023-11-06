@@ -112,7 +112,7 @@ userRouter.get('/', async (_req: Request, res: Response) => {
  *     responses:
  *       200:
  *         description: User's admin status updated successfully.
- *       400:
+ *       404:
  *         description: Bad request - Invalid request body or parameters.
  *       500:
  *         description: Internal server error.
