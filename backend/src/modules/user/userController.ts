@@ -101,5 +101,37 @@ userRouter.get('/', async (_req: Request, res: Response) => {
     }
   }
 });
-
+/**
+ * @openapi
+ * '/api/users/makeAdmin':
+ *  patch:
+ *     tags:
+ *       - Users
+ *     summary: Make a user an admin
+ *     description: Update a user's admin status.
+ *     responses:
+ *       200:
+ *         description: User's admin status updated successfully.
+ *       400:
+ *         description: Bad request - Invalid request body or parameters.
+ *       500:
+ *         description: Internal server error.
+ */
+userRouter.patch('/makeAdmin', async (req: Request, res: Response) => {
+  try {
+    const user = await userRepository.makeAdmin(
+      req.body.userId,
+      req.body.isAdmin,
+    );
+    res.status(200).json(user);
+  } catch (error) {
+    if (error instanceof CustomError) {
+      res
+        .status(error.status)
+        .json({ error: error.message, code: error.status });
+    } else {
+      res.status(500).json({ error: 'Internal server error' });
+    }
+  }
+});
 export default userRouter;
