@@ -70,6 +70,35 @@ export const userRepository = {
     }));
     return newUsers;
   },
+  async makeAdmin(userId: string, isAdmin: boolean): Promise<UserDto> {
+    let user = null;
+    try {
+      const roleId = isAdmin ? 1 : 2;
+      user = await prisma.user.update({
+        where: { id: userId },
+        data: {
+          roleId,
+        },
+      });
+    } catch (error) {
+      if (error instanceof Prisma.PrismaClientKnownRequestError) {
+        throw new CustomError(404, `Could not find user ${userId} to update`);
+      }
+    }
+    if (!user) {
+      throw new CustomError(404, `User with id:${userId}, not found`);
+    }
+    const updateUser: UserDto = {
+      id: user.id,
+      firstName: user.firstName,
+      lastName: user.lastName,
+      email: user.email,
+      roleId: user.roleId,
+      createdAt: user.createdAt,
+      updatedAt: user.updatedAt ?? new Date(),
+    };
+    return updateUser;
+  },
 };
 
 export default userRepository;
