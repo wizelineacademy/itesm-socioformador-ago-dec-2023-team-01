@@ -83,10 +83,6 @@ userRouter.get('/:userId', async (req: Request, res: Response) => {
  *  get:
  *     tags:
  *       - Users
- *     requestBody:
- *      required: true
- *     parameters:
- *        - userId: userId
  *     responses:
  *      200:
  *        description: Success
