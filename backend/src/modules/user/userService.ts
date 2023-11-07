@@ -1,7 +1,24 @@
+import roleRepository from '../role/roleRepository';
 import { TokenDto } from '../token/tokenModel';
 import userRepository from './userRepository';
+import { User } from './userModel';
 
 export const userService = {
+  async getUserById(userId: string): Promise<User> {
+    const user = await userRepository.getUserById(userId);
+    const role = await roleRepository.getRoleByIdOrName(user.roleId.toString());
+    const newUser: User = {
+      id: user.id,
+      firstName: user.firstName,
+      lastName: user.lastName,
+      email: user.email,
+      role: role.name,
+      createdAt: user.createdAt,
+      updatedAt: user.updatedAt ?? new Date(),
+    };
+    return newUser;
+  },
+
   async getUserTokens(userId: string): Promise<TokenDto[]> {
     const tokens = await userRepository.getUserTokens(userId);
     const tokensDto: TokenDto[] = tokens.map(token => ({
