@@ -7,8 +7,10 @@ const initialState = {
   isLoading: true,
 };
 
-export const fetchGroups = createAsyncThunk('groups/fetchGroups', async (accessToken) => {
+export const fetchGroups = createAsyncThunk('groups/fetchGroups', async () => {
   try {
+    const tokenReponse = await axios.get('/api/token');
+    const accessToken = tokenReponse.data.foo;
     const headers = {
       Authorization: `Bearer ${accessToken}`,
     };
@@ -18,7 +20,7 @@ export const fetchGroups = createAsyncThunk('groups/fetchGroups', async (accessT
     }
 
     const groups = response.data.map((group:any) => ({
-      title: group.name,
+      title: group.group.name,
       members: 20,
       moneySpent: 20,
       data: {
@@ -36,6 +38,39 @@ export const fetchGroups = createAsyncThunk('groups/fetchGroups', async (accessT
       },
     }));
     return groups;
+  } catch (error) {
+    console.log(error);
+    throw error;
+  }
+});
+
+export const fetchGroup = createAsyncThunk('groups/fetchGroup', async (groupName:string) => {
+  try {
+    const tokenReponse = await axios.get('/api/token');
+    const accessToken = tokenReponse.data.foo;
+    const headers = {
+      Authorization: `Bearer ${accessToken}`,
+    };
+    const response = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/group/findUsersInGroup/${groupName}`, { headers });
+    console.log('Hello', response.data);
+  } catch (error) {
+    console.log('hello');
+  }
+});
+
+export const createGroup = createAsyncThunk('groups/createGroup', async (groupName:string) => {
+  try {
+    const tokenReponse = await axios.get('/api/token');
+    const accessToken = tokenReponse.data.foo;
+    const headers = {
+      Authorization: `Bearer ${accessToken}`,
+    };
+    const data = {
+      name: groupName,
+      area: 'development',
+    };
+    const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/group`, data, { headers });
+    console.log(response.status);
   } catch (error) {
     console.log(error);
     throw error;
@@ -63,22 +98,3 @@ const slice = createSlice({
 });
 
 export default slice.reducer;
-
-// groupInfo: {
-//   title: '',
-//   members: 0,
-//   moneySpent: 0,
-//   data: {
-//     labels: ['Used'],
-//     datasets: [
-//       {
-//         label: 'Group Overview',
-//         data: [100, 0],
-//         backgroundColor: ['#E93D44', 'rgba(0,0,0,0)'],
-//         borderColor: ['rgba(0,0,0,0)', 'rgba(0,0,0,0)'],
-//         cutout: '37',
-//         borderRadius: 30,
-//       },
-//     ],
-//   },
-// },

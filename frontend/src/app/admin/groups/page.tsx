@@ -9,22 +9,47 @@ import {
   Stack,
   Button,
 } from '@mui/material';
-// import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import SearchIcon from '@mui/icons-material/Search';
 import AddIcon from '@mui/icons-material/Add';
-import mockData from '../components/data';
 import Group from '../components/group';
 import Title from '../components/Title';
-// import { AppDispatch } from '@/store';
-// import { fetchGroups } from '@/store/slices/groups';
+import CreateGroupPopup from '@/app/components/CreateGroupPopup';
+import { AppDispatch } from '@/store';
+import { fetchGroups } from '@/store/slices/groups';
+import Awaiting from '@/app/components/awaiting';
 
 export default function Groups() {
-  // const { groupsInfo } = useSelector((store:any) => store.groups);
-  // const dispatch = useDispatch<AppDispatch>();
   const [search, setSearch] = useState('');
+  const [isPopupOpen, setPopupOpen] = useState(false);
+  const { groupsInfo, isLoading } = useSelector((store:any) => store.groups);
+  const dispatch = useDispatch<AppDispatch>();
+
+  const handleOpenPopup = () => {
+    setPopupOpen(true);
+  };
+
+  const handleClosePopup = () => {
+    setPopupOpen(false);
+  };
+
+  useEffect(() => {
+    dispatch(fetchGroups());
+  }, [dispatch]);
+
+  if (isLoading) {
+    return <Awaiting />;
+  }
 
   return (
     <Box>
+      <CreateGroupPopup
+        groupName=""
+        defaultMonthlyWizecoins={100}
+        open={isPopupOpen}
+        onClose={handleClosePopup}
+        onGoodButtonClick={handleClosePopup}
+      />
       <Stack
         direction="row"
         justifyContent="space-between"
@@ -76,6 +101,7 @@ export default function Groups() {
                 borderRadius: '20px',
                 '&:hover': { borderColor: 'red' },
               }}
+              onClick={handleOpenPopup}
             >
               <AddIcon />
               New Group
@@ -84,11 +110,11 @@ export default function Groups() {
         </Paper>
       </Stack>
       <Grid container padding="3rem 0 3rem 3rem" gap={4}>
-        {mockData
-          .filter((group) => (search.toLocaleLowerCase() === ''
+        {groupsInfo
+          .filter((group:any) => (search.toLowerCase() === ''
             ? group
-            : group.title.toLocaleLowerCase().includes(search)))
-          .map((group, index) => (
+            : group.title.toLowerCase().includes(search)))
+          .map((group:any, index:any) => (
             <Group key={index} {...group} />
           ))}
       </Grid>

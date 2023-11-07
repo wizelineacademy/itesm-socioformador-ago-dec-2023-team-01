@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
+import { useSearchParams } from 'next/navigation';
 import Image from 'next/image';
 import Link from 'next/link';
 import Container from '@mui/material/Container';
@@ -13,12 +14,17 @@ import AddIcon from '@mui/icons-material/Add';
 import WTitle1 from '@/app/components/WTitle1';
 import DataGrid from '@/app/admin/components/DataGrid';
 import Popup from '@/app/components/Popup';
+// import { useDispatch } from 'react-redux';
+// import { AppDispatch } from '@/store';
 
 export default function EditGroups() {
   const totalWizecoins = 2500;
   const totalWizeliners = 10;
+  const searchParams = useSearchParams();
+  const groupTitle = searchParams.get('title');
   const [groupName, setGroupName] = useState('Software Engineers');
   const [isEditing, setIsEditing] = useState(false);
+  // const dispatch = useDispatch<AppDispatch>();
 
   const handleGroupNameChange = (e: { target: { value: React.SetStateAction<string>; }; }) => {
     setGroupName(e.target.value);
@@ -77,7 +83,7 @@ export default function EditGroups() {
                       fontWeight: 'bold',
                     }}
                   >
-                    {groupName}
+                    {groupTitle}
                   </Typography>
                 )}
                 <Box marginLeft={13}>

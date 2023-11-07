@@ -4,7 +4,10 @@ import {
   Stack, TextField,
 } from '@mui/material';
 import { Inter } from 'next/font/google';
+import { useDispatch } from 'react-redux';
+import { createGroup, fetchGroups } from '@/store/slices/groups';
 import styles from './iswelcome.module.css';
+import { AppDispatch } from '@/store';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -23,6 +26,7 @@ export default function CreateGroupPopup({
   onClose,
   onGoodButtonClick,
 }: CreateGroupPopupProps) {
+  const dispatch = useDispatch<AppDispatch>();
   const [groupNameInput, setGroupNameInput] = useState(groupName);
   // eslint-disable-next-line max-len
   const [defaultMonthlyWizecoinsInput, setDefaultMonthlyWizecoinsInput] = useState(defaultMonthlyWizecoins);
@@ -33,6 +37,12 @@ export default function CreateGroupPopup({
 
   const handleDefaultMonthlyWizecoinsChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setDefaultMonthlyWizecoinsInput(Number(event.target.value));
+  };
+
+  const handleCreateClick = () => {
+    dispatch(createGroup(groupNameInput));
+    dispatch(fetchGroups());
+    onGoodButtonClick();
   };
 
   return (
@@ -188,7 +198,7 @@ export default function CreateGroupPopup({
           </Box>
           <Box>
             <Button
-              onClick={onGoodButtonClick}
+              onClick={handleCreateClick}
               style={{
                 color: 'white',
                 backgroundColor: '#4BE93D',
