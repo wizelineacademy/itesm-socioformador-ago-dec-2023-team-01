@@ -7,7 +7,7 @@ generator client {
 
 datasource db {
   provider = "postgresql"
-  url      = env("DATABASE_URL_AWS_DEV")
+  url      = env("DATABASE_URL")
 }
 
 // Define the Role table
@@ -61,6 +61,7 @@ model Token {
 // Define the Conversation table with soft delete
 model Conversation {
   id         Int       @id @default(autoincrement())
+  title       String    @default("New Chat")
   isDeleted  Boolean   @default(false)
   userId     String
   user       User      @relation(fields: [userId], references: [id])
