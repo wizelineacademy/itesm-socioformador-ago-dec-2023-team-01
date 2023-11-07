@@ -2,8 +2,8 @@ import { Prisma } from '@prisma/client';
 import prisma from '../../../prisma/prisma-client';
 import { createGroupInput, Group } from './groupModel';
 import CustomError from '../../utils/errorModel';
+import { TokenDto } from '../token/tokenModel';
 
-// eslint-disable-next-line import/prefer-default-export
 export const groupRepository = {
   async createGroup(groupInput: createGroupInput): Promise<Group> {
     try {
@@ -188,7 +188,6 @@ export const groupRepository = {
         }
       }
     }
-
   },
   async addAreaToGroupByIdOrName(
     groupIdOrName: string,
@@ -220,7 +219,7 @@ export const groupRepository = {
           area: update.area ?? '',
           createdAt: update.createdAt,
           updatedAt: update.updatedAt ?? new Date(),
-        }
+        };
       } catch (error) {
         if (error instanceof Prisma.PrismaClientKnownRequestError) {
           throw new CustomError(
@@ -261,7 +260,7 @@ export const groupRepository = {
         const whereCondition = Number.isNaN(Number(groupIdOrName))
           ? { groups: { some: { name: groupIdOrName } } }
           : { groups: { some: { id: Number(groupIdOrName) } } };
-  
+
         users = await prisma.user.findMany({
           where: whereCondition,
         });
@@ -276,7 +275,37 @@ export const groupRepository = {
         }
       }
     }
-
     return users;
   },
+  async getGroupUsersTokens(usersIds: string[]): Promise<TokenDto[]> {
+    const tokens = await Promise.all(
+      usersIds.map(async userId => {
+        const token = await prisma.token.findFirst({
+          where: {
+            userId,
+          },
+          orderBy: {
+            createdAt: 'desc',
+          },
+        });
+        return token;
+      }),
+    );
+    if (!tokens) {
+      throw new CustomError(404, `Users with ids:${usersIds}, not found`);
+    }
+
+    const newTokens: TokenDto[] = tokens.map(token => ({
+      id: token?.id ?? 0,
+      userId: token?.userId ?? '',
+      amount: token?.amount ?? 0,
+      currentAmount: token?.currentAmount ?? 0,
+      expiresAt: token?.expiresAt ?? new Date(),
+      createdAt: token?.createdAt ?? new Date(),
+      updatedAt: token?.updatedAt ?? new Date(),
+    }));
+    return newTokens;
+  },
 };
+
+export default groupRepository;
