@@ -33,7 +33,7 @@ export default function Chat({ profileSrc }:any) {
       for (const message of messages) {
         numTokens += 4; // every message follows <im_start>{role/name}\n{content}<im_end>\n
         numTokens += (encoding.encode(message.content)).length;
-        if (message.key == 'name') {
+        if (message.key === 'name') {
           numTokens -= 1;
         }
       }
