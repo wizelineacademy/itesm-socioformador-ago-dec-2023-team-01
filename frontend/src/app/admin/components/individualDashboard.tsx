@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import {
-  Typography, Box, Button, Paper, Stack,
+  Typography, Box, Button, Paper, Stack, Grid,
 } from '@mui/material';
 import { Inter } from 'next/font/google';
 import Image from 'next/image';
@@ -76,17 +76,32 @@ export default function UserProfileDashboard({
         label: 'Users Gained',
         data: UserData.map((data) => data.userGain),
         backgroundColor: [
-          'rgba(75,192,192,1)',
-          '#ecf0f1',
-          '#50AF95',
-          '#f3ba2f',
-          '#2a71d0',
+          'pink',
+          'orange',
+          'green',
+          'red',
+          'blue',
         ],
-        borderColor: 'black',
+        borderColor: 'white',
         borderWidth: 2,
       },
     ],
   });
+
+  const options = {
+    scales: {
+      x: {
+        ticks: {
+          color: 'red', // Change the color of the X-axis labels here
+        },
+      },
+      y: {
+        ticks: {
+          color: 'blue', // Change the color of the Y-axis labels here
+        },
+      },
+    },
+  };
 
   return (
     <Box sx={{
@@ -215,30 +230,50 @@ export default function UserProfileDashboard({
                 >
                   Enrolled Groups
                 </Typography>
-                <Stack direction="row" justifyContent="left" alignItems="center" padding="1rem" spacing="0.5rem">
-                  {areas.map((title, index) => (
-                    <Button
-                      key={index}
-                      href="/mainpage"
-                      style={{
-                        backgroundColor: '#1D293A',
-                        borderRadius: '15px', // Add the border radius to the button
-                        textTransform: 'none', // Set textTransform to 'none' to prevent all caps
-                        padding: '6px',
-                      }}
-                    >
-                      <Typography
-                        variant="body2"
-                        sx={{
-                          color: '#E93D44', fontWeight: 'bold', paddingLeft: '8px', paddingRight: '8px',
-                        }}
-                        className={`${inter.className}`}
-                      >
-                        {title}
-                      </Typography>
-                    </Button>
-                  ))}
+                <Stack
+                  direction="row"
+                  justifyContent="left"
+                  alignItems="center"
+                  padding="1rem"
+                  spacing="0.5rem"
+                >
+                  <div
+                    style={{
+                      maxHeight: '150px',
+                      overflow: 'auto',
+                    }}
+                  >
+                    <Grid sx={{ flexGrow: 1 }} container spacing={1}>
+                      {areas.map((title, index) => (
+                        <Grid item key={index}>
+                          <Button
+                            href="/mainpage"
+                            style={{
+                              backgroundColor: '#1D293A',
+                              borderRadius: '15px',
+                              textTransform: 'none',
+                              padding: '6px',
+                            }}
+                          >
+                            <Typography
+                              variant="body2"
+                              sx={{
+                                color: '#E93D44',
+                                fontWeight: 'bold',
+                                paddingLeft: '8px',
+                                paddingRight: '8px',
+                              }}
+                              className={`${inter.className}`}
+                            >
+                              {title}
+                            </Typography>
+                          </Button>
+                        </Grid>
+                      ))}
+                    </Grid>
+                  </div>
                 </Stack>
+
               </Paper>
 
             </Stack>
@@ -251,7 +286,7 @@ export default function UserProfileDashboard({
               height: '200px', width: '450px', borderRadius: '20px', background: '#102A43',
             }}
           >
-            <LineChart data={userData} />
+            <LineChart data={userData} options={options} />
           </Paper>
           <Stack direction="column" alignItems="center" justifyContent="center">
             <Paper
@@ -341,47 +376,54 @@ export default function UserProfileDashboard({
                 alignItems="center"
                 padding="1rem"
                 spacing="0.5rem"
-                style={{
-                  maxHeight: '120px',
-                  overflow: 'auto',
-                }}
               >
-                {stats.map((area, index) => (
-                  <Button
-                    key={index}
-                    href="/mainpage"
-                    style={{
-                      backgroundColor: '#1D293A',
-                      width: '200px',
-                      borderRadius: '15px', // Add the border radius to the button
-                      textTransform: 'none', // Set textTransform to 'none' to prevent all caps
-                      padding: '6px',
-                    }}
-                  >
-                    <Stack direction="row" justifyContent="space-between" alignItems="center" spacing="3rem">
-                      <Typography
-                        variant="caption"
-                        sx={{
-                          color: 'white', fontWeight: 'bold',
-                        }}
-                        className={`${inter.className}`}
-                      >
-                        {area[0]}
-                      </Typography>
-                      <Typography
-                        variant="caption"
-                        sx={{
-                          color: 'white', fontWeight: 'bold',
-                        }}
-                        className={`${inter.className}`}
-                      >
-                        {area[1]}
-                        { ' ' }
-                        hrs
-                      </Typography>
-                    </Stack>
-                  </Button>
-                ))}
+                <div
+                  style={{
+                    maxHeight: '140px',
+                    overflow: 'auto',
+                  }}
+                >
+                  <Grid sx={{ flexGrow: 1 }} container spacing={1}>
+                    {stats.map((area, index) => (
+                      <Grid item key={index}>
+                        <Button
+                          key={index}
+                          href="/mainpage"
+                          style={{
+                            backgroundColor: '#1D293A',
+                            width: '200px',
+                            borderRadius: '15px', // Add the border radius to the button
+                            textTransform: 'none', // Set textTransform to 'none' to prevent all caps
+                            padding: '6px',
+                          }}
+                        >
+                          <Stack direction="row" justifyContent="space-between" alignItems="center" spacing="3rem">
+                            <Typography
+                              variant="caption"
+                              sx={{
+                                color: 'white', fontWeight: 'bold',
+                              }}
+                              className={`${inter.className}`}
+                            >
+                              {area[0]}
+                            </Typography>
+                            <Typography
+                              variant="caption"
+                              sx={{
+                                color: 'white', fontWeight: 'bold',
+                              }}
+                              className={`${inter.className}`}
+                            >
+                              {area[1]}
+                              { ' ' }
+                              hrs
+                            </Typography>
+                          </Stack>
+                        </Button>
+                      </Grid>
+                    ))}
+                  </Grid>
+                </div>
               </Stack>
             </Paper>
           </Stack>
