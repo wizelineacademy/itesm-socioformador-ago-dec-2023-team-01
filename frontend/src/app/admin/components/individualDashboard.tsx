@@ -6,6 +6,7 @@ import { Inter } from 'next/font/google';
 import Image from 'next/image';
 import CheckBoxOutlinedIcon from '@mui/icons-material/CheckBoxOutlined';
 import DisabledByDefaultOutlinedIcon from '@mui/icons-material/DisabledByDefaultOutlined';
+import CropSquareIcon from '@mui/icons-material/CropSquare';
 import LineChart from './LineChart';
 import styles from './individualDashboard.module.css';
 
@@ -73,31 +74,52 @@ export default function UserProfileDashboard({
     labels: UserData.map((data) => data.year),
     datasets: [
       {
-        label: 'Users Gained',
+        label: 'Total tokens per year',
         data: UserData.map((data) => data.userGain),
         backgroundColor: [
-          'pink',
-          'orange',
-          'green',
-          'red',
-          'blue',
+          '#E93D44',
+          '#E93D44',
+          '#E93D44',
+          '#E93D44',
+          '#E93D44',
         ],
-        borderColor: 'white',
+        borderColor: '#E93D44',
         borderWidth: 2,
       },
     ],
   });
 
   const options = {
+    plugins: {
+      title: {
+        display: true,
+        text: 'Total tokens per year', // Change to your desired title
+        color: 'white', // Change the color of the title here
+        font: {
+          size: 16, // Adjust the font size if needed
+        },
+      },
+      legend: {
+        labels: {
+          color: 'white', // Change the color of the dataset label here
+        },
+      },
+    },
     scales: {
       x: {
         ticks: {
-          color: 'red', // Change the color of the X-axis labels here
+          color: 'white', // Change the color of the X-axis labels here
+        },
+        grid: {
+          color: 'white', // Change the color of the X-axis grid lines here
         },
       },
       y: {
         ticks: {
-          color: 'blue', // Change the color of the Y-axis labels here
+          color: 'white', // Change the color of the Y-axis labels here
+        },
+        grid: {
+          color: 'white', // Change the color of the Y-axis grid lines here
         },
       },
     },
@@ -173,7 +195,7 @@ export default function UserProfileDashboard({
                   >
                     Is admin
                   </Typography>
-                  {isAdmin ? <CheckBoxOutlinedIcon fontSize="large" sx={{ color: '#4BE93D' }} /> : <DisabledByDefaultOutlinedIcon fontSize="large" sx={{ color: '#4BE93D' }} />}
+                  {isAdmin ? <CheckBoxOutlinedIcon fontSize="large" sx={{ color: '#4BE93D' }} /> : <CropSquareIcon fontSize="large" sx={{ color: '#4BE93D' }} />}
                 </Stack>
               </Paper>
             </Stack>
@@ -397,7 +419,7 @@ export default function UserProfileDashboard({
                             padding: '6px',
                           }}
                         >
-                          <Stack direction="row" justifyContent="space-between" alignItems="center" spacing="3rem">
+                          <Stack direction="row" display="flex" justifyContent="space-between" alignItems="left" spacing="1rem">
                             <Typography
                               variant="caption"
                               sx={{
