@@ -100,7 +100,7 @@ groupRouter.post('/', async (req, res) => {
         .status(error.status)
         .json({ error: error.message, code: error.status });
     } else {
-      res.status(500).json({ message: error });
+      res.status(500).json({ message: 'Internal server error', error });
     }
   }
 });
@@ -139,7 +139,7 @@ groupRouter.delete('/delete/:id', async (req, res) => {
         .status(error.status)
         .json({ error: error.message, code: error.status });
     } else {
-      res.status(500).json({ error: 'Internal server error' });
+      res.status(500).json({ message: 'Internal server error', error });
     }
   }
 });
@@ -190,7 +190,7 @@ groupRouter.post('/addUser', async (req, res) => {
         .status(error.status)
         .json({ error: error.message, code: error.status });
     } else {
-      res.status(500).json({ error: 'Internal server error' });
+      res.status(500).json({ message: 'Internal server error', error });
     }
   }
 });
@@ -238,7 +238,7 @@ groupRouter.put('/removeUser', async (req, res) => {
         .status(error.status)
         .json({ error: error.message, code: error.status });
     }
-    res.status(500).json({ error: 'Internal server error' });
+    res.status(500).json({ message: 'Internal server error', error });
   }
 });
 /**
@@ -288,7 +288,7 @@ groupRouter.put('/addAreaToGroup', async (req, res) => {
         .status(error.status)
         .json({ error: error.message, code: error.status });
     } else {
-      res.status(500).json({ error: 'Internal server error' });
+      res.status(500).json({ message: 'Internal server error', error });
     }
   }
 });
