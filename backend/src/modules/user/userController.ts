@@ -3,6 +3,7 @@ import CustomError from '../../utils/errorModel';
 import userRepository from './userRepository';
 import roleRepository from '../role/roleRepository';
 import { User } from './userModel';
+import userService from './userService';
 
 const userRouter = express.Router();
 
@@ -32,7 +33,7 @@ userRouter.post('/', async (req: Request, res: Response) => {
         .status(error.status)
         .json({ error: error.message, code: error.status });
     } else {
-      res.status(500).json({ error: 'Internal server error' });
+      res.status(500).json({ message: 'Internal server error', error });
     }
   }
 });
@@ -72,7 +73,7 @@ userRouter.get('/:userId', async (req: Request, res: Response) => {
         .status(error.status)
         .json({ error: error.message, code: error.status });
     } else {
-      res.status(500).json({ error: 'Internal server error' });
+      res.status(500).json({ message: 'Internal server error', error });
     }
   }
 });
@@ -97,9 +98,71 @@ userRouter.get('/', async (_req: Request, res: Response) => {
         .status(error.status)
         .json({ error: error.message, code: error.status });
     } else {
-      res.status(500).json({ error: 'Internal server error' });
+      res.status(500).json({ message: 'Internal server error', error });
     }
   }
 });
 
+/**
+ * @openapi
+ * '/api/users/{userId}/tokens':
+ *  get:
+ *     tags:
+ *       - Users
+ *     parameters:
+ *       - name: userId
+ *         in: path
+ *         description: Get user tokens by Id
+ *         required: true
+ *     responses:
+ *      200:
+ *        description: Success
+ */
+userRouter.get('/:userId/tokens', async (req: Request, res: Response) => {
+  try {
+    const tokens = await userRepository.getUserTokens(req.params.userId);
+    res.status(200).json(tokens);
+  } catch (error) {
+    if (error instanceof CustomError) {
+      res
+        .status(error.status)
+        .json({ error: error.message, code: error.status });
+    } else {
+      res.status(500).json({ message: 'Internal server error', error });
+    }
+  }
+});
+
+/**
+ * @openapi
+ * '/api/users/{userId}/current-tokens':
+ *  get:
+ *     tags:
+ *       - Users
+ *     parameters:
+ *       - name: userId
+ *         in: path
+ *         description: Get user current tokens by Id
+ *         required: true
+ *     responses:
+ *      200:
+ *        description: Success
+ */
+userRouter.get(
+  '/:userId/current-tokens',
+  async (req: Request, res: Response) => {
+    try {
+      const tokens = await userService.getUserCurrentTokens(req.params.userId);
+      res.status(200).json(tokens ?? {});
+    } catch (error) {
+      if (error instanceof CustomError) {
+        res
+          .status(error.status)
+          .json({ error: error.message, code: error.status });
+      } else {
+        res.status(500).json({ message: 'Internal server error', error });
+      }
+    }
+  },
+);
 export default userRouter;

@@ -3,6 +3,7 @@ import prisma from '../../../prisma/prisma-client';
 import CustomError from '../../utils/errorModel';
 import { CreateUserInput, UserDto } from './userModel';
 import { PostResponse } from '../../shared/models/responseModel';
+import { TokenDto } from '../token/tokenModel';
 
 export const userRepository = {
   async createUser(userInput: CreateUserInput): Promise<PostResponse> {
@@ -69,6 +70,55 @@ export const userRepository = {
       updatedAt: user.updatedAt ?? new Date(),
     }));
     return newUsers;
+  },
+
+  async getUserTokens(userId: string): Promise<TokenDto[]> {
+    const tokens = await prisma.token.findMany({
+      where: {
+        userId,
+      },
+    });
+
+    if (!tokens) {
+      throw new CustomError(404, `User with id:${userId}, not found`);
+    }
+
+    const newTokens: TokenDto[] = tokens.map(token => ({
+      id: token.id,
+      userId: token.userId,
+      amount: token.amount,
+      currentAmount: token.currentAmount,
+      expiresAt: token.expiresAt,
+      createdAt: token.createdAt,
+      updatedAt: token.updatedAt ?? new Date(),
+    }));
+    return newTokens;
+  },
+
+  async getUserCurrentToken(userId: string): Promise<TokenDto | null> {
+    const token = await prisma.token.findFirst({
+      where: {
+        userId,
+      },
+      orderBy: {
+        createdAt: 'desc',
+      },
+    });
+
+    if (!token) {
+      return null;
+    }
+
+    const newToken: TokenDto = {
+      id: token.id,
+      userId: token.userId,
+      amount: token.amount,
+      currentAmount: token.currentAmount,
+      expiresAt: token.expiresAt,
+      createdAt: token.createdAt,
+      updatedAt: token.updatedAt ?? new Date(),
+    };
+    return newToken;
   },
 };
 
