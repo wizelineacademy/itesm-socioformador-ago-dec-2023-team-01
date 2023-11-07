@@ -16,7 +16,7 @@ const tokenService = {
       userId: tokenInput.userId,
       amount: tokenInput.amount,
       currentAmount: tokenInput.amount,
-      expiresAt: tokenInput.expiresAt,
+      expiresAt,
     };
     return token;
   },

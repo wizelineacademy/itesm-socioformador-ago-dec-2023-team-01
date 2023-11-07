@@ -25,7 +25,7 @@ const tokenRepository = {
           throw new CustomError(400, `Invalid userId:${tokenInput.userId}`);
         }
       } else if (error instanceof Prisma.PrismaClientValidationError) {
-        throw new CustomError(400, 'Invalid input');
+        throw new CustomError(400, 'Invalid input.');
       }
     }
     throw new CustomError(500, 'Internal server error');
