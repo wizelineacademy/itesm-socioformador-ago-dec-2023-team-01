@@ -49,7 +49,7 @@ export default function Wizeliners() {
                   <TableCell>{user.monthlyWizecoins}</TableCell>
                   <TableCell>
                     <Button
-                      href="/welcome"
+                      href="/admin/wizeliners/profile"
                       variant="contained"
                       color="error"
                       sx={{
