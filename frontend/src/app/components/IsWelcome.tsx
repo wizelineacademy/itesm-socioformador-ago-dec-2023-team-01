@@ -58,9 +58,7 @@ export default function IsWelcome({
           <Grid>
             <Tooltip title="ChatGPT">
               <Link href="/mainpage">
-                <Paper sx={{ borderRadius: '20px', height: '28vh' }} elevation={8}>
-                  <img src="./chatgptGreen.png" className={styles.roundedimage} alt="Chat GPT Green" />
-                </Paper>
+                <img src="./chatgptGreen.png" className={styles.roundedimage} alt="Chat GPT Green" />
               </Link>
             </Tooltip>
           </Grid>
