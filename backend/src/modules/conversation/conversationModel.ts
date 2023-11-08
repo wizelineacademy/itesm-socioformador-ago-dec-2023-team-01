@@ -42,6 +42,7 @@ export interface Conversation {
  *      required:
  *        - userId
  *        - languageId
+ *        - title
  *      properties:
  *        userId:
  *          type: string
