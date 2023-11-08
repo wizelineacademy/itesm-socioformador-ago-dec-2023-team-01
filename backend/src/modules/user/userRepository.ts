@@ -174,6 +174,7 @@ export const userRepository = {
       id: user.id,
       firstName: user.firstName,
       lastName: user.lastName,
+      imageUrl: user.imageUrl,
       email: user.email,
       roleId: user.roleId,
       createdAt: user.createdAt,
