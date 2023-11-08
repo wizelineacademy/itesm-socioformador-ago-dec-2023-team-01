@@ -2,44 +2,37 @@
  * @openapi
  * components:
  *  schemas:
- *    Group:
+ *    Language:
  *      type: object
  *      properties:
  *        id:
  *          type: integer
  *        name:
  *          type: string
- *        area:
- *          type: string
  *        createdAt:
  *          type: string
  *        updatedAt:
  *          type: string
  */
-export interface Group {
+export interface Language {
   id: number;
   name: string;
-  area: string;
-  totalTokens?: number;
-  totalTokensUsed?: number;
   createdAt: Date;
-  updatedAt: Date | null;
+  updatedAt: Date;
 }
+
 /**
  * @openapi
  * components:
  *  schemas:
- *    CreateGroup:
+ *    CreateLanguage:
  *      type: object
  *      required:
  *        - name
  *      properties:
  *        name:
  *          type: string
- *        area:
- *          type: string
  */
-export interface createGroupInput {
+export interface CreateLanguageInput {
   name: string;
-  area?: string;
 }
