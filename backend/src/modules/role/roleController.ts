@@ -31,7 +31,7 @@ rolesRouter.post('/', async (req: Request, res: Response) => {
         .status(error.status)
         .json({ error: error.message, code: error.status });
     } else {
-      res.status(500).json({ error: 'Internal server error' });
+      res.status(500).json({ message: 'Internal server error', error });
     }
   }
 });
@@ -63,7 +63,7 @@ rolesRouter.get('/:roleIdName', async (req: Request, res: Response) => {
         .status(error.status)
         .json({ error: error.message, code: error.status });
     } else {
-      res.status(500).json({ error: 'Internal server error' });
+      res.status(500).json({ message: 'Internal server error', error });
     }
   }
 });
@@ -90,7 +90,7 @@ rolesRouter.get('/', async (_req: Request, res: Response) => {
         .status(error.status)
         .json({ error: error.message, code: error.status });
     } else {
-      res.status(500).json({ error: 'Internal server error' });
+      res.status(500).json({ message: 'Internal server error', error });
     }
   }
 });
