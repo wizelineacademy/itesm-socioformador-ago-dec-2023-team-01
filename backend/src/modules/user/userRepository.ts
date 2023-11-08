@@ -4,6 +4,7 @@ import CustomError from '../../utils/errorModel';
 import { CreateUserInput, UserDto } from './userModel';
 import { PostResponse } from '../../shared/models/responseModel';
 import { TokenDto } from '../token/tokenModel';
+import { Conversation } from '../conversation/conversationModel';
 
 export const userRepository = {
   async createUser(userInput: CreateUserInput): Promise<PostResponse> {
@@ -80,6 +81,9 @@ export const userRepository = {
       where: {
         userId,
       },
+      orderBy: {
+        createdAt: 'desc',
+      },
     });
 
     if (!tokens) {
@@ -122,6 +126,30 @@ export const userRepository = {
       updatedAt: token.updatedAt ?? new Date(),
     };
     return newToken;
+  },
+
+  async getConversationsOfUser(userId: string): Promise<Conversation[]> {
+    const conversations = await prisma.conversation.findMany({
+      where: {
+        userId,
+      },
+      orderBy: {
+        createdAt: 'desc',
+      },
+    });
+    const newConversations: Conversation[] = conversations.map(
+      conversation => ({
+        id: conversation.id,
+        title: conversation.title,
+        isDeleted: conversation.isDeleted,
+        languageId: conversation.languageId,
+        userId: conversation.userId,
+        createdAt: conversation.createdAt,
+        updatedAt: conversation.updatedAt ?? new Date(),
+        deletedAt: conversation.deletedAt,
+      }),
+    );
+    return newConversations;
   },
 };
 

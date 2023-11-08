@@ -2,7 +2,7 @@
  * @openapi
  * components:
  *  schemas:
- *    Role:
+ *    Group:
  *      type: object
  *      properties:
  *        id:

@@ -153,4 +153,39 @@ userRouter.get(
     }
   },
 );
+
+/**
+ * @openapi
+ * '/api/users/{userId}/conversations':
+ *  get:
+ *     tags:
+ *       - Users
+ *     parameters:
+ *       - name: userId
+ *         in: path
+ *         description: Get conversations of user by Id
+ *         required: true
+ *     responses:
+ *      200:
+ *        description: Success
+ */
+userRouter.get(
+  '/:userId/conversations',
+  async (req: Request, res: Response) => {
+    try {
+      const conversations = await userRepository.getConversationsOfUser(
+        req.params.userId,
+      );
+      res.status(200).json(conversations);
+    } catch (error) {
+      if (error instanceof CustomError) {
+        res
+          .status(error.status)
+          .json({ error: error.message, code: error.status });
+      } else {
+        res.status(500).json({ message: 'Internal server error', error });
+      }
+    }
+  },
+);
 export default userRouter;
