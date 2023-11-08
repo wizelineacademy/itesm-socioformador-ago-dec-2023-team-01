@@ -11,6 +11,7 @@ export const userService = {
       id: user.id,
       firstName: user.firstName,
       lastName: user.lastName,
+      imageUrl: user.imageUrl,
       email: user.email,
       role: role.name,
       createdAt: user.createdAt,

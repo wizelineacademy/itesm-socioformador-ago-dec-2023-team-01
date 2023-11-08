@@ -13,6 +13,8 @@
  *          type: string
  *        email:
  *          type: string
+ *        imageUrl:
+ *          type: string
  *        role:
  *          type: string
  *        createdAt:
@@ -24,6 +26,7 @@ export interface User {
   id: string;
   firstName: string;
   lastName: string;
+  imageUrl: string;
   email: string;
   role: string;
   createdAt: Date;
@@ -46,6 +49,8 @@ export interface User {
  *          type: string
  *        lastName:
  *          type: string
+ *        imageUrl:
+ *          type: string
  *        email:
  *          type: string
  *        roleId:
@@ -55,6 +60,7 @@ export interface CreateUserInput {
   id: string;
   firstName: string;
   lastName: string;
+  imageUrl: string;
   email: string;
   roleId: number;
 }
@@ -63,6 +69,7 @@ export interface UserDto {
   id: string;
   firstName: string;
   lastName: string;
+  imageUrl: string;
   email: string;
   roleId: number;
   createdAt: Date;
