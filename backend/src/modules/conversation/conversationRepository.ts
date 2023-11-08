@@ -35,28 +35,30 @@ export const conversationRepository = {
     throw new CustomError(500, 'Internal server error');
   },
 
-  async getConversationsOfUser(userId: string): Promise<Conversation[]> {
-    const conversations = await prisma.conversation.findMany({
+  async getConversationById(conversationId: number): Promise<Conversation> {
+    const conversation = await prisma.conversation.findUnique({
       where: {
-        userId,
-      },
-      orderBy: {
-        createdAt: 'desc',
+        id: conversationId,
       },
     });
-    const newConversations: Conversation[] = conversations.map(
-      conversation => ({
-        id: conversation.id,
-        title: conversation.title,
-        isDeleted: conversation.isDeleted,
-        languageId: conversation.languageId,
-        userId: conversation.userId,
-        createdAt: conversation.createdAt,
-        updatedAt: conversation.updatedAt ?? new Date(),
-        deletedAt: conversation.deletedAt,
-      }),
-    );
-    return newConversations;
+
+    if (!conversation) {
+      throw new CustomError(
+        404,
+        `Conversation with id:${conversationId}, not found`,
+      );
+    }
+    const newConversation: Conversation = {
+      id: conversation.id,
+      title: conversation.title,
+      isDeleted: conversation.isDeleted,
+      languageId: conversation.languageId,
+      userId: conversation.userId,
+      createdAt: conversation.createdAt,
+      updatedAt: conversation.updatedAt ?? new Date(),
+      deletedAt: conversation.deletedAt,
+    };
+    return newConversation;
   },
 };
 

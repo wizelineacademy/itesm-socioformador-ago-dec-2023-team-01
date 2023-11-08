@@ -39,34 +39,37 @@ conversationRouter.post('/', async (req: Request, res: Response) => {
 
 /**
  * @openapi
- * '/api/conversations/{userId}':
+ * '/api/conversations/{conversationId}':
  *  get:
  *     tags:
  *       - Conversations
  *     parameters:
- *       - name: userId
+ *       - name: conversationId
  *         in: path
- *         description: Get conversations of user by Id
+ *         description: Get conversation by Id
  *         required: true
  *     responses:
  *      200:
  *        description: Success
  */
-conversationRouter.get('/:userId', async (req: Request, res: Response) => {
-  try {
-    const conversations = await conversationRepository.getConversationsOfUser(
-      req.params.userId,
-    );
-    res.status(200).json(conversations);
-  } catch (error) {
-    if (error instanceof CustomError) {
-      res
-        .status(error.status)
-        .json({ error: error.message, code: error.status });
-    } else {
-      res.status(500).json({ message: 'Internal server error', error });
+conversationRouter.get(
+  '/:conversationId',
+  async (req: Request, res: Response) => {
+    try {
+      const conversation = await conversationRepository.getConversationById(
+        Number(req.params.userId),
+      );
+      res.status(200).json(conversation);
+    } catch (error) {
+      if (error instanceof CustomError) {
+        res
+          .status(error.status)
+          .json({ error: error.message, code: error.status });
+      } else {
+        res.status(500).json({ message: 'Internal server error', error });
+      }
     }
-  }
-});
+  },
+);
 
 export default conversationRouter;
