@@ -28,8 +28,7 @@ model User {
   email         String         @unique
   imageUrl      String
   groups        Group[]        @relation("UserToGroups")
-  token         Token[]
-  tokenId       Int?           @unique
+  tokens        Token[]
   role          Role           @relation(fields: [roleId], references: [id])
   roleId        Int
   conversations Conversation[]
