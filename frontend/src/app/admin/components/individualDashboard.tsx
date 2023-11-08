@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import {
-  Typography, Box, Button, Paper, Stack, Grid,
+  Typography, Box, Button, Paper, Stack, Grid, IconButton,
 } from '@mui/material';
 import { Inter } from 'next/font/google';
 import Image from 'next/image';
@@ -9,6 +9,7 @@ import DisabledByDefaultOutlinedIcon from '@mui/icons-material/DisabledByDefault
 import CropSquareIcon from '@mui/icons-material/CropSquare';
 import LineChart from './LineChart';
 import styles from './individualDashboard.module.css';
+import Popup from '@/app/components/Popup';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -125,6 +126,29 @@ export default function UserProfileDashboard({
     },
   };
 
+  const [isPopupOpen, setPopupOpen] = useState(false);
+  const [adminState, setAdminState] = useState(isAdmin);
+
+  // Function to open the popup
+  const handleOpenPopup = () => {
+    setPopupOpen(true);
+  };
+
+  // Function to close the popup
+  const handleClosePopup = () => {
+    setPopupOpen(false);
+  };
+
+  // Function to handle the "good" button click
+  const handleGoodButtonClick = () => {
+    // Add your logic here for what should happen when the "good" button is clicked
+    // For example, you can save data or continue with an action.
+    // After that, close the popup:
+    setAdminState(!adminState);
+    isAdmin = !isAdmin;
+    handleClosePopup();
+  };
+
   return (
     <Box sx={{
       display: 'flex', justifyContent: 'center', alignItems: 'left', Height: '100vh', width: '100hh',
@@ -195,7 +219,57 @@ export default function UserProfileDashboard({
                   >
                     Is admin
                   </Typography>
-                  {isAdmin ? <CheckBoxOutlinedIcon fontSize="large" sx={{ color: '#4BE93D' }} /> : <CropSquareIcon fontSize="large" sx={{ color: '#4BE93D' }} />}
+                  {adminState
+                    ? (
+                      <>
+                        <IconButton type="button" onClick={handleOpenPopup}>
+                          <CheckBoxOutlinedIcon fontSize="large" sx={{ color: '#4BE93D' }} />
+                        </IconButton>
+                        <Popup
+                          title={[
+                            'Remove ',
+                            'Administrator',
+                            '.',
+                          ]}
+                          content={[
+                            'You are about to ',
+                            'remove Thomas Anderson as an Administrator',
+                            ', proceed?',
+                          ]}
+                          badButtonTitle="Cancel"
+                          goodButtonTitle="Remove"
+                          open={isPopupOpen}
+                          onClose={handleClosePopup}
+                          onGoodButtonClick={handleGoodButtonClick}
+                        />
+
+                      </>
+                    )
+                    : (
+                      <>
+                        <IconButton type="button" onClick={handleOpenPopup}>
+                          <CropSquareIcon fontSize="large" sx={{ color: '#4BE93D' }} />
+                        </IconButton>
+                        <Popup
+                          title={[
+                            'Create ',
+                            'Administrator',
+                            '.',
+                          ]}
+                          content={[
+                            'You are about to ',
+                            'make Thomas Anderson an Administrator',
+                            ', proceed?',
+                          ]}
+                          badButtonTitle="Cancel"
+                          goodButtonTitle="Create"
+                          open={isPopupOpen}
+                          onClose={handleClosePopup}
+                          onGoodButtonClick={handleGoodButtonClick}
+                        />
+
+                      </>
+                    )}
                 </Stack>
               </Paper>
             </Stack>
@@ -450,7 +524,7 @@ export default function UserProfileDashboard({
             </Paper>
           </Stack>
         </Stack>
-        <Stack direction="row" justifyContent="space-between" paddingBottom="1rem" paddingTop="1rem" width="1000px">
+        <Stack direction="row" justifyContent="space-between" paddingBottom="1rem" paddingTop="1rem" width="100%">
           <Box sx={{
             display: 'flex', justifyContent: 'center', alignItems: 'center',
           }}
