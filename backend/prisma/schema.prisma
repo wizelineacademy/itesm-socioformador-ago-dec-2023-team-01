@@ -26,6 +26,7 @@ model User {
   firstName     String
   lastName      String
   email         String         @unique
+  imageUrl      String
   groups        Group[]        @relation("UserToGroups")
   token         Token[]
   tokenId       Int?           @unique
@@ -53,7 +54,7 @@ model Token {
   currentAmount Int
   expiresAt     DateTime
   user          User      @relation(fields: [userId], references: [id])
-  userId        String    @unique
+  userId        String
   createdAt     DateTime  @default(now())
   updatedAt     DateTime? @updatedAt
 }
