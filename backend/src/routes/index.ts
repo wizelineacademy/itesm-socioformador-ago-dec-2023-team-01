@@ -7,6 +7,7 @@ import tokenRouter from '../modules/token/tokenController';
 import conversationRouter from '../modules/conversation/conversationController';
 import authRouter from '../modules/auth/authController';
 import languageRouter from '../modules/language/languageController';
+import postRouter from '../modules/conversation/post/postController';
 
 import checkAuthorizationMiddleware from '../middlewares/authMiddleware';
 
@@ -19,5 +20,6 @@ router.use('/roles/', checkAuthorizationMiddleware, rolesRouter);
 router.use('/tokens/', tokenRouter);
 router.use('/conversations/', conversationRouter);
 router.use('/languages/', languageRouter);
+router.use('/posts/', postRouter);
 
 export default router;
