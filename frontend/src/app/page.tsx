@@ -14,6 +14,17 @@ export default function Home() {
   const router = useRouter();
 
   if (user) {
+    const tokenResponse = async () => {
+      const response = await fetch('/api/token');
+      const data = await response.json();
+      return data.foo;
+    };
+    tokenResponse().then((token) => {
+      localStorage.setItem('token', token);
+    }).catch((err) => {
+      console.log(err);
+    });
+
     router.push('/welcome');
     console.log('user', user);
   }

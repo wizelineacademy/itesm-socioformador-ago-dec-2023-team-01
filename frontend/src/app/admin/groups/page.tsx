@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Grid from '@mui/material/Unstable_Grid2';
 import {
   Box,
@@ -15,12 +15,27 @@ import SearchIcon from '@mui/icons-material/Search';
 import AddIcon from '@mui/icons-material/Add';
 import mockData from '../components/data';
 import Group from '../components/group';
-
+import { fetchGroups } from '@/services/groupService';
 const inter = Inter({ subsets: ['latin'] });
 
 export default function Groups() {
   const [search, setSearch] = useState('');
+  const [groups, setGroups] = useState([]);
+
   console.log(search);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const groupsData = await fetchGroups();
+        console.log(groupsData);
+        setGroups(groupsData);
+      } catch (e) {
+        console.log(e);
+      }
+    };
+    fetchData();
+  }, []);
 
   return (
     <Box>
@@ -93,11 +108,11 @@ export default function Groups() {
         </Paper>
       </Stack>
       <Grid container padding="3rem 0 3rem 3rem" gap={4}>
-        {mockData
-          .filter((group) => (search.toLocaleLowerCase() === ''
+        {groups
+          .filter((group : any) => (search.toLocaleLowerCase() === ''
             ? group
             : group.title.toLocaleLowerCase().includes(search)))
-          .map((group, index) => (
+          .map((group : any, index) => (
             <Group key={index} {...group} />
           ))}
       </Grid>
