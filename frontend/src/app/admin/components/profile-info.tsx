@@ -7,14 +7,14 @@ import {
   Typography,
   Stack,
 } from '@mui/material';
-import { WelcomeProps } from '@/app/components/types';
 import styles from './sidenav.module.css';
 
-export default function ProfileInfo({
+function ProfileInfo({
   firstName,
   lastName,
   wizecoins,
-}: WelcomeProps) {
+  picSource,
+}:any) {
   return (
     <Box
       sx={{
@@ -46,9 +46,11 @@ export default function ProfileInfo({
           </Stack>
         </Grid>
         <Grid paddingLeft="1rem">
-          <img src="/tommy.png" className={styles.images} alt="" />
+          <img src={picSource} className={styles.images} alt="" />
         </Grid>
       </Grid>
     </Box>
   );
 }
+
+export default ProfileInfo;
