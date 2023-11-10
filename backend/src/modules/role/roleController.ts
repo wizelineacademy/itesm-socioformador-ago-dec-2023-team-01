@@ -38,24 +38,60 @@ rolesRouter.post('/', async (req: Request, res: Response) => {
 
 /**
  * @openapi
- * '/api/roles/{roleIdName}':
+ * '/api/roles/{roleId}':
  *  get:
  *     tags:
  *       - Roles
  *     security:
  *       - bearerAuth: []
  *     parameters:
- *       - name: roleIdName
+ *       - name: roleId
  *         in: path
- *         description: Get Role by Id or Name
+ *         description: Get Role by Id
  *         required: true
+ *         schema:
+ *          type: integer
  *     responses:
  *      200:
  *        description: Success
  */
-rolesRouter.get('/:roleIdName', async (req: Request, res: Response) => {
+rolesRouter.get('/:roleId', async (req: Request, res: Response) => {
   try {
-    const role = await roleRepository.getRoleByIdOrName(req.params.roleIdName);
+    const role = await roleRepository.getRoleById(Number(req.params.roleId));
+    res.status(200).json(role);
+  } catch (error) {
+    if (error instanceof CustomError) {
+      res
+        .status(error.status)
+        .json({ error: error.message, code: error.status });
+    } else {
+      res.status(500).json({ message: 'Internal server error', error });
+    }
+  }
+});
+
+/**
+ * @openapi
+ * '/api/roles/{roleName}':
+ *  get:
+ *     tags:
+ *       - Roles
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - name: roleName
+ *         in: path
+ *         description: Get Role by name
+ *         required: true
+ *         schema:
+ *          type: string
+ *     responses:
+ *      200:
+ *        description: Success
+ */
+rolesRouter.get('/:roleName', async (req: Request, res: Response) => {
+  try {
+    const role = await roleRepository.getRoleByName(req.params.roleName);
     res.status(200).json(role);
   } catch (error) {
     if (error instanceof CustomError) {
