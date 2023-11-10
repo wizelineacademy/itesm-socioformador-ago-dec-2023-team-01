@@ -5,7 +5,7 @@ import {
 } from '@mui/material';
 import { Inter } from 'next/font/google';
 import styles from './iswelcome.module.css';
-import { createGroup, fetchGroups } from '@/services/groupService';
+import { createGroup } from '@/services/groupService';
 
 const inter = Inter({ subsets: ['latin'] });
 
