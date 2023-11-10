@@ -5,6 +5,7 @@ import {
 } from '@mui/material';
 import { Inter } from 'next/font/google';
 import styles from './iswelcome.module.css';
+import { createGroup, fetchGroups } from '@/services/groupService';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -33,6 +34,11 @@ export default function CreateGroupPopup({
 
   const handleDefaultMonthlyWizecoinsChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setDefaultMonthlyWizecoinsInput(Number(event.target.value));
+  };
+
+  const handleCreateClick = () => {
+    createGroup(groupNameInput);
+    onGoodButtonClick();
   };
 
   return (
@@ -188,7 +194,7 @@ export default function CreateGroupPopup({
           </Box>
           <Box>
             <Button
-              onClick={onGoodButtonClick}
+              onClick={handleCreateClick}
               style={{
                 color: 'white',
                 backgroundColor: '#4BE93D',

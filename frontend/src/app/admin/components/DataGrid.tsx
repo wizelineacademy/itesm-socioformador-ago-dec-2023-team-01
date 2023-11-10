@@ -1,11 +1,12 @@
 'use client';
 
-import * as React from 'react';
+import React, { useEffect, useState } from 'react';
 import Box from '@mui/material/Box';
 import { DataGrid, GridColDef } from '@mui/x-data-grid';
 import Button from '@mui/material/Button';
 import Image from 'next/image';
 import Styles from './DataGrid.module.css';
+import { fetchWizelinersInGroup } from '@/services/groupService';
 
 const columns: GridColDef[] = [
   {
@@ -94,40 +95,20 @@ const columns: GridColDef[] = [
   },
 ];
 
-const rows = [
-  {
-    id: 1, username: 'Thomas Anderson', area: 'Full Stack', idAdmin: 'Yes', wizecoins: 400,
-  },
-  {
-    id: 2, username: 'Andrew Window', area: 'Marketing', idAdmin: 'No', wizecoins: 200,
-  },
-  {
-    id: 3, username: 'Toby Foster', area: 'Design', idAdmin: 'No', wizecoins: 100,
-  },
-  {
-    id: 4, username: 'Forest Hill', area: 'Full Stack', idAdmin: 'No', wizecoins: 50,
-  },
-  {
-    id: 5, username: 'Samuel Acosta', area: 'Front End', idAdmin: 'Yes', wizecoins: 800,
-  },
-  {
-    id: 6, username: 'Nicolas Aguirre', area: 'Back End', idAdmin: 'Yes', wizecoins: 50,
-  },
-  {
-    id: 7, username: 'Pablo Erhard', area: 'Full Stack', idAdmin: 'Yes', wizecoins: 200,
-  },
-  {
-    id: 8, username: 'Alejandro Lizarraga', area: 'QA', idAdmin: 'Yes', wizecoins: 300,
-  },
-  {
-    id: 9, username: 'Diego Esparza', area: 'Project Manager', idAdmin: 'Yes', wizecoins: 500,
-  },
-  {
-    id: 10, username: 'Leonardo Gonzalez', area: 'Front End', idAdmin: 'Yes', wizecoins: 1200,
-  },
-];
-
-export default function DataTable() {
+export default function DataTable({ groupName }:{ groupName: string }) {
+  const [usersGroup, setUsersGroup] = useState([]);
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const usersInGroup = await fetchWizelinersInGroup(groupName);
+        console.log(usersInGroup);
+        setUsersGroup(usersInGroup);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    fetchData();
+  }, [groupName]);
   return (
     <Box sx={{ height: 400, width: '100%', overflow: 'hidden' }}>
       <DataGrid
@@ -177,7 +158,7 @@ export default function DataTable() {
             color: 'white',
           },
         }}
-        rows={rows}
+        rows={usersGroup}
         columns={columns}
         initialState={{
           pagination: {

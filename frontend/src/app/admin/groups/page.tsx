@@ -13,14 +13,28 @@ import {
 import { Inter } from 'next/font/google';
 import SearchIcon from '@mui/icons-material/Search';
 import AddIcon from '@mui/icons-material/Add';
-import mockData from '../components/data';
 import Group from '../components/group';
 import { fetchGroups } from '@/services/groupService';
+import CreateGroupPopup from '@/app/components/CreateGroupPopup';
+
 const inter = Inter({ subsets: ['latin'] });
 
 export default function Groups() {
   const [search, setSearch] = useState('');
+  const [change, setChange] = useState(true);
   const [groups, setGroups] = useState([]);
+  const [isPopupOpen, setPopupOpen] = useState(false);
+
+  const handleOpenPopup = () => {
+    setPopupOpen(true);
+  };
+
+  const handleClosePopup = () => {
+    console.log('I should update create');
+    // this needs to change - test only
+    setChange(!change);
+    setPopupOpen(false);
+  };
 
   console.log(search);
 
@@ -35,10 +49,17 @@ export default function Groups() {
       }
     };
     fetchData();
-  }, []);
+  }, [change]);
 
   return (
     <Box>
+      <CreateGroupPopup
+        groupName=""
+        defaultMonthlyWizecoins={100}
+        open={isPopupOpen}
+        onClose={handleClosePopup}
+        onGoodButtonClick={handleClosePopup}
+      />
       <Stack
         direction="row"
         justifyContent="space-between"
@@ -100,6 +121,7 @@ export default function Groups() {
                 borderRadius: '20px',
                 '&:hover': { borderColor: 'red' },
               }}
+              onClick={handleOpenPopup}
             >
               <AddIcon />
               New Group

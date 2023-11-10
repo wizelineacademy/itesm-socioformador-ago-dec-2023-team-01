@@ -10,6 +10,7 @@ import {
   IconButton,
 } from '@mui/material';
 import CodeIcon from '@mui/icons-material/Code';
+import { useRouter } from 'next/navigation';
 import { Doughnut } from 'react-chartjs-2';
 import { Chart, ArcElement } from 'chart.js';
 import EditIcon from '@mui/icons-material/Edit';
@@ -23,6 +24,7 @@ export default function Group({
   moneySpent,
   data,
 }: GroupProps) {
+  const router = useRouter();
   const textCenter = {
     id: 'textCenter',
     beforeDatasetsDraw(chart: any) {
@@ -39,6 +41,10 @@ export default function Group({
         chart.getDatasetMeta(0).data[0].y,
       );
     },
+  };
+
+  const handleNavigation = () => {
+    router.push(`/admin/groups/edit?groupTitle=${title}`);
   };
 
   return (
@@ -79,7 +85,7 @@ export default function Group({
           {title}
         </Typography>
         <Tooltip title="Edit">
-          <IconButton sx={{ color: 'white' }} href="#">
+          <IconButton sx={{ color: 'white' }} onClick={handleNavigation}>
             <EditIcon />
           </IconButton>
         </Tooltip>

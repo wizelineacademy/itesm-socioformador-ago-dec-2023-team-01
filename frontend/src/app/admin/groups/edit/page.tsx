@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
+import { useSearchParams } from 'next/navigation';
 import Image from 'next/image';
 import Link from 'next/link';
 import Container from '@mui/material/Container';
@@ -8,13 +9,14 @@ import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import Paper from '@mui/material/Paper';
 import Button from '@mui/material/Button';
-import EditIcon from '@mui/icons-material/Edit';
 import AddIcon from '@mui/icons-material/Add';
 import WTitle1 from '@/app/components/WTitle1';
 import DataGrid from '@/app/admin/components/DataGrid';
 import Popup from '@/app/components/Popup';
 
 export default function EditGroups() {
+  const params = useSearchParams();
+  const title = params.get('groupTitle');
   const totalWizecoins = 2500;
   const totalWizeliners = 10;
   const [groupName, setGroupName] = useState('Software Engineers');
@@ -51,12 +53,12 @@ export default function EditGroups() {
           justifyContent="space-between"
         >
           <Box>
-            <WTitle1 text="Edit" redText=" Groups" />
+            <WTitle1 text="Edit" redText=" Group." />
             <Paper
               sx={{
                 marginTop: 1,
                 padding: '10px',
-                width: '100%',
+                maxidth: '100%',
                 backgroundColor: '#111823',
                 borderRadius: '20px',
                 boxShadow: '0px 4px 4px rgba(0, 0, 0, 0.25)',
@@ -77,18 +79,9 @@ export default function EditGroups() {
                       fontWeight: 'bold',
                     }}
                   >
-                    {groupName}
+                    {title}
                   </Typography>
                 )}
-                <Box marginLeft={13}>
-                  <EditIcon
-                    style={{
-                      cursor: 'pointer',
-                      color: '#ffffff',
-                    }}
-                  />
-                  {' '}
-                </Box>
               </Box>
             </Paper>
           </Box>
@@ -252,7 +245,7 @@ export default function EditGroups() {
           </Paper>
         </Box>
       </Box>
-      <DataGrid />
+      <DataGrid groupName={title!} />
     </Container>
   );
 }
