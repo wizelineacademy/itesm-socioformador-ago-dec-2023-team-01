@@ -293,4 +293,51 @@ groupRouter.put('/addAreaToGroup', async (req, res) => {
     }
   }
 });
+/**
+ * @openapi
+ * '/api/group/set-tokens-to-group/{id}/{amount}':
+ *   patch:
+ *     tags:
+ *       - Groups
+ *     operationId: setTokensToGroup
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - name: id
+ *         in: path
+ *         required: true
+ *         description: ID of the group to set tokens
+ *         schema:
+ *           type: string
+ *       - name: amount
+ *         in: path
+ *         required: true
+ *         description: Amount of tokens to set to the group
+ *         schema:
+ *          type: string
+ *     responses:
+ *       200:
+ *         description: Tokens set successfully
+ *       404:
+ *         description: Group not found
+ *       500:
+ *         description: Internal server error
+ */
+groupRouter.patch('/set-tokens-to-group/:id/:amount', async (req, res) => {
+  try {
+    await groupRepository.setTokensToUsersFromGroup(
+      req.params.id,
+      Number(req.params.amount),
+    );
+    res.status(200).json({ message: 'Tokens set to group successfully' });
+  } catch (error) {
+    if (error instanceof CustomError) {
+      res
+        .status(error.status)
+        .json({ error: error.message, code: error.status });
+    } else {
+      res.status(500).json({ message: 'Internal server error', error });
+    }
+  }
+});
 export default groupRouter;

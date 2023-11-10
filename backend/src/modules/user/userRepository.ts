@@ -5,6 +5,7 @@ import { CreateUserInput, UserDto } from './userModel';
 import { PostResponse } from '../../shared/models/responseModel';
 import { TokenDto } from '../token/tokenModel';
 import { Conversation } from '../conversation/conversationModel';
+import tokenRepository from '../token/tokenRepository';
 
 export const userRepository = {
   async createUser(userInput: CreateUserInput): Promise<PostResponse> {
@@ -127,7 +128,6 @@ export const userRepository = {
     };
     return newToken;
   },
-
   async getConversationsOfUser(userId: string): Promise<Conversation[]> {
     const conversations = await prisma.conversation.findMany({
       where: {
@@ -152,6 +152,37 @@ export const userRepository = {
     return newConversations;
   },
 
+  async substractFromUserToken(
+    userId: string,
+    amount: number,
+  ): Promise<TokenDto | null> {
+    let token = await userRepository.getUserCurrentToken(userId);
+    if (!token) {
+      throw new CustomError(404, `Token with id:${userId}, not found`);
+    }
+    token = await tokenRepository.decrementCurrentAmountToken(
+      String(token?.id),
+      amount,
+    );
+    if (!token) {
+      return null;
+    }
+    return token;
+  },
+  async addToUserToken(
+    userId: string,
+    amount: number,
+  ): Promise<TokenDto | null> {
+    let token = await userRepository.getUserCurrentToken(userId);
+    if (!token) {
+      throw new CustomError(404, `User with id:${userId}, not found`);
+    }
+    token = await tokenRepository.addTokensToUser(String(token?.id), amount);
+    if (!token) {
+      return null;
+    }
+    return token;
+  },
   async makeAdmin(userId: string, isAdmin: boolean): Promise<UserDto> {
     let user = null;
     try {

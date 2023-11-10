@@ -17,7 +17,7 @@ export const groupService = {
           0,
         );
         const groupUsedTokens = tokensOfGroup.reduce(
-          (total, token) => total + (token.amount - token.currentAmount),
+          (total, token) => total + token.currentAmount,
           0,
         );
         return {

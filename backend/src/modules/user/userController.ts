@@ -173,6 +173,10 @@ userRouter.patch('/makeAdmin', async (req: Request, res: Response) => {
  *     responses:
  *      200:
  *        description: Success
+ *      404:
+ *        description: Token not found
+ *      400:
+ *        description: Token is expired
  */
 userRouter.get(
   '/:userId/current-tokens',
@@ -215,6 +219,89 @@ userRouter.get(
         req.params.userId,
       );
       res.status(200).json(conversations);
+    } catch (error) {
+      if (error instanceof CustomError) {
+        res
+          .status(error.status)
+          .json({ error: error.message, code: error.status });
+      } else {
+        res.status(500).json({ message: 'Internal server error', error });
+      }
+    }
+  },
+);
+
+/**
+ * @openapi
+ * '/api/users/substract-token/{userId}/{amount}':
+ *  patch:
+ *     tags:
+ *       - Users
+ *     parameters:
+ *       - name: userId
+ *         in: path
+ *         description: Get conversations of user by Id
+ *         required: true
+ *       - name: amount
+ *         in: path
+ *         description: Amount to substract
+ *         required: true
+ *     responses:
+ *      200:
+ *        description: Success
+ *      404:
+ *        description: Token not found
+ */
+userRouter.patch(
+  '/substract-token/:userId/:amount',
+  async (req: Request, res: Response) => {
+    try {
+      const updatedToken = await userRepository.substractFromUserToken(
+        req.params.userId,
+        Number(req.params.amount),
+      );
+      res.status(200).json(updatedToken);
+    } catch (error) {
+      if (error instanceof CustomError) {
+        res
+          .status(error.status)
+          .json({ error: error.message, code: error.status });
+      } else {
+        res.status(500).json({ message: 'Internal server error', error });
+      }
+    }
+  },
+);
+/**
+ * @openapi
+ * '/api/users/add-to-token/{userId}/{amount}':
+ *  patch:
+ *     tags:
+ *       - Users
+ *     parameters:
+ *       - name: userId
+ *         in: path
+ *         description: Get conversations of user by Id
+ *         required: true
+ *       - name: amount
+ *         in: path
+ *         description: Amount to add
+ *         required: true
+ *     responses:
+ *      200:
+ *        description: Success
+ *      404:
+ *        description: Token not found
+ */
+userRouter.patch(
+  '/add-to-token/:userId/:amount',
+  async (req: Request, res: Response) => {
+    try {
+      const updatedToken = await userRepository.addToUserToken(
+        req.params.userId,
+        Number(req.params.amount),
+      );
+      res.status(200).json(updatedToken);
     } catch (error) {
       if (error instanceof CustomError) {
         res
