@@ -213,6 +213,21 @@ export const userRepository = {
     };
     return updateUser;
   },
+  async getGroupsFromUser(userId: string): Promise<string[]> {
+    const user = await prisma.user.findUnique({
+      where: { id: userId },
+    });
+    if (!user) {
+      throw new CustomError(404, `User with id:${userId}, not found`);
+    }
+    const groups = await prisma.group.findMany({
+      where: {
+        users: { some: { id: userId } },
+      },
+    });
+    const groupNames = groups.map(group => group.name);
+    return groupNames;
+  },
 };
 
 export default userRepository;

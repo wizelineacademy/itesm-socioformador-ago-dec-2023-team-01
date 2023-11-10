@@ -313,5 +313,38 @@ userRouter.patch(
     }
   },
 );
+/**
+ * @openapi
+ * '/api/users/get-groups/{userId}':
+ *  get:
+ *     tags:
+ *       - Users
+ *     parameters:
+ *       - name: userId
+ *         in: path
+ *         description: Get groups of user by Id
+ *         required: true
+ *     responses:
+ *      200:
+ *        description: Success
+ *      404:
+ *        description: User not found
+ *      500:
+ *        description: Internal server error
+ */
+userRouter.get('/get-groups/:userId', async (req: Request, res: Response) => {
+  try {
+    const groups = await userRepository.getGroupsFromUser(req.params.userId);
+    res.status(200).json(groups);
+  } catch (error) {
+    if (error instanceof CustomError) {
+      res
+        .status(error.status)
+        .json({ error: error.message, code: error.status });
+    } else {
+      res.status(500).json({ message: 'Internal server error', error });
+    }
+  }
+});
 
 export default userRouter;
