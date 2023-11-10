@@ -6,7 +6,7 @@ import { User } from './userModel';
 export const userService = {
   async getUserById(userId: string): Promise<User> {
     const user = await userRepository.getUserById(userId);
-    const role = await roleRepository.getRoleByIdOrName(user.roleId.toString());
+    const role = await roleRepository.getRoleById(user.roleId);
     const newUser: User = {
       id: user.id,
       firstName: user.firstName,
