@@ -14,6 +14,7 @@ export const fetchGroups = async () => {
 
     let groups = await response.json();
     groups = groups.map((group:any) => ({
+      id: group.group.id,
       title: group.group.name,
       members: 20,
       moneySpent: 20,
@@ -86,6 +87,25 @@ export const createGroup = async (groupName:string) => {
         Authorization: `Bearer ${localStorage.getItem('token')}`,
       },
       body: JSON.stringify(data),
+    });
+
+    if (!response.ok) {
+      throw new Error('Network response was not ok');
+    }
+  } catch (error) {
+    console.error(error);
+    throw error;
+  }
+};
+
+export const deleteGroup = async (groupID:number) => {
+  try {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/group/delete/${groupID}`, {
+      method: 'DELETE',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${localStorage.getItem('token')}`,
+      },
     });
 
     if (!response.ok) {

@@ -7,7 +7,6 @@ import {
   Paper,
   Typography,
   Button,
-  Link,
 } from '@mui/material';
 import WTitle1 from '@/app/components/WTitle1';
 import DataGridAdd from '@/app/admin/components/DataGridAdd';
@@ -54,34 +53,30 @@ export default function addWizeliner() {
         justifyContent="space-between"
         marginTop={3}
       >
-        <Link href="/admin/groups/edit" underline="none">
-          <Button
-            variant="contained"
-            color="error"
-            sx={{
-              bgcolor: '#E93D44',
-              '&:hover': {
-                bgcolor: 'red',
-              },
-            }}
-          >
-            Cancel
-          </Button>
-        </Link>
-        <Link href="/admin/groups/edit" underline="none">
-          <Button
-            variant="contained"
-            color="error"
-            sx={{
-              bgcolor: '#4BE93D',
-              '&:hover': {
-                bgcolor: 'green',
-              },
-            }}
-          >
-            Confirm
-          </Button>
-        </Link>
+        <Button
+          variant="contained"
+          color="error"
+          sx={{
+            bgcolor: '#E93D44',
+            '&:hover': {
+              bgcolor: 'red',
+            },
+          }}
+        >
+          Cancel
+        </Button>
+        <Button
+          variant="contained"
+          color="error"
+          sx={{
+            bgcolor: '#4BE93D',
+            '&:hover': {
+              bgcolor: 'green',
+            },
+          }}
+        >
+          Confirm
+        </Button>
       </Box>
     </Container>
   );

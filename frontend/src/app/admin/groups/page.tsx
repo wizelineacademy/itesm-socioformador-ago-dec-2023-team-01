@@ -23,20 +23,21 @@ export default function Groups() {
   const [search, setSearch] = useState('');
   const [change, setChange] = useState(true);
   const [groups, setGroups] = useState([]);
-  const [isPopupOpen, setPopupOpen] = useState(false);
+  const [isCreatePopupOpen, setCreatePopup] = useState(false);
 
-  const handleOpenPopup = () => {
-    setPopupOpen(true);
+  const handleOpenCreatePopup = () => {
+    setCreatePopup(true);
   };
 
-  const handleClosePopup = () => {
-    console.log('I should update create');
+  const handleCloseCreatePopup = () => {
     // this needs to change - test only
     setChange(!change);
-    setPopupOpen(false);
+    setCreatePopup(false);
   };
 
-  console.log(search);
+  const handleRefetch = () => {
+    setChange((prevValue) => !prevValue);
+  };
 
   useEffect(() => {
     const fetchData = async () => {
@@ -56,9 +57,9 @@ export default function Groups() {
       <CreateGroupPopup
         groupName=""
         defaultMonthlyWizecoins={100}
-        open={isPopupOpen}
-        onClose={handleClosePopup}
-        onGoodButtonClick={handleClosePopup}
+        open={isCreatePopupOpen}
+        onClose={handleCloseCreatePopup}
+        onGoodButtonClick={handleCloseCreatePopup}
       />
       <Stack
         direction="row"
@@ -121,7 +122,7 @@ export default function Groups() {
                 borderRadius: '20px',
                 '&:hover': { borderColor: 'red' },
               }}
-              onClick={handleOpenPopup}
+              onClick={handleOpenCreatePopup}
             >
               <AddIcon />
               New Group
@@ -135,7 +136,15 @@ export default function Groups() {
             ? group
             : group.title.toLocaleLowerCase().includes(search)))
           .map((group : any, index) => (
-            <Group key={index} {...group} />
+            <Group
+              key={index}
+              id={group.id}
+              title={group.title}
+              members={group.members}
+              moneySpent={group.moneySpent}
+              data={group.data}
+              toggle={handleRefetch}
+            />
           ))}
       </Grid>
     </Box>

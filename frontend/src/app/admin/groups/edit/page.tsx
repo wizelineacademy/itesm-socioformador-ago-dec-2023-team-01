@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
-import { useSearchParams } from 'next/navigation';
+import { useSearchParams, useRouter } from 'next/navigation';
 import Image from 'next/image';
 import Link from 'next/link';
 import Container from '@mui/material/Container';
@@ -21,6 +21,7 @@ export default function EditGroups() {
   const totalWizeliners = 10;
   const [groupName, setGroupName] = useState('Software Engineers');
   const [isEditing, setIsEditing] = useState(false);
+  const router = useRouter();
 
   const handleGroupNameChange = (e: { target: { value: React.SetStateAction<string>; }; }) => {
     setGroupName(e.target.value);
@@ -42,6 +43,10 @@ export default function EditGroups() {
 
   const handleGoodButtonClick = () => {
     handleClosePopup();
+  };
+
+  const handleNavBack = () => {
+    router.back();
   };
 
   return (
@@ -246,6 +251,38 @@ export default function EditGroups() {
         </Box>
       </Box>
       <DataGrid groupName={title!} />
+      <Box
+        display="flex"
+        justifyContent="space-between"
+        marginTop={3}
+      >
+        <Button
+          onClick={handleNavBack}
+          variant="contained"
+          color="error"
+          sx={{
+            bgcolor: '#E93D44',
+            '&:hover': {
+              bgcolor: 'red',
+            },
+          }}
+        >
+          Cancel
+        </Button>
+        <Button
+          onClick={handleNavBack}
+          variant="contained"
+          color="error"
+          sx={{
+            bgcolor: '#4BE93D',
+            '&:hover': {
+              bgcolor: 'green',
+            },
+          }}
+        >
+          Confirm
+        </Button>
+      </Box>
     </Container>
   );
 }

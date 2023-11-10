@@ -36,9 +36,13 @@ export default function CreateGroupPopup({
     setDefaultMonthlyWizecoinsInput(Number(event.target.value));
   };
 
-  const handleCreateClick = () => {
-    createGroup(groupNameInput);
-    onGoodButtonClick();
+  const handleCreateClick = async () => {
+    try {
+      await createGroup(groupNameInput);
+      onGoodButtonClick();
+    } catch (err) {
+      console.log(err);
+    }
   };
 
   return (
