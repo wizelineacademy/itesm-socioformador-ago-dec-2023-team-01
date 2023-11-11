@@ -173,6 +173,10 @@ userRouter.patch('/makeAdmin', async (req: Request, res: Response) => {
  *     responses:
  *      200:
  *        description: Success
+ *      404:
+ *        description: Token not found
+ *      400:
+ *        description: Token is expired
  */
 userRouter.get(
   '/:userId/current-tokens',
@@ -226,5 +230,90 @@ userRouter.get(
     }
   },
 );
+
+/**
+ * @openapi
+ * '/api/users/{userId}/token-operation':
+ *  patch:
+ *     tags:
+ *       - Users
+ *     parameters:
+ *       - name: userId
+ *         in: path
+ *         description: Get conversations of user by Id
+ *         required: true
+ *     requestBody:
+ *        required: true
+ *        content:
+ *         application/json:
+ *          schema:
+ *           $ref: '#/components/schemas/UserTokenOperation'
+ *     responses:
+ *      200:
+ *        description: Success
+ *      404:
+ *        description: Token not found
+ */
+userRouter.patch(
+  '/:userId/token-operation',
+  async (req: Request, res: Response) => {
+    try {
+      let updatedToken;
+      if (req.body.operation === 'add') {
+        updatedToken = await userService.addToUserToken(
+          req.params.userId,
+          req.body.amount,
+        );
+      } else if (req.body.operation === 'substract') {
+        updatedToken = await userService.substractToUserToken(
+          req.params.userId,
+          req.body.amount,
+        );
+      }
+      res.status(200).json(updatedToken);
+    } catch (error) {
+      if (error instanceof CustomError) {
+        res
+          .status(error.status)
+          .json({ error: error.message, code: error.status });
+      } else {
+        res.status(500).json({ message: 'Internal server error', error });
+      }
+    }
+  },
+);
+/**
+ * @openapi
+ * '/api/users/{userId}/groups':
+ *  get:
+ *     tags:
+ *       - Users
+ *     parameters:
+ *       - name: userId
+ *         in: path
+ *         description: Get groups of user by Id
+ *         required: true
+ *     responses:
+ *      200:
+ *        description: Success
+ *      404:
+ *        description: User not found
+ *      500:
+ *        description: Internal server error
+ */
+userRouter.get('/:userId/groups', async (req: Request, res: Response) => {
+  try {
+    const groups = await userService.getGroupsFromUser(req.params.userId);
+    res.status(200).json(groups);
+  } catch (error) {
+    if (error instanceof CustomError) {
+      res
+        .status(error.status)
+        .json({ error: error.message, code: error.status });
+    } else {
+      res.status(500).json({ message: 'Internal server error', error });
+    }
+  }
+});
 
 export default userRouter;

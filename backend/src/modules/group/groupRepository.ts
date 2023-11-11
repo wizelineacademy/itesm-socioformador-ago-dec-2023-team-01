@@ -266,10 +266,7 @@ export const groupRepository = {
         });
       } catch (error) {
         if (error instanceof Prisma.PrismaClientKnownRequestError) {
-          throw new CustomError(
-            404,
-            `Could not find group ${groupIdOrName} to delete`,
-          );
+          throw new CustomError(404, `Could not find group ${groupIdOrName}`);
         } else {
           throw new CustomError(500, `Internal server error`);
         }
@@ -291,11 +288,18 @@ export const groupRepository = {
         return token;
       }),
     );
+
     if (!tokens) {
       throw new CustomError(404, `Users with ids:${usersIds}, not found`);
     }
 
-    const newTokens: TokenDto[] = tokens.map(token => ({
+    const validTokens = tokens
+      .flat()
+      .filter(
+        currentToken => currentToken && currentToken.expiresAt > new Date(),
+      );
+
+    const newTokens: TokenDto[] = validTokens.map(token => ({
       id: token?.id ?? 0,
       userId: token?.userId ?? '',
       amount: token?.amount ?? 0,

@@ -127,7 +127,6 @@ export const userRepository = {
     };
     return newToken;
   },
-
   async getConversationsOfUser(userId: string): Promise<Conversation[]> {
     const conversations = await prisma.conversation.findMany({
       where: {
@@ -151,7 +150,6 @@ export const userRepository = {
     );
     return newConversations;
   },
-
   async makeAdmin(userId: string, isAdmin: boolean): Promise<UserDto> {
     let user = null;
     try {
@@ -181,6 +179,14 @@ export const userRepository = {
       updatedAt: user.updatedAt ?? new Date(),
     };
     return updateUser;
+  },
+  async getGroupsFromUser(userId: string): Promise<string[]> {
+    const groups = await prisma.group.findMany({
+      where: {
+        users: { some: { id: userId } },
+      },
+    });
+    return groups.map(group => group.name);
   },
 };
 

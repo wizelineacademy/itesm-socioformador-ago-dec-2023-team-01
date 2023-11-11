@@ -93,3 +93,22 @@ export interface MakeAdminInput {
   userId: string;
   isAdmin: boolean;
 }
+/**
+ * @openapi
+ * components:
+ *  schemas:
+ *    UserTokenOperation:
+ *      type: object
+ *      required:
+ *        - operation
+ *        - amount
+ *      properties:
+ *        operation:
+ *          type: string
+ *        amount:
+ *          type: number
+ */
+export interface UserTokenOperation {
+  operation: 'add' | 'subtract';
+  amount: number;
+}
