@@ -2,8 +2,7 @@ import { Prisma } from '@prisma/client';
 import prisma from '../../../prisma/prisma-client';
 import { createGroupInput, Group } from './groupModel';
 import CustomError from '../../utils/errorModel';
-import { TokenDto, CreateTokenDto } from '../token/tokenModel';
-import tokenRepository from '../token/tokenRepository';
+import { TokenDto } from '../token/tokenModel';
 
 export const groupRepository = {
   async createGroup(groupInput: createGroupInput): Promise<Group> {
@@ -310,34 +309,6 @@ export const groupRepository = {
       updatedAt: token?.updatedAt ?? new Date(),
     }));
     return newTokens;
-  },
-  async setTokensToUsersFromGroup(
-    groupIdOrName: string,
-    amount: number,
-  ): Promise<void> {
-    const users =
-      await groupRepository.findUsersInGroupByIdOrName(groupIdOrName);
-    if (!users) {
-      throw new CustomError(
-        404,
-        `Group with id/name:${groupIdOrName}, not found`,
-      );
-    }
-    try {
-      await Promise.all(
-        users.map(async user => {
-          const tokenDto: CreateTokenDto = {
-            userId: user.id,
-            amount,
-            currentAmount: amount,
-            expiresAt: new Date(new Date().setMonth(new Date().getMonth() + 1)),
-          };
-          await tokenRepository.createToken(tokenDto);
-        }),
-      );
-    } catch (error) {
-      throw new CustomError(500, 'Internal server error');
-    }
   },
 };
 
