@@ -18,7 +18,7 @@ import { useRouter } from 'next/navigation';
 import AddIcon from '@mui/icons-material/Add';
 import SearchIcon from '@mui/icons-material/Search';
 import Title from '../components/Title';
-import { fetchWizeliners } from '@/services/wizelinerService';
+import { fetchUsers } from '@/services/usersService';
 
 export default function Wizeliners() {
   const [wizeliners, setWizeliners] = useState([]);
@@ -26,12 +26,11 @@ export default function Wizeliners() {
   const [filteredWizeliners, setFilteredWizeliners] = useState([]);
 
   const router = useRouter();
-  const userId = 'google-oauth2|110273456643017657010';
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const wizelinersData = await fetchWizeliners();
+        const wizelinersData = await fetchUsers();
         setWizeliners(wizelinersData);
       } catch (e) {
         console.log(e);
@@ -135,7 +134,7 @@ export default function Wizeliners() {
                   <TableCell sx={{ color: '#FFF' }}>{user.monthlyWizecoins}</TableCell>
                   <TableCell>
                     <Button
-                      onClick={() => router.push(`wizeliners/edit?userId=${userId}`)}
+                      onClick={() => router.push(`wizeliners/edit?userId=${user.id}`)}
                       variant="contained"
                       color="error"
                       sx={{

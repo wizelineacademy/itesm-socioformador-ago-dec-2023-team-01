@@ -1,6 +1,6 @@
 export default async function fetchUserCurrentTokens(userId: any) {
   try {
-    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/users/${userId}/current-tokens`, {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/users/${userId}/current-tokens`, {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
@@ -14,9 +14,7 @@ export default async function fetchUserCurrentTokens(userId: any) {
 
     const userCurrentTokensData = await response.json();
 
-    // Check if userCurrentTokensData is empty
     if (Object.keys(userCurrentTokensData).length === 0) {
-      // If it's empty, return an object with both quantities set to 0
       return {
         amountTokens: 0,
         currentAmountTokens: 0,

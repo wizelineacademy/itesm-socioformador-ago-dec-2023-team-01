@@ -11,11 +11,13 @@ export default function Wizeliner() {
     id: '',
     firstName: '',
     lastName: '',
+    fullName: '',
     imageUrl: '',
     email: '',
     role: '',
     createdAt: '',
     updatedAt: '',
+    isAdmin: false,
   });
 
   const [userTokens, setUserTokens] = useState({
@@ -34,26 +36,21 @@ export default function Wizeliner() {
         const userTokensData = await fetchUserCurrentTokens(userId);
         setUser(userData);
         setUserTokens(userTokensData);
-
-        console.log('Current Amount:', userTokens.currentAmountTokens);
-        console.log('Amount:', userTokens.amountTokens);
       } catch (e) {
         console.error(e);
       }
     };
-
-    if (userId) {
-      fetchData();
-    }
-  });
+    fetchData();
+  }, [userId]);
 
   return (
     <div>
       <UserProfileDashboard
+        id={user.id}
         name={`${user.firstName} ${user.lastName}`}
         areas={['Software Engineers', 'ITESM project', 'Quality Assurance', 'Testing']}
         profileSrc={user.imageUrl}
-        isAdmin
+        isAdmin={user.isAdmin}
         currentWizecoins={userTokens.currentAmountTokens}
         monthlyWizecoins={userTokens.amountTokens}
         ChatGPTPrompts="50"

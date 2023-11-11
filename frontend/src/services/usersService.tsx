@@ -1,5 +1,5 @@
 // eslint-disable-next-line import/prefer-default-export
-export const fetchWizeliners = async () => {
+export const fetchUsers = async () => {
   try {
     const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/users`, {
       method: 'GET',
@@ -13,15 +13,21 @@ export const fetchWizeliners = async () => {
       throw new Error('Network response was not ok');
     }
 
-    let wizeliners = await response.json();
-    wizeliners = wizeliners.map((user:any) => ({
+    let users = await response.json();
+    console.log(users);
+    users = users.map((user:any) => ({
+      id: user.id,
+      firstName: user.firstName,
+      lastName: user.lastName,
       fullName: `${user.firstName} ${user.lastName}`,
-      areas: user?.areas ?? [''],
-      isAdmin: user?.isAdmin ?? true,
-      monthlyWizecoins: user?.monthlyWizecoins ?? 0,
+      imageUrl: user.imageUrl,
+      email: user.email,
+      roleId: user.role,
+      createdAt: user.createdAt,
+      updatedAt: user.updatedAt,
+      isAdmin: user.roleId === 1,
     }));
-    console.log(wizeliners);
-    return wizeliners;
+    return users;
   } catch (error) {
     console.error(error);
     throw error;

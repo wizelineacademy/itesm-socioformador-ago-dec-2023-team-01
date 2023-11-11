@@ -5,15 +5,16 @@ import {
 import { Inter } from 'next/font/google';
 import Image from 'next/image';
 import CheckBoxOutlinedIcon from '@mui/icons-material/CheckBoxOutlined';
-import DisabledByDefaultOutlinedIcon from '@mui/icons-material/DisabledByDefaultOutlined';
 import CropSquareIcon from '@mui/icons-material/CropSquare';
 import LineChart from './LineChart';
 import styles from './individualDashboard.module.css';
 import Popup from '@/app/components/Popup';
+import { updateUserAdminStatus } from '@/services/userService';
 
 const inter = Inter({ subsets: ['latin'] });
 
 interface IndividualDashboardProps {
+  id: any;
   name: any;
   areas: string[];
   profileSrc: any;
@@ -27,6 +28,7 @@ interface IndividualDashboardProps {
 }
 
 export default function UserProfileDashboard({
+  id,
   name,
   areas,
   profileSrc,
@@ -127,7 +129,6 @@ export default function UserProfileDashboard({
   };
 
   const [isPopupOpen, setPopupOpen] = useState(false);
-  const [adminState, setAdminState] = useState(isAdmin);
 
   // Function to open the popup
   const handleOpenPopup = () => {
@@ -140,12 +141,26 @@ export default function UserProfileDashboard({
   };
 
   // Function to handle the "good" button click
-  const handleGoodButtonClick = () => {
-    // Add your logic here for what should happen when the "good" button is clicked
-    // For example, you can save data or continue with an action.
-    // After that, close the popup:
-    setAdminState(!adminState);
-    isAdmin = !isAdmin;
+  const handleMakeAdminButtonClick = async () => {
+    try {
+      // Update the isAdmin status to true
+      await updateUserAdminStatus(id, true);
+      handleClosePopup(); // Assuming you have a handleClosePopup function
+    } catch (error) {
+      console.error(error);
+    }
+    handleClosePopup();
+  };
+
+  // Function to handle the "good" button click
+  const handleRemoveAdminButtonClick = async () => {
+    try {
+      // Update the isAdmin status to true
+      await updateUserAdminStatus(id, false);
+      handleClosePopup(); // Assuming you have a handleClosePopup function
+    } catch (error) {
+      console.error(error);
+    }
     handleClosePopup();
   };
 
@@ -219,7 +234,7 @@ export default function UserProfileDashboard({
                   >
                     Is admin
                   </Typography>
-                  {adminState
+                  {isAdmin
                     ? (
                       <>
                         <IconButton type="button" onClick={handleOpenPopup}>
@@ -233,14 +248,18 @@ export default function UserProfileDashboard({
                           ]}
                           content={[
                             'You are about to ',
-                            'remove Thomas Anderson as an Administrator',
+                            'remove',
+                            ' ',
+                            name,
+                            ' ',
+                            'as an Administrator',
                             ', proceed?',
                           ]}
                           badButtonTitle="Cancel"
                           goodButtonTitle="Remove"
                           open={isPopupOpen}
                           onClose={handleClosePopup}
-                          onGoodButtonClick={handleGoodButtonClick}
+                          onGoodButtonClick={handleRemoveAdminButtonClick}
                         />
 
                       </>
@@ -258,14 +277,18 @@ export default function UserProfileDashboard({
                           ]}
                           content={[
                             'You are about to ',
-                            'make Thomas Anderson an Administrator',
+                            'make',
+                            ' ',
+                            name,
+                            ' ',
+                            'an Administrator',
                             ', proceed?',
                           ]}
                           badButtonTitle="Cancel"
                           goodButtonTitle="Create"
                           open={isPopupOpen}
                           onClose={handleClosePopup}
-                          onGoodButtonClick={handleGoodButtonClick}
+                          onGoodButtonClick={handleMakeAdminButtonClick}
                         />
 
                       </>
