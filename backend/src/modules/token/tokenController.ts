@@ -23,7 +23,7 @@ const tokenRouter = express.Router();
  */
 tokenRouter.post('/', async (req: Request, res: Response) => {
   try {
-    const token = tokenService.createToken(req.body);
+    const token = await tokenService.createToken(req.body);
     const newToken = await tokenRepository.createToken(token);
     res.status(200).json(newToken);
   } catch (error) {

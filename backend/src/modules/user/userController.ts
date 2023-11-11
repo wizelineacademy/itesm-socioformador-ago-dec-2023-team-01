@@ -233,7 +233,7 @@ userRouter.get(
 
 /**
  * @openapi
- * '/api/users/substract-token/{userId}/{amount}':
+ * '/api/users/{userId}/token-operation':
  *  patch:
  *     tags:
  *       - Users
@@ -242,10 +242,12 @@ userRouter.get(
  *         in: path
  *         description: Get conversations of user by Id
  *         required: true
- *       - name: amount
- *         in: path
- *         description: Amount to substract
- *         required: true
+ *     requestBody:
+ *        required: true
+ *        content:
+ *         application/json:
+ *          schema:
+ *           $ref: '#/components/schemas/UserTokenOperation'
  *     responses:
  *      200:
  *        description: Success
@@ -253,13 +255,21 @@ userRouter.get(
  *        description: Token not found
  */
 userRouter.patch(
-  '/substract-token/:userId/:amount',
+  '/:userId/token-operation',
   async (req: Request, res: Response) => {
     try {
-      const updatedToken = await userRepository.substractFromUserToken(
-        req.params.userId,
-        Number(req.params.amount),
-      );
+      let updatedToken;
+      if (req.body.operation === 'add') {
+        updatedToken = await userService.addToUserToken(
+          req.params.userId,
+          req.body.amount,
+        );
+      } else if (req.body.operation === 'substract') {
+        updatedToken = await userService.substractToUserToken(
+          req.params.userId,
+          req.body.amount,
+        );
+      }
       res.status(200).json(updatedToken);
     } catch (error) {
       if (error instanceof CustomError) {
@@ -274,48 +284,7 @@ userRouter.patch(
 );
 /**
  * @openapi
- * '/api/users/add-to-token/{userId}/{amount}':
- *  patch:
- *     tags:
- *       - Users
- *     parameters:
- *       - name: userId
- *         in: path
- *         description: Get conversations of user by Id
- *         required: true
- *       - name: amount
- *         in: path
- *         description: Amount to add
- *         required: true
- *     responses:
- *      200:
- *        description: Success
- *      404:
- *        description: Token not found
- */
-userRouter.patch(
-  '/add-to-token/:userId/:amount',
-  async (req: Request, res: Response) => {
-    try {
-      const updatedToken = await userRepository.addToUserToken(
-        req.params.userId,
-        Number(req.params.amount),
-      );
-      res.status(200).json(updatedToken);
-    } catch (error) {
-      if (error instanceof CustomError) {
-        res
-          .status(error.status)
-          .json({ error: error.message, code: error.status });
-      } else {
-        res.status(500).json({ message: 'Internal server error', error });
-      }
-    }
-  },
-);
-/**
- * @openapi
- * '/api/users/get-groups/{userId}':
+ * '/api/users/{userId}/groups':
  *  get:
  *     tags:
  *       - Users
@@ -332,9 +301,9 @@ userRouter.patch(
  *      500:
  *        description: Internal server error
  */
-userRouter.get('/get-groups/:userId', async (req: Request, res: Response) => {
+userRouter.get('/:userId/groups', async (req: Request, res: Response) => {
   try {
-    const groups = await userRepository.getGroupsFromUser(req.params.userId);
+    const groups = await userService.getGroupsFromUser(req.params.userId);
     res.status(200).json(groups);
   } catch (error) {
     if (error instanceof CustomError) {

@@ -30,29 +30,16 @@ const tokenRepository = {
     }
     throw new CustomError(500, 'Internal server error');
   },
-  async decrementCurrentAmountToken(
+  async substractCurrentAmountToken(
     tokenId: string,
     amount: number,
   ): Promise<TokenDto | null> {
-    const token = await prisma.token.findUnique({
-      where: {
-        id: Number(tokenId),
-      },
-    });
-
-    if (!token) {
-      return null;
-    }
-
-    // Validate if the amount to decrement is greater than the currentAmount
-    const newAmount = Math.max(0, token.currentAmount - amount);
-
     const updatedToken = await prisma.token.update({
       where: {
         id: Number(tokenId),
       },
       data: {
-        currentAmount: newAmount,
+        currentAmount: amount,
       },
     });
 
@@ -87,6 +74,26 @@ const tokenRepository = {
     });
     if (!token) {
       return null;
+    }
+    const tokenDto: TokenDto = {
+      id: token.id,
+      userId: token.userId,
+      amount: token.amount,
+      currentAmount: token.currentAmount,
+      expiresAt: token.expiresAt,
+      createdAt: token.createdAt,
+      updatedAt: token.updatedAt ?? new Date(),
+    };
+    return tokenDto;
+  },
+  async getTokenById(tokenId: string): Promise<TokenDto> {
+    const token = await prisma.token.findUnique({
+      where: {
+        id: Number(tokenId),
+      },
+    });
+    if (!token) {
+      throw new CustomError(404, `Token with id:${tokenId}, not found`);
     }
     const tokenDto: TokenDto = {
       id: token.id,

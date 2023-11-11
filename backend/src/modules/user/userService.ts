@@ -2,6 +2,9 @@ import roleRepository from '../role/roleRepository';
 import { TokenDto } from '../token/tokenModel';
 import userRepository from './userRepository';
 import { User } from './userModel';
+import CustomError from '../../utils/errorModel';
+import tokenService from '../token/tokenService';
+import tokenRepository from '../token/tokenRepository';
 
 export const userService = {
   async getUserById(userId: string): Promise<User> {
@@ -52,6 +55,46 @@ export const userService = {
       updatedAt: token.updatedAt ?? new Date(),
     };
     return tokenDto;
+  },
+
+  async getGroupsFromUser(userId: string): Promise<string[]> {
+    const user = userRepository.getUserById(userId);
+    if (!user) {
+      throw new CustomError(404, `User with id:${userId}, not found`);
+    }
+
+    const groupNames = await userRepository.getGroupsFromUser(userId);
+
+    return groupNames;
+  },
+
+  async addToUserToken(
+    userId: string,
+    amount: number,
+  ): Promise<TokenDto | null> {
+    const token = await userRepository.getUserCurrentToken(userId);
+    if (!token) {
+      return null;
+    }
+    const updatedToken = await tokenRepository.addTokensToUser(
+      String(token.id),
+      amount,
+    );
+    return updatedToken;
+  },
+  async substractToUserToken(
+    userId: string,
+    amount: number,
+  ): Promise<TokenDto | null> {
+    const token = await userRepository.getUserCurrentToken(userId);
+    if (!token) {
+      return null;
+    }
+    const updatedToken = await tokenService.decrementCurrentAmountToken(
+      String(token.id),
+      amount,
+    );
+    return updatedToken;
   },
 };
 

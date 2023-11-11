@@ -43,3 +43,22 @@ export interface createGroupInput {
   name: string;
   area?: string;
 }
+/**
+ * @openapi
+ * components:
+ *  schemas:
+ *    GroupTokens:
+ *      type: object
+ *      required:
+ *        - groupId
+ *        - amount
+ *      properties:
+ *        groupId:
+ *          type: string
+ *        amount:
+ *          type: number
+ */
+export interface GroupTokens {
+  groupId: number;
+  amount: number;
+}
