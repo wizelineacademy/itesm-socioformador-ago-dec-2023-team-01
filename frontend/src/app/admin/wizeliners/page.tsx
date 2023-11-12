@@ -16,6 +16,8 @@ import {
 } from '@mui/material';
 import { useRouter } from 'next/navigation';
 import AddIcon from '@mui/icons-material/Add';
+import CheckBoxOutlinedIcon from '@mui/icons-material/CheckBoxOutlined';
+import CropSquareIcon from '@mui/icons-material/CropSquare';
 import SearchIcon from '@mui/icons-material/Search';
 import Title from '../components/Title';
 import { fetchUsers } from '@/services/usersService';
@@ -109,11 +111,11 @@ export default function Wizeliners() {
           <Table sx={{ minWidth: 650, color: '#FFF' }} aria-label="simple table">
             <TableHead>
               <TableRow sx={{ backgroundColor: '#111823' }}>
-                <TableCell sx={{ color: '#FFF' }}>Full Name</TableCell>
-                <TableCell sx={{ color: '#FFF' }}>Area(s)</TableCell>
-                <TableCell sx={{ color: '#FFF' }}>Is Administrator</TableCell>
-                <TableCell sx={{ color: '#FFF' }}>Monthly Wizecoins</TableCell>
-                <TableCell sx={{ color: '#FFF' }}>Profile Information</TableCell>
+                <TableCell align="center" sx={{ color: '#FFF' }}>Full Name</TableCell>
+                <TableCell align="center" sx={{ color: '#FFF' }}>Area(s)</TableCell>
+                <TableCell align="center" sx={{ color: '#FFF' }}>Is Administrator</TableCell>
+                <TableCell align="center" sx={{ color: '#FFF' }}>Monthly Wizecoins</TableCell>
+                <TableCell align="center" sx={{ color: '#FFF' }}>Profile Information</TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
@@ -130,9 +132,17 @@ export default function Wizeliners() {
                 >
                   <TableCell sx={{ color: '#FFF' }}>{user.fullName}</TableCell>
                   <TableCell sx={{ color: '#FFF' }}>{user.areas}</TableCell>
-                  <TableCell sx={{ color: '#FFF' }}>{user.isAdmin ? 'YES' : 'NO'}</TableCell>
-                  <TableCell sx={{ color: '#FFF' }}>{user.monthlyWizecoins}</TableCell>
-                  <TableCell>
+                  <TableCell align="center" sx={{ color: '#FFF' }}>
+                    {user.isAdmin
+                      ? (
+                        <CheckBoxOutlinedIcon fontSize="large" sx={{ color: '#4BE93D' }} />
+                      )
+                      : (
+                        <CropSquareIcon fontSize="large" sx={{ color: '#4BE93D' }} />
+                      )}
+                  </TableCell>
+                  <TableCell align="center" sx={{ color: '#FFF' }}>{user.monthlyWizecoins}</TableCell>
+                  <TableCell align="center">
                     <Button
                       onClick={() => router.push(`wizeliners/edit?userId=${user.id}`)}
                       variant="contained"
