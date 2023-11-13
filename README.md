@@ -33,12 +33,19 @@ This should install all the neccessary dependencies
 
 ### Environment Variables Backend
 PORT -> This should indicate the port the backend should run at
+
 DATABASE_URL -> This points to your postgres database
+
 BASE_URL -> This represents the base localhost url including the port
+
 CLIENT_ID -> This represents auth0 client ID (provided by auth0)
+
 ISSUER_BASE_URL -> This represents auth0 issuer base url (provided by auth0)
+
 CLIENT_SECRET -> This represents auth0 client secret (provided by auth0)
+
 AUTH0_AUDIENCE -> This represents auth0 audience (provided by auth0)
+
 JWT_SECRET -> This represent a random set of numbers and letters that generate the JWT token
 
 ### Environment Variables Frontend
