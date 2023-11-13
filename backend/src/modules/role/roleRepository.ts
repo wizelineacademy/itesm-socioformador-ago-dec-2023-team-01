@@ -29,18 +29,31 @@ export const roleRepository = {
     throw new CustomError(500, 'Internal server error');
   },
 
-  async getRoleByIdOrName(roleIdOrName: string): Promise<Role> {
+  async getRoleById(roleId: number): Promise<Role> {
     const role = await prisma.role.findUnique({
-      where: Number.isNaN(Number(roleIdOrName))
-        ? { name: roleIdOrName.toLowerCase() }
-        : { id: Number(roleIdOrName) },
+      where: { id: roleId },
     });
 
     if (!role) {
-      throw new CustomError(
-        404,
-        `Role with id/name:${roleIdOrName}, not found`,
-      );
+      throw new CustomError(404, `Role with id:${roleId}, not found`);
+    }
+    const newRole: Role = {
+      id: role.id,
+      name: role.name,
+      description: role.description ?? '',
+      createdAt: role.createdAt,
+      updatedAt: role.updatedAt ?? new Date(),
+    };
+    return newRole;
+  },
+
+  async getRoleByName(roleName: string): Promise<Role> {
+    const role = await prisma.role.findUnique({
+      where: { name: roleName },
+    });
+
+    if (!role) {
+      throw new CustomError(404, `Role with name:${roleName}, not found`);
     }
     const newRole: Role = {
       id: role.id,

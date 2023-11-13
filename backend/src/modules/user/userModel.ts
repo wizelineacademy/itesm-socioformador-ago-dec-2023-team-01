@@ -13,6 +13,8 @@
  *          type: string
  *        email:
  *          type: string
+ *        imageUrl:
+ *          type: string
  *        role:
  *          type: string
  *        createdAt:
@@ -24,6 +26,7 @@ export interface User {
   id: string;
   firstName: string;
   lastName: string;
+  imageUrl: string;
   email: string;
   role: string;
   createdAt: Date;
@@ -46,6 +49,8 @@ export interface User {
  *          type: string
  *        lastName:
  *          type: string
+ *        imageUrl:
+ *          type: string
  *        email:
  *          type: string
  *        roleId:
@@ -55,6 +60,7 @@ export interface CreateUserInput {
   id: string;
   firstName: string;
   lastName: string;
+  imageUrl: string;
   email: string;
   roleId: number;
 }
@@ -62,6 +68,7 @@ export interface UserDto {
   id: string;
   firstName: string;
   lastName: string;
+  imageUrl: string;
   email: string;
   roleId: number;
   createdAt: Date;
@@ -85,4 +92,23 @@ export interface UserDto {
 export interface MakeAdminInput {
   userId: string;
   isAdmin: boolean;
+}
+/**
+ * @openapi
+ * components:
+ *  schemas:
+ *    UserTokenOperation:
+ *      type: object
+ *      required:
+ *        - operation
+ *        - amount
+ *      properties:
+ *        operation:
+ *          type: string
+ *        amount:
+ *          type: number
+ */
+export interface UserTokenOperation {
+  operation: 'add' | 'subtract';
+  amount: number;
 }

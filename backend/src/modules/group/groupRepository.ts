@@ -32,29 +32,19 @@ export const groupRepository = {
     }
     throw new CustomError(500, 'Internal server error');
   },
-  async deleteGroupByIdOrName(
-    groupIdOrName: string,
-  ): Promise<Group | undefined> {
+  async deleteGroupById(groupId: number): Promise<Group | undefined> {
     let group = null;
     try {
-      if (Number.isNaN(Number(groupIdOrName))) {
-        group = await prisma.group.findUnique({
-          where: {
-            name: groupIdOrName,
-          },
-        });
-      } else {
-        group = await prisma.group.findUnique({
-          where: {
-            id: Number(groupIdOrName),
-          },
-        });
-      }
+      group = await prisma.group.findUnique({
+        where: {
+          id: groupId,
+        },
+      });
     } catch (error) {
       if (!group) {
         throw new CustomError(
           404,
-          `Group with id / name:${groupIdOrName}, not found`,
+          `Group with id / name:${groupId}, not found`,
         );
       } else {
         throw new CustomError(500, 'internal server error');
@@ -64,9 +54,7 @@ export const groupRepository = {
     if (group) {
       try {
         await prisma.group.update({
-          where: Number.isNaN(Number(groupIdOrName))
-            ? { name: groupIdOrName }
-            : { id: Number(groupIdOrName) },
+          where: { id: groupId },
           data: {
             users: {
               disconnect: (group as any).users.map((user: any) => ({
@@ -79,15 +67,13 @@ export const groupRepository = {
         if (error instanceof Prisma.PrismaClientKnownRequestError) {
           throw new CustomError(
             404,
-            `Could not find group ${groupIdOrName} to delete`,
+            `Could not find group ${groupId} to delete`,
           );
         }
       }
       try {
         const deleted = await prisma.group.delete({
-          where: Number.isNaN(Number(groupIdOrName))
-            ? { name: groupIdOrName }
-            : { id: Number(groupIdOrName) },
+          where: { id: groupId },
         });
         deletedGroup = {
           id: deleted.id,
@@ -100,33 +86,26 @@ export const groupRepository = {
         if (error instanceof Prisma.PrismaClientKnownRequestError) {
           throw new CustomError(
             404,
-            `Could not find group ${groupIdOrName} to delete`,
+            `Could not find group ${groupId} to delete`,
           );
         }
       }
     }
     return deletedGroup;
   },
-  async addUserToGroupByIdOrName(
-    groupIdOrName: string,
-    userId: string,
-  ): Promise<Group> {
+  async addUserToGroupById(groupId: number, userId: string): Promise<Group> {
     let updatedGroup = null;
     const user = await prisma.user.findUnique({ where: { id: userId } });
-    const group = Number.isNaN(Number(groupIdOrName))
-      ? await prisma.group.findUnique({ where: { name: groupIdOrName } })
-      : await prisma.group.findUnique({ where: { id: Number(groupIdOrName) } });
+    const group = await prisma.group.findUnique({ where: { id: groupId } });
     if (!user || !group) {
       throw new CustomError(
         404,
-        `Group or user with id/name:${groupIdOrName} and ${userId}, not found`,
+        `Group or user with id/name:${groupId} and ${userId}, not found`,
       );
     }
     try {
       const updated = await prisma.group.update({
-        where: Number.isNaN(Number(groupIdOrName))
-          ? { name: groupIdOrName }
-          : { id: Number(groupIdOrName) },
+        where: { id: groupId },
         data: {
           users: {
             connect: { id: userId },
@@ -142,35 +121,27 @@ export const groupRepository = {
       };
     } catch (error) {
       if (error instanceof Prisma.PrismaClientKnownRequestError) {
-        throw new CustomError(
-          404,
-          `Could not find group ${groupIdOrName} to delete`,
-        );
+        throw new CustomError(404, `Could not find group ${groupId} to delete`);
       } else {
         throw new CustomError(500, `Internal server error`);
       }
     }
     return updatedGroup;
   },
-  async removeUserFromGroupByIdOrName(
+  async removeUserFromGroupById(
     userId: string,
-    groupIdOrName: string,
+    groupId: number,
   ): Promise<void> {
-    const group = Number.isNaN(Number(groupIdOrName))
-      ? await prisma.group.findUnique({ where: { name: groupIdOrName } })
-      : await prisma.group.findUnique({ where: { id: Number(groupIdOrName) } });
+    const group = await prisma.group.findUnique({
+      where: { id: groupId },
+    });
 
     if (!group) {
-      throw new CustomError(
-        404,
-        `Group with id/name ${groupIdOrName} not found`,
-      );
+      throw new CustomError(404, `Group with id/name ${groupId} not found`);
     } else {
       try {
         await prisma.group.update({
-          where: Number.isNaN(Number(groupIdOrName))
-            ? { name: groupIdOrName }
-            : { id: Number(groupIdOrName) },
+          where: { id: groupId },
           data: {
             users: {
               disconnect: { id: userId },
@@ -181,7 +152,7 @@ export const groupRepository = {
         if (error instanceof Prisma.PrismaClientKnownRequestError) {
           throw new CustomError(
             404,
-            `Could not find group ${groupIdOrName} to delete`,
+            `Could not find group ${groupId} to delete`,
           );
         } else {
           throw new CustomError(500, `Internal server error`);
@@ -189,26 +160,16 @@ export const groupRepository = {
       }
     }
   },
-  async addAreaToGroupByIdOrName(
-    groupIdOrName: string,
-    area: string,
-  ): Promise<Group> {
+  async addAreaToGroupById(groupId: number, area: string): Promise<Group> {
     let updatedGroup = null;
-    const group = Number.isNaN(Number(groupIdOrName))
-      ? await prisma.group.findUnique({ where: { name: groupIdOrName } })
-      : await prisma.group.findUnique({ where: { id: Number(groupIdOrName) } });
+    const group = await prisma.group.findUnique({ where: { id: groupId } });
 
     if (!group) {
-      throw new CustomError(
-        404,
-        `Group with id/name ${groupIdOrName} not found`,
-      );
+      throw new CustomError(404, `Group with id/name ${groupId} not found`);
     } else {
       try {
         const update = await prisma.group.update({
-          where: Number.isNaN(Number(groupIdOrName))
-            ? { name: groupIdOrName }
-            : { id: Number(groupIdOrName) },
+          where: { id: groupId },
           data: {
             area,
           },
@@ -224,7 +185,7 @@ export const groupRepository = {
         if (error instanceof Prisma.PrismaClientKnownRequestError) {
           throw new CustomError(
             404,
-            `Could not find group ${groupIdOrName} to delete`,
+            `Could not find group ${groupId} to delete`,
           );
         } else {
           throw new CustomError(500, `Internal server error`);
@@ -244,32 +205,21 @@ export const groupRepository = {
       updatedAt: group.updatedAt,
     }));
   },
-  async findUsersInGroupByIdOrName(groupIdOrName: string) {
+  async findUsersInGroupById(groupId: number) {
     let users = null;
-    const group = Number.isNaN(Number(groupIdOrName))
-      ? await prisma.group.findUnique({ where: { name: groupIdOrName } })
-      : await prisma.group.findUnique({ where: { id: Number(groupIdOrName) } });
+    const group = await prisma.group.findUnique({ where: { id: groupId } });
 
     if (!group) {
-      throw new CustomError(
-        404,
-        `Group with id/name ${groupIdOrName} not found`,
-      );
+      throw new CustomError(404, `Group with id ${groupId} not found`);
     } else {
       try {
-        const whereCondition = Number.isNaN(Number(groupIdOrName))
-          ? { groups: { some: { name: groupIdOrName } } }
-          : { groups: { some: { id: Number(groupIdOrName) } } };
-
+        const whereCondition = { groups: { some: { id: groupId } } };
         users = await prisma.user.findMany({
           where: whereCondition,
         });
       } catch (error) {
         if (error instanceof Prisma.PrismaClientKnownRequestError) {
-          throw new CustomError(
-            404,
-            `Could not find group ${groupIdOrName} to delete`,
-          );
+          throw new CustomError(404, `Could not find group ${groupId}`);
         } else {
           throw new CustomError(500, `Internal server error`);
         }
@@ -291,11 +241,18 @@ export const groupRepository = {
         return token;
       }),
     );
+
     if (!tokens) {
       throw new CustomError(404, `Users with ids:${usersIds}, not found`);
     }
 
-    const newTokens: TokenDto[] = tokens.map(token => ({
+    const validTokens = tokens
+      .flat()
+      .filter(
+        currentToken => currentToken && currentToken.expiresAt > new Date(),
+      );
+
+    const newTokens: TokenDto[] = validTokens.map(token => ({
       id: token?.id ?? 0,
       userId: token?.userId ?? '',
       amount: token?.amount ?? 0,

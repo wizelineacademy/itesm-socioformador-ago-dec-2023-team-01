@@ -1,8 +1,9 @@
 import CustomError from '../../utils/errorModel';
-import { CreateTokenDto, CreateTokenInput } from './tokenModel';
+import { TokenDto, CreateTokenDto, CreateTokenInput } from './tokenModel';
+import tokenRepository from './tokenRepository';
 
 const tokenService = {
-  createToken(tokenBody: any): CreateTokenDto {
+  async createToken(tokenBody: any): Promise<CreateTokenDto> {
     const tokenInput: CreateTokenInput = {
       userId: tokenBody.userId,
       amount: tokenBody.amount,
@@ -16,9 +17,34 @@ const tokenService = {
       userId: tokenInput.userId,
       amount: tokenInput.amount,
       currentAmount: tokenInput.amount,
-      expiresAt: tokenInput.expiresAt,
+      expiresAt,
     };
     return token;
+  },
+  async decrementCurrentAmountToken(
+    tokenId: string,
+    amount: number,
+  ): Promise<TokenDto | null> {
+    const token = await tokenRepository.getTokenById(tokenId);
+    const newAmount = Math.max(0, token.currentAmount - amount);
+    const updatedToken = await tokenRepository.substractCurrentAmountToken(
+      tokenId,
+      newAmount,
+    );
+    if (!updatedToken) {
+      return null;
+    }
+    return updatedToken;
+  },
+  async addAmountToUsersToken(
+    tokenId: string,
+    amount: number,
+  ): Promise<TokenDto | null> {
+    if (amount < 0) {
+      throw new CustomError(400, 'Amount must be positive');
+    }
+    const updatedToken = await tokenRepository.addTokensToUser(tokenId, amount);
+    return updatedToken;
   },
 };
 
