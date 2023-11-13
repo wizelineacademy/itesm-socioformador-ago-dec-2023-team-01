@@ -1,6 +1,7 @@
 'use client';
 
 import React from 'react';
+import { useRouter, useSearchParams } from 'next/navigation';
 import {
   Container,
   Box,
@@ -11,8 +12,15 @@ import {
 import WTitle1 from '@/app/components/WTitle1';
 import DataGridAdd from '@/app/admin/components/DataGridAdd';
 
-export default function addWizeliner() {
+export default function AddWizeliner() {
+  const router = useRouter();
+  const params = useSearchParams();
   const groupName = 'Software Engineers';
+
+  const handleNavBack = () => {
+    router.back();
+  };
+
   return (
     <Container>
       <Box
@@ -54,6 +62,7 @@ export default function addWizeliner() {
         marginTop={3}
       >
         <Button
+          onClick={handleNavBack}
           variant="contained"
           color="error"
           sx={{
@@ -66,6 +75,7 @@ export default function addWizeliner() {
           Cancel
         </Button>
         <Button
+          onClick={handleNavBack}
           variant="contained"
           color="error"
           sx={{
