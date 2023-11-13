@@ -66,6 +66,7 @@ PUBLIC_OPENAI_API_KEY -> This represents the openAI api key (provided by openAI)
 NEXT_PUBLIC_API_URL -> This represent base url including localhost and port number
 
 ## Folder Structure
+```
 |-- itesm-socioformador...
 |   |-- backend/                  # Backend code
 |       |-- src/                  # Source code
@@ -95,4 +96,4 @@ NEXT_PUBLIC_API_URL -> This represent base url including localhost and port numb
 |
 |   |-- ...                       # Additional files and folders
 |-- ...
-
+```
