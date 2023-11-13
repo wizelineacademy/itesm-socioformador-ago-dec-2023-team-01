@@ -7,7 +7,7 @@ const groupRouter = express.Router();
 
 /**
  * @openapi
- * '/api/group/getAllGroups':
+ * '/api/group/':
  *  get:
  *     tags:
  *       - Groups
@@ -18,7 +18,7 @@ const groupRouter = express.Router();
  *       200:
  *         description: Success
  */
-groupRouter.get('/getAllGroups', async (_req, res) => {
+groupRouter.get('/', async (_req, res) => {
   try {
     const groups = await groupService.getTotalTokensForGroup();
     res.status(200).json(groups);
@@ -34,7 +34,7 @@ groupRouter.get('/getAllGroups', async (_req, res) => {
 });
 /**
  * @openapi
- * '/api/group/findUsersInGroup/{groupIdOrName}':
+ * '/api/group/{groupIdOrName}/users':
  *  get:
  *     tags:
  *       - Groups
@@ -54,7 +54,7 @@ groupRouter.get('/getAllGroups', async (_req, res) => {
  *       default:
  *         description: Error
  */
-groupRouter.get('/findUsersInGroup/:groupIdOrName', async (req, res) => {
+groupRouter.get('/:groupIdOrName/users', async (req, res) => {
   try {
     const { groupIdOrName } = req.params;
     const users =
@@ -107,7 +107,7 @@ groupRouter.post('/', async (req, res) => {
 });
 /**
  * @openapi
- * '/api/group/delete/{id}':
+ * '/api/group/{id}':
  *   delete:
  *     tags:
  *       - Groups
@@ -129,7 +129,7 @@ groupRouter.post('/', async (req, res) => {
  *       500:
  *         description: Internal server error
  */
-groupRouter.delete('/delete/:id', async (req, res) => {
+groupRouter.delete('/:id', async (req, res) => {
   try {
     const { id } = req.params;
     await groupRepository.deleteGroupByIdOrName(id);
@@ -146,7 +146,7 @@ groupRouter.delete('/delete/:id', async (req, res) => {
 });
 /**
  * @openapi
- * '/api/group/addUser':
+ * '/api/group/user':
  *   post:
  *     tags:
  *       - Groups
@@ -177,7 +177,7 @@ groupRouter.delete('/delete/:id', async (req, res) => {
  *       500:
  *         description: Internal server error
  */
-groupRouter.post('/addUser', async (req, res) => {
+groupRouter.post('/user', async (req, res) => {
   try {
     const { userId, groupIdOrName } = req.body;
     const updateGroup = await groupRepository.addUserToGroupByIdOrName(
@@ -197,8 +197,8 @@ groupRouter.post('/addUser', async (req, res) => {
 });
 /**
  * @openapi
- * '/api/group/removeUser':
- *   put:
+ * '/api/group/user':
+ *   patch:
  *     tags:
  *       - Groups
  *     operationId: removeUserFromGroup
@@ -228,7 +228,7 @@ groupRouter.post('/addUser', async (req, res) => {
  *       500:
  *         description: Internal server error
  */
-groupRouter.put('/removeUser', async (req, res) => {
+groupRouter.patch('/user', async (req, res) => {
   try {
     const { userId, groupIdOrName } = req.body;
     await groupRepository.removeUserFromGroupByIdOrName(userId, groupIdOrName);
@@ -244,8 +244,8 @@ groupRouter.put('/removeUser', async (req, res) => {
 });
 /**
  * @openapi
- * '/api/group/addAreaToGroup':
- *   put:
+ * '/api/group/area':
+ *   patch:
  *     tags:
  *       - Groups
  *     operationId: addAreaToGroup
@@ -275,7 +275,7 @@ groupRouter.put('/removeUser', async (req, res) => {
  *       500:
  *         description: Internal server error
  */
-groupRouter.put('/addAreaToGroup', async (req, res) => {
+groupRouter.patch('/area', async (req, res) => {
   try {
     const { area, groupIdOrName } = req.body;
     const updated = await groupRepository.addAreaToGroupByIdOrName(
