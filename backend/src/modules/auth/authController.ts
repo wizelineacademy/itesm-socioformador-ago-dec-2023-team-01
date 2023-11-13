@@ -6,7 +6,7 @@ const authRouter = express.Router();
 dotenv.config();
 /**
  * @openapi
- * '/api/auth/getToken/':
+ * '/api/auth/access-token/':
  *  get:
  *     tags:
  *       - Auth
@@ -14,7 +14,7 @@ dotenv.config();
  *      200:
  *        description: Success
  */
-authRouter.get('/getToken', (req: Request, res: Response) => {
+authRouter.get('/access-token', (req: Request, res: Response) => {
   if (req.oidc.isAuthenticated()) {
     res.status(200).json({ token: req.oidc.accessToken });
   } else {

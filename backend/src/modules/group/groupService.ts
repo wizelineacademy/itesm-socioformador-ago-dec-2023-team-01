@@ -9,8 +9,8 @@ export const groupService = {
 
     const result = await Promise.all(
       groups.map(async group => {
-        const usersInGroup = await groupRepository.findUsersInGroupByIdOrName(
-          group.id.toString(),
+        const usersInGroup = await groupRepository.findUsersInGroupById(
+          group.id,
         );
         const tokensOfGroup = await groupRepository.getGroupUsersTokens(
           usersInGroup.map(user => user.id),
@@ -33,16 +33,12 @@ export const groupService = {
     return result;
   },
   async setTokensToUsersFromGroup(
-    groupIdOrName: string,
+    groupId: number,
     amount: number,
   ): Promise<void> {
-    const users =
-      await groupRepository.findUsersInGroupByIdOrName(groupIdOrName);
+    const users = await groupRepository.findUsersInGroupById(groupId);
     if (!users) {
-      throw new CustomError(
-        404,
-        `Group with id/name:${groupIdOrName}, not found`,
-      );
+      throw new CustomError(404, `Group with id/name:${groupId}, not found`);
     }
     try {
       await Promise.all(

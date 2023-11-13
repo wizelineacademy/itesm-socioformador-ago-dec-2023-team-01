@@ -123,7 +123,7 @@ userRouter.get('/:userId/tokens', async (req: Request, res: Response) => {
 
 /**
  * @openapi
- * '/api/users/makeAdmin':
+ * '/api/users/admin':
  *  patch:
  *     tags:
  *     - Users
@@ -141,7 +141,7 @@ userRouter.get('/:userId/tokens', async (req: Request, res: Response) => {
  *      500:
  *        description: Internal server error
  */
-userRouter.patch('/makeAdmin', async (req: Request, res: Response) => {
+userRouter.patch('/admin', async (req: Request, res: Response) => {
   try {
     const user = await userRepository.makeAdmin(
       req.body.userId,
