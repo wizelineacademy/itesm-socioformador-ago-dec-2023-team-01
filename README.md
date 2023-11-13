@@ -21,8 +21,10 @@
 - [PostgreSQL](https://www.postgresql.org/) installed / deployed and running
 ### Installation
 In your terminal of choice run the following commands in a dedicated folder
+
 - git clone https://github.com/wizelineacademy/itesm-socioformador-ago-dec-2023-team-01.git
 - cd itesm-socioformador-ago-dec-2023-team-01
+  
 Once in itesm-socioformador-ago-dec-2023-team-01 run the following commands:
 - cd backend
 - npm install
