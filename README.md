@@ -50,46 +50,85 @@ JWT_SECRET -> This represent a random set of numbers and letters that generate t
 
 ### Environment Variables Frontend
 AUTH0_SECRET -> This represent a random generated secret key (provided by auth0)
+
 AUTH0_BASE_URL -> This represent the base url for auth0
+
 AUTH0_ISSUER_BASE_URL -> This represent the base url issued by auth0 (provided by auth0)
+
 AUTH0_CLIENT_ID -> This represent the client ID (provided by auth0)
+
 AUTH0_CLIENT_SECRET -> This represent a random number of numbers and letters (provided by auth0)
+
 AUTH0_AUDIENCE -> This represents auth0 audience (provided by auth0)
+
 PUBLIC_OPENAI_API_KEY -> This represents the openAI api key (provided by openAI)
+
 NEXT_PUBLIC_API_URL -> This represent base url including localhost and port number
 
 ## Folder Structure
 |-- itesm-socioformador...
+
 |   |-- backend/                    # Backend code
+
 |   |   |-- src/                    # Source code
+
 |   |   |   | server.ts             # File in charge of initializing backend server
+
 |   |   |   |-- configs/            # Configuration files
+
 |   |   |   |   |-- auth0-config.ts   # Auth0 configuration
+
 |   |   |   |   |-- jwt-config.ts     # JSON Web Token configuration
+
 |   |   |   |
+
 |   |   |   |-- middlewares/      # Custom middleware functions
+
 |   |   |   |   |-- authMiddleware.ts  # Authentication middleware
+
 |   |   |   |   |-- erroMiddleware.ts  # Error catch middleware
+
 |   |   |   |
+
 |   |   |   |-- modules/          # Application modules
+
 |   |   |   |   |-- user/         # User-related module
+
 |   |   |   |   |   |-- controllers/  # Controllers for user module
+
 |   |   |   |   |   |-- models/       # Models for user module
+
 |   |   |   |   |   |-- services/     # Services for user module
+
 |   |   |   |   |   |-- repository/   # Direct interaction with user db table
+
 |   |   |   |
+
 |   |   |   |-- routes/           # API routes
+
 |   |   |   |   |-- index.ts      
+
 |   |   |   |
+
 |   |   |   |-- shared/           # Shared utilities and components
+
 |   |   |   |-- utils/            # General utility functions
+
 |   |   |
+
 |   |-- frontend/                 # Frontend code
+
 |   |   |-- components/           # Reusable UI components
+
 |   |   |-- pages/                # Next.js pages
+
 |   |   |-- public/               # Public assets
+
 |   |   |-- styles/               # CSS styles
+
 |   |
+
 |   |-- ...                       # Additional files and folders
+
 |-- ...
 
