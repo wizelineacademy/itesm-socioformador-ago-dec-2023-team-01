@@ -1,4 +1,4 @@
-import express from 'express';
+import express, { Request, Response } from 'express';
 import { groupRepository } from './groupRepository';
 import CustomError from '../../utils/errorModel';
 import { groupService } from './groupService';
@@ -34,7 +34,7 @@ groupRouter.get('/', async (_req, res) => {
 });
 /**
  * @openapi
- * '/api/group/{groupIdOrName}/users':
+ * '/api/group/{groupId}/users':
  *  get:
  *     tags:
  *       - Groups
@@ -42,31 +42,31 @@ groupRouter.get('/', async (_req, res) => {
  *     security:
  *       - bearerAuth: []
  *     parameters:
- *      - name: groupIdOrName
+ *      - name: groupId
  *        in: path
  *        required: true
- *        description: ID or name of the group to get users from
+ *        description: ID of the group to get users from
  *     schema:
- *      type: string
+ *      type: integer
  *     responses:
- *       201:
+ *       200:
  *         description: Success
  *       default:
  *         description: Error
  */
-groupRouter.get('/:groupIdOrName/users', async (req, res) => {
+groupRouter.get('/:groupId/users', async (req, res) => {
   try {
-    const { groupIdOrName } = req.params;
-    const users =
-      await groupRepository.findUsersInGroupByIdOrName(groupIdOrName);
-    res.status(201).json(users);
+    const { groupId } = req.params;
+    const users = await groupRepository.findUsersInGroupById(Number(groupId));
+    res.status(200).json(users);
   } catch (error) {
     if (error instanceof CustomError) {
       res
         .status(error.status)
         .json({ error: error.message, code: error.status });
+    } else {
+      res.status(500).json({ message: 'Internal server error', error });
     }
-    res.status(500).json({ error: 'Internal server error' });
   }
 });
 /**
@@ -132,7 +132,7 @@ groupRouter.post('/', async (req, res) => {
 groupRouter.delete('/:id', async (req, res) => {
   try {
     const { id } = req.params;
-    await groupRepository.deleteGroupByIdOrName(id);
+    await groupRepository.deleteGroupById(Number(id));
     res.status(201).json({ message: 'Group deleted successfully' });
   } catch (error) {
     if (error instanceof CustomError) {
@@ -146,13 +146,20 @@ groupRouter.delete('/:id', async (req, res) => {
 });
 /**
  * @openapi
- * '/api/group/user':
+ * '/api/group/{groupId}/user':
  *   post:
  *     tags:
  *       - Groups
  *     operationId: addUserToGroup
  *     security:
  *       - bearerAuth: []
+ *     parameters:
+ *       - name: groupId
+ *         in: path
+ *         required: true
+ *         description: The ID of the group to which the user will be added
+ *         schema:
+ *           type: integer
  *     requestBody:
  *       description: User and group information to add to the group
  *       required: true
@@ -164,9 +171,6 @@ groupRouter.delete('/:id', async (req, res) => {
  *               userId:
  *                 type: string
  *                 description: The ID of the user to add
- *               groupIdOrName:
- *                 type: string
- *                 description: The ID or name of the group to which the user will be added
  *     responses:
  *       201:
  *         description: User added to the group successfully
@@ -177,11 +181,12 @@ groupRouter.delete('/:id', async (req, res) => {
  *       500:
  *         description: Internal server error
  */
-groupRouter.post('/user', async (req, res) => {
+groupRouter.post('/:groupId/user', async (req: Request, res: Response) => {
   try {
-    const { userId, groupIdOrName } = req.body;
-    const updateGroup = await groupRepository.addUserToGroupByIdOrName(
-      groupIdOrName,
+    const { groupId } = req.params;
+    const { userId } = req.body;
+    const updateGroup = await groupRepository.addUserToGroupById(
+      Number(groupId),
       userId,
     );
     res.status(201).json({ message: 'added user to group: ', updateGroup });
@@ -197,30 +202,29 @@ groupRouter.post('/user', async (req, res) => {
 });
 /**
  * @openapi
- * '/api/group/user':
- *   patch:
+ * '/api/group/{groupId}/user/{userId}':
+ *   delete:
  *     tags:
  *       - Groups
  *     operationId: removeUserFromGroup
  *     security:
  *       - bearerAuth: []
- *     requestBody:
- *       description: User and group information to remove from the group
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             type: object
- *             properties:
- *               userId:
- *                 type: string
- *                 description: The ID of the user to add
- *               groupIdOrName:
- *                 type: string
- *                 description: The ID or name of the group to which the user will be added
+ *     parameters:
+ *       - name: groupId
+ *         in: path
+ *         required: true
+ *         description: The ID of the group to which the user will be removed
+ *         schema:
+ *           type: integer
+ *       - name: userId
+ *         in: path
+ *         required: true
+ *         description: The ID of the user to be removed
+ *         schema:
+ *           type: string
  *     responses:
  *       201:
- *         description: User added to the group successfully
+ *         description: User removed to the group successfully
  *       400:
  *         description: Bad request, missing or invalid data
  *       404:
@@ -228,29 +232,37 @@ groupRouter.post('/user', async (req, res) => {
  *       500:
  *         description: Internal server error
  */
-groupRouter.patch('/user', async (req, res) => {
+groupRouter.delete('/:groupId/user/:userId', async (req: Request, res) => {
   try {
-    const { userId, groupIdOrName } = req.body;
-    await groupRepository.removeUserFromGroupByIdOrName(userId, groupIdOrName);
+    const { userId, groupId } = req.params;
+    await groupRepository.removeUserFromGroupById(userId, Number(groupId));
     res.status(201).json({ message: 'User removed from group successfully' });
   } catch (error) {
     if (error instanceof CustomError) {
       res
         .status(error.status)
         .json({ error: error.message, code: error.status });
+    } else {
+      res.status(500).json({ message: 'Internal server error', error });
     }
-    res.status(500).json({ message: 'Internal server error', error });
   }
 });
 /**
  * @openapi
- * '/api/group/area':
+ * '/api/group/{groupId}/area':
  *   patch:
  *     tags:
  *       - Groups
  *     operationId: addAreaToGroup
  *     security:
  *       - bearerAuth: []
+ *     parameters:
+ *       - name: groupId
+ *         in: path
+ *         required: true
+ *         description: The ID of the group to which the area will be added
+ *         schema:
+ *           type: integer
  *     requestBody:
  *       description: Group information to add area
  *       required: true
@@ -262,9 +274,6 @@ groupRouter.patch('/user', async (req, res) => {
  *               area:
  *                 type: string
  *                 description: The area to add
- *               groupIdOrName:
- *                 type: string
- *                 description: The ID or name of the group to which the area will be added
  *     responses:
  *       201:
  *         description: User added to the group successfully
@@ -275,11 +284,12 @@ groupRouter.patch('/user', async (req, res) => {
  *       500:
  *         description: Internal server error
  */
-groupRouter.patch('/area', async (req, res) => {
+groupRouter.patch('/:groupId/area', async (req: Request, res) => {
   try {
-    const { area, groupIdOrName } = req.body;
-    const updated = await groupRepository.addAreaToGroupByIdOrName(
-      groupIdOrName,
+    const { groupId } = req.params;
+    const { area } = req.body;
+    const updated = await groupRepository.addAreaToGroupById(
+      Number(groupId),
       area,
     );
     res.status(201).json(updated);
