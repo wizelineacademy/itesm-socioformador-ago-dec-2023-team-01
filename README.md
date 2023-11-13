@@ -67,68 +67,32 @@ NEXT_PUBLIC_API_URL -> This represent base url including localhost and port numb
 
 ## Folder Structure
 |-- itesm-socioformador...
-
-|   |-- backend/                    # Backend code
-
-|   |   |-- src/                    # Source code
-
-|   |   |   | server.ts             # File in charge of initializing backend server
-
-|   |   |   |-- configs/            # Configuration files
-
-|   |   |   |   |-- auth0-config.ts   # Auth0 configuration
-
-|   |   |   |   |-- jwt-config.ts     # JSON Web Token configuration
-
-|   |   |   |
-
-|   |   |   |-- middlewares/      # Custom middleware functions
-
-|   |   |   |   |-- authMiddleware.ts  # Authentication middleware
-
-|   |   |   |   |-- erroMiddleware.ts  # Error catch middleware
-
-|   |   |   |
-
-|   |   |   |-- modules/          # Application modules
-
-|   |   |   |   |-- user/         # User-related module
-
-|   |   |   |   |   |-- controllers/  # Controllers for user module
-
-|   |   |   |   |   |-- models/       # Models for user module
-
-|   |   |   |   |   |-- services/     # Services for user module
-
-|   |   |   |   |   |-- repository/   # Direct interaction with user db table
-
-|   |   |   |
-
-|   |   |   |-- routes/           # API routes
-
-|   |   |   |   |-- index.ts      
-
-|   |   |   |
-
-|   |   |   |-- shared/           # Shared utilities and components
-
-|   |   |   |-- utils/            # General utility functions
-
-|   |   |
-
+|   |-- backend/                  # Backend code
+|       |-- src/                  # Source code
+|           |-- server.ts         # Initializing backend server
+|           |-- configs/          
+|               |-- auth0-config.ts  # Auth0 configuration
+|               |-- jwt-config.ts    # JSON Web Token configuration
+|           |-- middlewares/      
+|               |-- authMiddleware.ts  # Authentication middleware
+|               |-- errorMiddleware.ts # Error catch middleware
+|           |-- modules/          
+|               |-- user/         
+|                   |-- controllers/   # Controllers for user module
+|                   |-- models/        # Models for user module
+|                   |-- services/      # Services for user module
+|                   |-- repository/    # Direct interaction with user db table
+|           |-- routes/          
+|               |-- index.ts
+|           |-- shared/          
+|           |-- utils/            
+|   
 |   |-- frontend/                 # Frontend code
-
-|   |   |-- components/           # Reusable UI components
-
-|   |   |-- pages/                # Next.js pages
-
-|   |   |-- public/               # Public assets
-
-|   |   |-- styles/               # CSS styles
-
-|   |
-
+|       |-- components/           # Reusable UI components
+|       |-- pages/                # Next.js pages
+|       |-- public/               # Public assets
+|       |-- styles/               # CSS styles
+|
 |   |-- ...                       # Additional files and folders
-
 |-- ...
 
