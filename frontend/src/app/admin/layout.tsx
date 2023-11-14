@@ -1,16 +1,32 @@
 'use client';
 
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Box, Stack } from '@mui/material';
 import SideNav from './components/side-nav';
 import ProfileInfo from './components/profile-info';
-import { WelcomeProps } from '../components/types';
 
 export default function AdminLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
+  // Declare state variables for the user data
+  const [firstName, setFirstName] = useState<string | null>(null);
+  const [lastName, setLastName] = useState<string | null>(null);
+  const [wizecoins, setWizecoins] = useState<string | null>(null);
+  const [picSource, setPicSource] = useState<string | null>(null);
+
+  useEffect(() => {
+    // Access localStorage here and update state variables
+    setFirstName(localStorage.getItem('first'));
+    setLastName(localStorage.getItem('last'));
+    setWizecoins(localStorage.getItem('amountTokens'));
+    setPicSource(localStorage.getItem('pic'));
+    // ... other localStorage operations
+
+    // Use the data as needed
+  }, []); // Empty dependency array ensures this effect runs once after the initial render
+
   return (
     <Stack direction="row">
       <Box sx={{ height: '100vh', position: 'sticky', top: '0' }}>
@@ -27,10 +43,10 @@ export default function AdminLayout({
         >
           <Box sx={{ position: 'relative', right: '3.3rem' }}>
             <ProfileInfo
-              firstName={`${localStorage.getItem('first')}`}
-              lastName={`${localStorage.getItem('last')}`}
-              wizecoins="120"
-              picSource={`${localStorage.getItem('pic')}`}
+              firstName={firstName}
+              lastName={lastName}
+              wizecoins={wizecoins}
+              picSource={picSource}
             />
           </Box>
         </Box>

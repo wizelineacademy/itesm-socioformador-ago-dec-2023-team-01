@@ -32,7 +32,7 @@ function Mainpage() {
         <Navbar
           profileSrc={user.picture}
           name={user.name}
-          number="9891"
+          number={`${localStorage.getItem('amountTokens')}`}
           onBurgerClick={() => setShowChatHistory((prev) => !prev)}
         />
 

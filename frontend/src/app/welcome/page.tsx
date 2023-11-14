@@ -13,13 +13,12 @@ export default function Welcome() {
   if (error) return <div>{error.message}</div>;
 
   if (user) {
-    console.log(`${localStorage.getItem('first')} ${localStorage.getItem('last')}`);
     return (
       <div>
         <IsWelcome
           admin
           name={`${localStorage.getItem('first')} ${localStorage.getItem('last')}`}
-          wizecoins="120"
+          wizecoins={`${localStorage.getItem('amountTokens')}`}
           IsWizeliner
           picSource={`${localStorage.getItem('pic')}`}
         />
