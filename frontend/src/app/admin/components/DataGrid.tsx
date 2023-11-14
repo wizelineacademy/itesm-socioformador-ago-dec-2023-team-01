@@ -95,12 +95,12 @@ const columns: GridColDef[] = [
   },
 ];
 
-export default function DataTable({ groupName }:{ groupName: string }) {
+export default function DataTable({ groupId }:{ groupId: string }) {
   const [usersGroup, setUsersGroup] = useState([]);
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const usersInGroup = await fetchWizelinersInGroup(groupName);
+        const usersInGroup = await fetchWizelinersInGroup(groupId);
         console.log(usersInGroup);
         setUsersGroup(usersInGroup);
       } catch (error) {
@@ -108,7 +108,7 @@ export default function DataTable({ groupName }:{ groupName: string }) {
       }
     };
     fetchData();
-  }, [groupName]);
+  }, [groupId]);
   return (
     <Box sx={{ height: 400, width: '100%', overflow: 'hidden' }}>
       <DataGrid

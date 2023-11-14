@@ -59,7 +59,11 @@ export default function Group({
   };
 
   const handleNavigation = () => {
-    router.push(`/admin/groups/edit?groupTitle=${title}`);
+    const groupId = id;
+    const searchParams = new URLSearchParams();
+    searchParams.append('id', groupId.toString());
+    searchParams.append('groupTitle', title.toString());
+    router.push(`/admin/groups/edit?${searchParams.toString()}`);
   };
 
   const handleOpenPopup = () => {

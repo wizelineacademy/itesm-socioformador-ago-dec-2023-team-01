@@ -1,12 +1,13 @@
 'use client';
 
-import * as React from 'react';
+import React, { useEffect, useState } from 'react';
 import Box from '@mui/material/Box';
 import { DataGrid, GridColDef } from '@mui/x-data-grid';
 import Button from '@mui/material/Button';
 import Image from 'next/image';
 import AddIcon from '@mui/icons-material/Add';
 import Styles from './DataGrid.module.css';
+import { fetchUsers } from '@/services/usersService';
 
 const columns: GridColDef[] = [
   {
@@ -130,76 +131,30 @@ const columns: GridColDef[] = [
   },
 ];
 
-const rows = [
-  {
-    id: 2309, username: 'Thomas Anderson', area: 'Full Stack', idAdmin: 'Yes', wizecoins: 400,
-  },
-  {
-    id: 1129, username: 'Andrew Window', area: 'Marketing', idAdmin: 'No', wizecoins: 200,
-  },
-  {
-    id: 1290, username: 'Toby Foster', area: 'Design', idAdmin: 'No', wizecoins: 100,
-  },
-  {
-    id: 1234, username: 'Forest Hill', area: 'Full Stack', idAdmin: 'No', wizecoins: 50,
-  },
-  {
-    id: 9836, username: 'Samuel Acosta', area: 'Front End', idAdmin: 'Yes', wizecoins: 800,
-  },
-  {
-    id: 8725, username: 'Nicolas Aguirre', area: 'Back End', idAdmin: 'Yes', wizecoins: 50,
-  },
-  {
-    id: 2168, username: 'Pablo Erhard', area: 'Full Stack', idAdmin: 'Yes', wizecoins: 200,
-  },
-  {
-    id: 4628, username: 'Alejandro Lizarraga', area: 'QA', idAdmin: 'Yes', wizecoins: 300,
-  },
-  {
-    id: 1289, username: 'Diego Esparza', area: 'Project Manager', idAdmin: 'Yes', wizecoins: 500,
-  },
-  {
-    id: 7809, username: 'Leonardo Gonzalez', area: 'Front End', idAdmin: 'Yes', wizecoins: 1200,
-  },
-  {
-    id: 4392, username: 'Andrea Martinez', area: 'Back End', idAdmin: 'No', wizecoins: 250,
-  },
-  {
-    id: 5438, username: 'Victor Hugo', area: 'Design', idAdmin: 'No', wizecoins: 150,
-  },
-  {
-    id: 6357, username: 'Claudia Reyes', area: 'Marketing', idAdmin: 'Yes', wizecoins: 320,
-  },
-  {
-    id: 2986, username: 'Benjamin Cervantes', area: 'Full Stack', idAdmin: 'No', wizecoins: 480,
-  },
-  {
-    id: 5698, username: 'Patricia Olvera', area: 'QA', idAdmin: 'No', wizecoins: 350,
-  },
-  {
-    id: 3142, username: 'Roberto Solis', area: 'Back End', idAdmin: 'Yes', wizecoins: 290,
-  },
-  {
-    id: 6294, username: 'Liliana Paredes', area: 'Front End', idAdmin: 'No', wizecoins: 210,
-  },
-  {
-    id: 7946, username: 'Alonso Mercado', area: 'Full Stack', idAdmin: 'No', wizecoins: 540,
-  },
-  {
-    id: 8923, username: 'Carmen Navarro', area: 'Project Manager', idAdmin: 'Yes', wizecoins: 440,
-  },
-  {
-    id: 6954, username: 'Miguel Angel', area: 'Design', idAdmin: 'No', wizecoins: 110,
-  },
-  {
-    id: 7493, username: 'Isabel Castillo', area: 'Front End', idAdmin: 'Yes', wizecoins: 650,
-  },
-  {
-    id: 5023, username: 'Raul Medina', area: 'Back End', idAdmin: 'No', wizecoins: 560,
-  },
-];
+// id: 2309, username: 'Thomas Anderson', area: 'Full Stack', idAdmin: 'Yes', wizecoins: 400
 
 export default function DataTable() {
+  const [rows, setWizeliners] = useState<any[]>([]);
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const wizelinersData = await fetchUsers();
+        setWizeliners(wizelinersData.map((user:any) => ({
+          id: user.id,
+          username: user.fullName,
+          area: 'To be determined',
+          idAdmin: 'Yes',
+          wizecoins: 400,
+        })));
+      } catch (e) {
+        console.log(e);
+      }
+    };
+    fetchData();
+    console.log(rows);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   return (
     <Box sx={{ height: 400, width: '100%', overflow: 'hidden' }}>
       <DataGrid

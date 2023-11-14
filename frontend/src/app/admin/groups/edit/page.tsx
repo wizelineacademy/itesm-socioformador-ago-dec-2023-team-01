@@ -3,20 +3,23 @@
 import React, { useState } from 'react';
 import { useSearchParams, useRouter } from 'next/navigation';
 import Image from 'next/image';
-import Link from 'next/link';
+import { Inter } from 'next/font/google';
 import Container from '@mui/material/Container';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import Paper from '@mui/material/Paper';
 import Button from '@mui/material/Button';
 import AddIcon from '@mui/icons-material/Add';
-import WTitle1 from '@/app/components/WTitle1';
 import DataGrid from '@/app/admin/components/DataGrid';
 import Popup from '@/app/components/Popup';
+import Stack from '@mui/material/Stack';
+
+const inter = Inter({ subsets: ['latin'] });
 
 export default function EditGroups() {
   const params = useSearchParams();
   const title = params.get('groupTitle');
+  const id = params.get('id');
   const totalWizecoins = 2500;
   const totalWizeliners = 10;
   const [groupName, setGroupName] = useState('Software Engineers');
@@ -49,6 +52,10 @@ export default function EditGroups() {
     router.back();
   };
 
+  const handleNavigation = () => {
+    router.push(`/admin/groups/edit/add?groupTitle=${title}`);
+  };
+
   return (
     <Container>
       <Box marginBottom={3}>
@@ -58,7 +65,29 @@ export default function EditGroups() {
           justifyContent="space-between"
         >
           <Box>
-            <WTitle1 text="Edit" redText=" Group." />
+            <Stack direction="row" spacing={0}>
+              <Typography
+                variant="h1"
+                className={inter.className}
+                sx={{
+                  fontWeight: 'bold',
+                  color: '#e93d44',
+                }}
+              >
+                Edit
+              </Typography>
+              <Typography
+                variant="h1"
+                className={inter.className}
+                sx={{
+                  paddingLeft: '2rem',
+                  fontWeight: 'bold',
+                  color: 'white',
+                }}
+              >
+                Group.
+              </Typography>
+            </Stack>
             <Paper
               sx={{
                 marginTop: 1,
@@ -138,26 +167,25 @@ export default function EditGroups() {
                 onClose={handleClosePopup}
                 onGoodButtonClick={handleGoodButtonClick}
               />
-              <Link href="/admin/groups/edit/add" passHref>
-                <Button
-                  variant="outlined"
-                  sx={{
-                    textTransform: 'none',
-                    color: '#ffffff',
-                    borderColor: '#4BE93D',
-                    borderRadius: '20px',
-                    '&:hover': {
-                      borderColor: 'green',
-                    },
-                    '& .MuiTouchRipple-root span': {
-                      backgroundColor: '#4BE93D',
-                    },
-                  }}
-                >
-                  <AddIcon />
-                  New Member
-                </Button>
-              </Link>
+              <Button
+                onClick={handleNavigation}
+                variant="outlined"
+                sx={{
+                  textTransform: 'none',
+                  color: '#ffffff',
+                  borderColor: '#4BE93D',
+                  borderRadius: '20px',
+                  '&:hover': {
+                    borderColor: 'green',
+                  },
+                  '& .MuiTouchRipple-root span': {
+                    backgroundColor: '#4BE93D',
+                  },
+                }}
+              >
+                <AddIcon />
+                New Member
+              </Button>
             </Box>
             <Box
               display="flex"
@@ -250,7 +278,7 @@ export default function EditGroups() {
           </Paper>
         </Box>
       </Box>
-      <DataGrid groupName={title!} />
+      <DataGrid groupId={id!} />
       <Box
         display="flex"
         justifyContent="space-between"

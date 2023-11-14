@@ -1,22 +1,24 @@
 'use client';
 
 import React from 'react';
-import { useRouter, useSearchParams } from 'next/navigation';
 import {
   Container,
   Box,
   Paper,
   Typography,
   Button,
+  Stack,
 } from '@mui/material';
-import WTitle1 from '@/app/components/WTitle1';
+import { Inter } from 'next/font/google';
+import { useRouter, useSearchParams } from 'next/navigation';
 import DataGridAdd from '@/app/admin/components/DataGridAdd';
+
+const inter = Inter({ subsets: ['latin'] });
 
 export default function AddWizeliner() {
   const router = useRouter();
   const params = useSearchParams();
-  const groupName = 'Software Engineers';
-
+  const title = params.get('groupTitle');
   const handleNavBack = () => {
     router.back();
   };
@@ -30,7 +32,30 @@ export default function AddWizeliner() {
         justifyContent="space-between"
         marginBottom={3}
       >
-        <WTitle1 text="Add" redText=" Wizeliner" />
+        {/* <WTitle1 text="Add" redText=" Wizeliner" /> */}
+        <Stack direction="row" spacing={0}>
+          <Typography
+            variant="h1"
+            className={inter.className}
+            sx={{
+              fontWeight: 'bold',
+              color: '#e93d44',
+            }}
+          >
+            Add
+          </Typography>
+          <Typography
+            variant="h1"
+            className={inter.className}
+            sx={{
+              paddingLeft: '2rem',
+              fontWeight: 'bold',
+              color: 'white',
+            }}
+          >
+            Wizeliner.
+          </Typography>
+        </Stack>
         <Paper
           sx={{
             marginTop: 0,
@@ -50,44 +75,12 @@ export default function AddWizeliner() {
                 fontWeight: 'bold',
               }}
             >
-              {groupName}
+              {title}
             </Typography>
           </Box>
         </Paper>
       </Box>
       <DataGridAdd />
-      <Box
-        display="flex"
-        justifyContent="space-between"
-        marginTop={3}
-      >
-        <Button
-          onClick={handleNavBack}
-          variant="contained"
-          color="error"
-          sx={{
-            bgcolor: '#E93D44',
-            '&:hover': {
-              bgcolor: 'red',
-            },
-          }}
-        >
-          Cancel
-        </Button>
-        <Button
-          onClick={handleNavBack}
-          variant="contained"
-          color="error"
-          sx={{
-            bgcolor: '#4BE93D',
-            '&:hover': {
-              bgcolor: 'green',
-            },
-          }}
-        >
-          Confirm
-        </Button>
-      </Box>
     </Container>
   );
 }

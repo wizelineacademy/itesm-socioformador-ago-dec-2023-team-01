@@ -1,6 +1,6 @@
 export const fetchGroups = async () => {
   try {
-    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/group/getAllGroups`, {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/group`, {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
@@ -44,9 +44,9 @@ export const fetchGroup = () => {
   console.log('fetchGroup');
 };
 
-export const fetchWizelinersInGroup = async (groupName:string) => {
+export const fetchWizelinersInGroup = async (groupId:string) => {
   try {
-    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/group/findUsersInGroup/${groupName}`, {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/group/${groupId}/users`, {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
@@ -63,7 +63,7 @@ export const fetchWizelinersInGroup = async (groupName:string) => {
       id: user.id,
       username: `${user.firstName} ${user.lastName}`,
       area: 'to be defined',
-      isAdmin: 'Yes',
+      idAdmin: 'Yes',
       wizecoins: 100,
     }));
     console.log(usersInGroup);
