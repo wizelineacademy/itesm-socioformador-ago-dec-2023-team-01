@@ -1,15 +1,15 @@
 import React, { useState } from 'react';
 import {
-  Typography, Box, Button, Paper, Stack, Grid, IconButton,
+  Typography, Box, Button, Paper, Stack, Grid, IconButton, Avatar,
 } from '@mui/material';
 import { Inter } from 'next/font/google';
-import Image from 'next/image';
 import CheckBoxOutlinedIcon from '@mui/icons-material/CheckBoxOutlined';
 import CropSquareIcon from '@mui/icons-material/CropSquare';
+import Popup from '@/app/components/Popup';
+import EditWizecoinsUserPopup from '@/app/components/EditWizecoinsUserPopup';
+import { updateUserAdminStatus } from '@/services/usersService';
 import LineChart from './LineChart';
 import styles from './individualDashboard.module.css';
-import Popup from '@/app/components/Popup';
-import { updateUserAdminStatus } from '@/services/userService';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -25,6 +25,7 @@ interface IndividualDashboardProps {
   GoogleBardPrompts: string;
   Llama2Prompts: string;
   stats: string[][];
+  toggle: Function;
 }
 
 export default function UserProfileDashboard({
@@ -39,6 +40,7 @@ export default function UserProfileDashboard({
   GoogleBardPrompts,
   Llama2Prompts,
   stats,
+  toggle,
 }: IndividualDashboardProps) {
   const UserData = [
     {
@@ -128,40 +130,61 @@ export default function UserProfileDashboard({
     },
   };
 
-  const [isPopupOpen, setPopupOpen] = useState(false);
+  const [isAdminPopupOpen, setAdminPopupOpen] = useState(false);
+  const [isWizecoinsPopupOpen, setWizecoinsPopupOpen] = useState(false);
 
-  // Function to open the popup
-  const handleOpenPopup = () => {
-    setPopupOpen(true);
+  // Function to open the admin popup
+  const handleOpenAdminPopup = () => {
+    setAdminPopupOpen(true);
   };
 
-  // Function to close the popup
-  const handleClosePopup = () => {
-    setPopupOpen(false);
+  // Function to close the admin popup
+  const handleCloseAdminPopup = () => {
+    toggle();
+    setAdminPopupOpen(false);
   };
 
-  // Function to handle the "good" button click
+  // Function to handle the "good" button click for admin popup
   const handleMakeAdminButtonClick = async () => {
     try {
       // Update the isAdmin status to true
       await updateUserAdminStatus(id, true);
-      handleClosePopup(); // Assuming you have a handleClosePopup function
     } catch (error) {
       console.error(error);
     }
-    handleClosePopup();
+    handleCloseAdminPopup();
   };
 
-  // Function to handle the "good" button click
+  // Function to handle the "good" button click for admin popup
   const handleRemoveAdminButtonClick = async () => {
     try {
-      // Update the isAdmin status to true
+      // Update the isAdmin status to false
       await updateUserAdminStatus(id, false);
-      handleClosePopup(); // Assuming you have a handleClosePopup function
     } catch (error) {
       console.error(error);
     }
-    handleClosePopup();
+    handleCloseAdminPopup();
+  };
+
+  // Function to open the Wizecoins popup
+  const handleOpenWizecoinsPopup = () => {
+    setWizecoinsPopupOpen(true);
+  };
+
+  // Function to close the Wizecoins popup
+  const handleCloseWizecoinsPopup = () => {
+    toggle();
+    setWizecoinsPopupOpen(false);
+  };
+
+  // Function to handle the "good" button click for Wizecoins popup
+  const handleEditWizecoinsButtonClick = () => {
+    try {
+      // Your logic for handling "good" button click in the Wizecoins popup
+    } catch (error) {
+      console.error(error);
+    }
+    handleCloseWizecoinsPopup();
   };
 
   return (
@@ -173,27 +196,10 @@ export default function UserProfileDashboard({
         display: 'flex', justifyContent: 'left', alignItems: 'left', Height: '100%', width: '100%', paddingLeft: '5rem', paddingRight: '5rem',
       }}
       >
-        <Stack direction="row" paddingLeft="2rem">
-          <Stack
-            direction="row"
-            alignItems="center"
-            justifyContent="space-evenly"
-            paddingTop="2rem"
-            paddingBottom="2rem"
-          >
-            <Image src="/wizeline.png" width={55} height={40} alt="logo" />
-            <Typography color="white" variant="h4" fontWeight="bold" paddingLeft="0.5rem">
-              WIZE
-              <span>
-                PROMPT
-              </span>
-            </Typography>
-          </Stack>
-        </Stack>
         <Stack direction="row">
           <Stack direction="column" spacing="1rem">
             <Stack paddingLeft="1rem">
-              <img src={profileSrc} className={styles.image} alt="Mock Wizeliner" />
+              <Avatar className={styles.image} alt="Wizeliner" src={profileSrc} />
             </Stack>
             <Stack direction="row" spacing="0.5rem">
               <Paper
@@ -237,7 +243,7 @@ export default function UserProfileDashboard({
                   {isAdmin
                     ? (
                       <>
-                        <IconButton type="button" onClick={handleOpenPopup}>
+                        <IconButton type="button" onClick={handleOpenAdminPopup}>
                           <CheckBoxOutlinedIcon fontSize="large" sx={{ color: '#4BE93D' }} />
                         </IconButton>
                         <Popup
@@ -257,8 +263,8 @@ export default function UserProfileDashboard({
                           ]}
                           badButtonTitle="Cancel"
                           goodButtonTitle="Remove"
-                          open={isPopupOpen}
-                          onClose={handleClosePopup}
+                          open={isAdminPopupOpen}
+                          onClose={handleCloseAdminPopup}
                           onGoodButtonClick={handleRemoveAdminButtonClick}
                         />
 
@@ -266,7 +272,7 @@ export default function UserProfileDashboard({
                     )
                     : (
                       <>
-                        <IconButton type="button" onClick={handleOpenPopup}>
+                        <IconButton type="button" onClick={handleOpenAdminPopup}>
                           <CropSquareIcon fontSize="large" sx={{ color: '#4BE93D' }} />
                         </IconButton>
                         <Popup
@@ -286,8 +292,8 @@ export default function UserProfileDashboard({
                           ]}
                           badButtonTitle="Cancel"
                           goodButtonTitle="Create"
-                          open={isPopupOpen}
-                          onClose={handleClosePopup}
+                          open={isAdminPopupOpen}
+                          onClose={handleCloseAdminPopup}
                           onGoodButtonClick={handleMakeAdminButtonClick}
                         />
 
@@ -311,7 +317,7 @@ export default function UserProfileDashboard({
               }}
               >
                 <Button
-                  href="/mainpage"
+                  onClick={handleOpenWizecoinsPopup}
                   style={{
                     color: 'white',
                     backgroundColor: '#E93D44',
@@ -322,6 +328,14 @@ export default function UserProfileDashboard({
                 >
                   <Typography variant="body1" sx={{ color: 'white' }} className={`${inter.className}`}>Edit</Typography>
                 </Button>
+                <EditWizecoinsUserPopup
+                  fullName={name}
+                  monthlyWizecoins={monthlyWizecoins}
+                  open={isWizecoinsPopupOpen}
+                  onClose={handleCloseWizecoinsPopup}
+                  onGoodButtonClick={handleEditWizecoinsButtonClick}
+                />
+
               </Box>
             </Stack>
           </Stack>

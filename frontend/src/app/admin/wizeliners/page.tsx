@@ -19,8 +19,8 @@ import AddIcon from '@mui/icons-material/Add';
 import CheckBoxOutlinedIcon from '@mui/icons-material/CheckBoxOutlined';
 import CropSquareIcon from '@mui/icons-material/CropSquare';
 import SearchIcon from '@mui/icons-material/Search';
-import Title from '../components/Title';
 import { fetchUsers } from '@/services/usersService';
+import Title from '../components/Title';
 
 export default function Wizeliners() {
   const [wizeliners, setWizeliners] = useState([]);

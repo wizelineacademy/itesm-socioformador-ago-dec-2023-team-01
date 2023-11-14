@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { useSearchParams } from 'next/navigation';
-import fetchUser from '@/services/userService';
+import fetchUser from '@/services/usersService';
 import fetchUserCurrentTokens from '@/services/tokenService';
 import UserProfileDashboard from '@/app/admin/components/individualDashboard';
 
@@ -19,6 +19,12 @@ export default function Wizeliner() {
     updatedAt: '',
     isAdmin: false,
   });
+
+  const [change, setChange] = useState(true);
+
+  const handleRefetch = () => {
+    setChange((prevValue) => !prevValue);
+  };
 
   const [userTokens, setUserTokens] = useState({
     amountTokens: '0',
@@ -41,7 +47,7 @@ export default function Wizeliner() {
       }
     };
     fetchData();
-  }, [userId]);
+  }, [userId, change]);
 
   return (
     <div>
@@ -62,6 +68,7 @@ export default function Wizeliner() {
           ['/Main/ChatGPT', '2.5'],
           ['/Main/ChatGPT', '2.5'],
         ]}
+        toggle={handleRefetch}
       />
     </div>
   );
