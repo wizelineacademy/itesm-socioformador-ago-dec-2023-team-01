@@ -316,4 +316,38 @@ userRouter.get('/:userId/groups', async (req: Request, res: Response) => {
   }
 });
 
+/**
+ * @openapi
+ * '/api/users/{userId}':
+ *  delete:
+ *     tags:
+ *       - Users
+ *     parameters:
+ *       - name: userId
+ *         in: path
+ *         description: Delete user by id
+ *         required: true
+ *     responses:
+ *      200:
+ *        description: Success
+ *      404:
+ *        description: User not found
+ *      500:
+ *        description: Internal server error
+ */
+userRouter.delete('/:userId', async (req: Request, res: Response) => {
+  try {
+    const response = await userService.deleteUser(req.params.userId);
+    res.status(200).json(response);
+  } catch (error) {
+    if (error instanceof CustomError) {
+      res
+        .status(error.status)
+        .json({ error: error.message, code: error.status });
+    } else {
+      res.status(500).json({ message: 'Internal server error', error });
+    }
+  }
+});
+
 export default userRouter;

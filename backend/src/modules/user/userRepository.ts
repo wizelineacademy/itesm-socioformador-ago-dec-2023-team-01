@@ -188,6 +188,15 @@ export const userRepository = {
     });
     return groups.map(group => group.name);
   },
+
+  async deleteUser(userId: string): Promise<object> {
+    const user = await prisma.user.delete({
+      where: {
+        id: userId,
+      },
+    });
+    return user;
+  },
 };
 
 export default userRepository;
