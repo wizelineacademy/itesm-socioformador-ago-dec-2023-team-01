@@ -42,7 +42,7 @@ export const userService = {
     if (!token) {
       return null;
     }
-    if (token.expiresAt > new Date()) {
+    if (token.expiresAt < new Date()) {
       return null;
     }
     const tokenDto: TokenDto = {
