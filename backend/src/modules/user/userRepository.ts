@@ -180,13 +180,16 @@ export const userRepository = {
     };
     return updateUser;
   },
-  async getGroupsFromUser(userId: string): Promise<string[]> {
+  async getGroupsFromUser(userId: string): Promise<any[]> {
     const groups = await prisma.group.findMany({
       where: {
         users: { some: { id: userId } },
       },
     });
-    return groups.map(group => group.name);
+    return groups.map(group => ({
+      id: group.id,
+      name: group.name,
+    }));
   },
 };
 
