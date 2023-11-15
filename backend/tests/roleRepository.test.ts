@@ -29,27 +29,27 @@ describe('roleRepository_Server', () => {
     });
   });
 
-  describe('getRoleByIdOrName', () => {
+  describe('getRoleById', () => {
     it('should get a role by ID', async () => {
-      const roleIdOrName = '3';
+      const roleId = 3;
 
-      const result = await roleRepository.getRoleByIdOrName(roleIdOrName);
-      expect(result.id).to.equal(3);
+      const result = await roleRepository.getRoleById(roleId);
+      expect(result.id).to.equal(roleId);
       expect(result.name).to.equal('testrole');
       expect(result.description).to.equal('Test Description');
     });
 
     it('should recieve error when getting role by ID', async () => {
-      const roleIdOrName = '9999';
+      const roleId = 9999;
 
       try {
-        await roleRepository.getRoleByIdOrName(roleIdOrName);
+        await roleRepository.getRoleById(roleId);
         assert.fail('Expected an error to be thrown');
       } catch (error) {
         if (error instanceof CustomError) {
           const expectedError = new CustomError(
             404,
-            'Role with id/name:9999, not found',
+            `Role with id:${roleId}, not found`,
           );
           assert.equal(error.status, expectedError.status);
           assert.equal(error.message, expectedError.message);
@@ -60,25 +60,25 @@ describe('roleRepository_Server', () => {
     });
 
     it('should get a role by name', async () => {
-      const roleIdOrName = 'testrole';
+      const roleName = 'testrole';
 
-      const result = await roleRepository.getRoleByIdOrName(roleIdOrName);
+      const result = await roleRepository.getRoleByName(roleName);
       expect(result.id).to.equal(3);
-      expect(result.name).to.equal('testrole');
+      expect(result.name).to.equal(roleName);
       expect(result.description).to.equal('Test Description');
     });
 
     it('should recieve error when getting role by name', async () => {
-      const roleIdOrName = 'unusedName(fd15ec06-7fda-11ee-b962-0242ac120002)';
+      const roleName = 'unusedName(fd15ec06-7fda-11ee-b962-0242ac120002)';
 
       try {
-        await roleRepository.getRoleByIdOrName(roleIdOrName);
+        await roleRepository.getRoleByName(roleName);
         assert.fail('Expected an error to be thrown');
       } catch (error) {
         if (error instanceof CustomError) {
           const expectedError = new CustomError(
             404,
-            'Role with id/name:unusedName(fd15ec06-7fda-11ee-b962-0242ac120002), not found',
+            `Role with name:${roleName}, not found`,
           );
           assert.equal(error.status, expectedError.status);
           assert.equal(error.message, expectedError.message);
@@ -90,7 +90,6 @@ describe('roleRepository_Server', () => {
   });
   describe('getRoles', () => {
     it('should get all roles', async () => {
-      // Resolve the stub with desired data in a beforeEach hook
       const roles = await roleRepository.getRoles();
       expect(roles).to.be.an('array');
       expect(roles.length).to.equal(3);
