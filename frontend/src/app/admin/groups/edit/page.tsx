@@ -10,9 +10,8 @@ import Typography from '@mui/material/Typography';
 import Paper from '@mui/material/Paper';
 import Button from '@mui/material/Button';
 import AddIcon from '@mui/icons-material/Add';
-import DataGrid from '@/app/admin/components/DataGrid';
-import Popup from '@/app/components/Popup';
 import Stack from '@mui/material/Stack';
+import DataGrid from '@/app/admin/components/DataGrid';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -20,10 +19,9 @@ export default function EditGroups() {
   const params = useSearchParams();
   const title = params.get('groupTitle');
   const id = params.get('id');
-  const totalWizecoins = 2500;
-  const totalWizeliners = 10;
   const [groupName, setGroupName] = useState('Software Engineers');
   const [isEditing, setIsEditing] = useState(false);
+  const [wizeCount, setWizeCount] = useState({ totalWizeCoins: 0, totalUsers: 0 });
   const router = useRouter();
 
   const handleGroupNameChange = (e: { target: { value: React.SetStateAction<string>; }; }) => {
@@ -34,31 +32,26 @@ export default function EditGroups() {
     setIsEditing(!isEditing);
   };
 
-  const [isPopupOpen, setPopupOpen] = useState(false);
-
-  const handleOpenPopup = () => {
-    setPopupOpen(true);
-  };
-
-  const handleClosePopup = () => {
-    setPopupOpen(false);
-  };
-
-  const handleGoodButtonClick = () => {
-    handleClosePopup();
-  };
-
   const handleNavBack = () => {
     router.back();
   };
 
+  const handleWizeCount = (wizeCountData:{ totalWizeCoins:number, totalUsers:number }) => {
+    console.log(wizeCountData);
+    setWizeCount(wizeCountData);
+  };
+
   const handleNavigation = () => {
-    router.push(`/admin/groups/edit/add?groupTitle=${title}`);
+    const groupId = id;
+    const searchParams = new URLSearchParams();
+    searchParams.append('id', groupId!.toString());
+    searchParams.append('groupTitle', title!.toString());
+    router.push(`/admin/groups/edit/add?${searchParams.toString()}`);
   };
 
   return (
     <Container>
-      <Box marginBottom={3}>
+      <Box marginBottom={2}>
         <Box
           display="flex"
           alignItems="flex-end"
@@ -72,6 +65,7 @@ export default function EditGroups() {
                 sx={{
                   fontWeight: 'bold',
                   color: '#e93d44',
+                  padding: '0',
                 }}
               >
                 Edit
@@ -135,38 +129,19 @@ export default function EditGroups() {
               marginBottom={2}
             >
               <Button
-                variant="outlined"
+                onClick={handleNavBack}
+                variant="contained"
                 sx={{
                   textTransform: 'none',
-                  color: '#ffffff',
-                  borderColor: '#E93D44',
-                  borderRadius: '20px',
+                  fontSize: '1rem',
+                  bgcolor: '#E93D44',
                   '&:hover': {
-                    borderColor: 'red',
+                    bgcolor: 'red',
                   },
                 }}
-                onClick={handleOpenPopup}
               >
-                Remove
+                Finish and go back
               </Button>
-              <Popup
-                title={[
-                  'Remove ',
-                  'Wizeliner',
-                ]}
-                content={[
-                  'You are about to ',
-                  'remove Thomas Anderson ',
-                  'from the ',
-                  'group ',
-                  ', proceed?',
-                ]}
-                badButtonTitle="Cancel"
-                goodButtonTitle="Remove"
-                open={isPopupOpen}
-                onClose={handleClosePopup}
-                onGoodButtonClick={handleGoodButtonClick}
-              />
               <Button
                 onClick={handleNavigation}
                 variant="outlined"
@@ -212,7 +187,7 @@ export default function EditGroups() {
                     color: '#ffffff',
                   }}
                 >
-                  {totalWizeliners}
+                  {wizeCount.totalUsers}
                 </Typography>
               </Box>
               <Typography
@@ -262,7 +237,7 @@ export default function EditGroups() {
                     color: '#4BE93D',
                   }}
                 >
-                  {totalWizecoins}
+                  {wizeCount.totalWizeCoins}
                 </Typography>
               </Box>
               <Typography
@@ -278,39 +253,7 @@ export default function EditGroups() {
           </Paper>
         </Box>
       </Box>
-      <DataGrid groupId={id!} />
-      <Box
-        display="flex"
-        justifyContent="space-between"
-        marginTop={3}
-      >
-        <Button
-          onClick={handleNavBack}
-          variant="contained"
-          color="error"
-          sx={{
-            bgcolor: '#E93D44',
-            '&:hover': {
-              bgcolor: 'red',
-            },
-          }}
-        >
-          Cancel
-        </Button>
-        <Button
-          onClick={handleNavBack}
-          variant="contained"
-          color="error"
-          sx={{
-            bgcolor: '#4BE93D',
-            '&:hover': {
-              bgcolor: 'green',
-            },
-          }}
-        >
-          Confirm
-        </Button>
-      </Box>
+      <DataGrid groupId={id!} wizeCount={handleWizeCount} />
     </Container>
   );
 }

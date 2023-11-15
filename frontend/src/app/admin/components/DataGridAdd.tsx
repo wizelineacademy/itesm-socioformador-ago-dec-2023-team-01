@@ -6,8 +6,10 @@ import { DataGrid, GridColDef } from '@mui/x-data-grid';
 import Button from '@mui/material/Button';
 import Image from 'next/image';
 import AddIcon from '@mui/icons-material/Add';
+import RemoveIcon from '@mui/icons-material/Remove';
 import Styles from './DataGrid.module.css';
 import { fetchUsers } from '@/services/usersService';
+import { fetchWizelinersInGroup, addUserToGroup, removeUserToGroup } from '@/services/groupService';
 
 const columns: GridColDef[] = [
   {
@@ -19,24 +21,24 @@ const columns: GridColDef[] = [
     field: 'username',
     headerName: 'Username',
     width: 300,
-    editable: true,
+    editable: false,
   },
   {
     field: 'area',
     headerName: 'Area(s)',
     width: 200,
-    editable: true,
+    editable: false,
   },
   {
     field: 'idAdmin',
     headerName: 'Is Admin',
     width: 130,
-    editable: true,
+    editable: false,
   },
   {
     field: 'wizecoins',
     headerName: 'Wizecoins',
-    width: 150,
+    width: 110,
     editable: false,
     renderCell: (params) => (
       <Box
@@ -65,7 +67,7 @@ const columns: GridColDef[] = [
     width: 200,
     sortable: false,
     filterable: false,
-    renderCell: () => (
+    renderCell: (params) => (
       <Box
         display="flex"
         alignItems="center"
@@ -73,24 +75,61 @@ const columns: GridColDef[] = [
         height="100%"
         width="100%"
       >
-        <Button
-          variant="outlined"
-          sx={{
-            textTransform: 'none',
-            color: '#ffffff',
-            borderColor: '#4BE93D',
-            borderRadius: '20px',
-            '&:hover': {
-              borderColor: 'green',
-            },
-            '& .MuiTouchRipple-root span': {
-              backgroundColor: '#4BE93D',
-            },
-          }}
-        >
-          <AddIcon />
-          Add Wizeliner
-        </Button>
+        {!params.value.inGroup
+          ? (
+            <Button
+              onClick={
+                async () => {
+                  console.log(params.value);
+                  await addUserToGroup(params.value.groupId, params.value.userId);
+                  params.value.refetch();
+                }
+              }
+              variant="outlined"
+              sx={{
+                textTransform: 'none',
+                color: '#ffffff',
+                borderColor: '#4BE93D',
+                borderRadius: '20px',
+                '&:hover': {
+                  borderColor: 'green',
+                },
+                '& .MuiTouchRipple-root span': {
+                  backgroundColor: '#4BE93D',
+                },
+              }}
+            >
+              <AddIcon />
+              Add Wizeliner
+            </Button>
+          )
+          : (
+            <Button
+              onClick={
+                async () => {
+                  console.log(params.value);
+                  await removeUserToGroup(params.value.groupId, params.value.userId);
+                  params.value.refetch();
+                }
+              }
+              variant="outlined"
+              sx={{
+                textTransform: 'none',
+                color: '#FFF',
+                borderColor: '#E93D44',
+                borderRadius: '20px',
+                '&:hover': {
+                  borderColor: 'red',
+                },
+                '& .MuiTouchRipple-root span': {
+                  backgroundColor: '#4BE93D',
+                },
+              }}
+            >
+              <RemoveIcon />
+              Remove
+            </Button>
+          )}
       </Box>
     ),
   },
@@ -131,29 +170,37 @@ const columns: GridColDef[] = [
   },
 ];
 
-// id: 2309, username: 'Thomas Anderson', area: 'Full Stack', idAdmin: 'Yes', wizecoins: 400
-
-export default function DataTable() {
+export default function DataTable({ groupId }:{ groupId:string }) {
   const [rows, setWizeliners] = useState<any[]>([]);
+  const [change, setChange] = useState(true);
+  const handleRefetch = () => {
+    setChange((prevValue) => !prevValue);
+  };
   useEffect(() => {
     const fetchData = async () => {
       try {
         const wizelinersData = await fetchUsers();
+        const wizelinersInGroupData = await fetchWizelinersInGroup(groupId);
         setWizeliners(wizelinersData.map((user:any) => ({
           id: user.id,
           username: user.fullName,
           area: 'To be determined',
           idAdmin: 'Yes',
           wizecoins: 400,
+          add: {
+            inGroup: wizelinersInGroupData.some((groupUser:any) => groupUser.id === user.id),
+            userId: user.id,
+            groupId,
+            refetch: handleRefetch,
+          },
         })));
       } catch (e) {
         console.log(e);
       }
     };
     fetchData();
-    console.log(rows);
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [change]);
 
   return (
     <Box sx={{ height: 400, width: '100%', overflow: 'hidden' }}>

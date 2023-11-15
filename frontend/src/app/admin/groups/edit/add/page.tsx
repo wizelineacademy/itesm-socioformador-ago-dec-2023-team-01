@@ -19,6 +19,7 @@ export default function AddWizeliner() {
   const router = useRouter();
   const params = useSearchParams();
   const title = params.get('groupTitle');
+  const groupId = params.get('id');
   const handleNavBack = () => {
     router.back();
   };
@@ -80,7 +81,26 @@ export default function AddWizeliner() {
           </Box>
         </Paper>
       </Box>
-      <DataGridAdd />
+      <DataGridAdd groupId={groupId!} />
+      <Box
+        display="flex"
+        justifyContent="space-between"
+        marginTop={3}
+      >
+        <Button
+          onClick={handleNavBack}
+          variant="contained"
+          color="error"
+          sx={{
+            bgcolor: '#E93D44',
+            '&:hover': {
+              bgcolor: 'red',
+            },
+          }}
+        >
+          Go Back
+        </Button>
+      </Box>
     </Container>
   );
 }

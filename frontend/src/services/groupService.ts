@@ -116,3 +116,44 @@ export const deleteGroup = async (groupID:number) => {
     throw error;
   }
 };
+
+export const addUserToGroup = async (groupId:number, userId:number) => {
+  try {
+    const data = {
+      userId,
+    };
+    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/group/${groupId}/user`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${localStorage.getItem('token')}`,
+      },
+      body: JSON.stringify(data),
+    });
+
+    if (!response.ok) {
+      throw new Error('Network response was not ok');
+    }
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export const removeUserToGroup = async (groupId:string, userId:string) => {
+  try {
+    console.log(`About to remove ${userId} from group ${groupId}`);
+    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/group/${groupId}/user/${userId}`, {
+      method: 'DELETE',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${localStorage.getItem('token')}`,
+      },
+    });
+
+    if (!response.ok) {
+      throw new Error('Network response was not ok');
+    }
+  } catch (error) {
+    console.log(error);
+  }
+};

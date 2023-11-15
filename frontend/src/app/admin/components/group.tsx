@@ -166,7 +166,7 @@ export default function Group({
               <span>
                 {members.toString()}
               </span>
-              wizeliners
+              {' wizeliners'}
             </Typography>
             <Box>
               <Typography
