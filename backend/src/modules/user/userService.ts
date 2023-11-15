@@ -1,3 +1,4 @@
+import axios from 'axios';
 import roleRepository from '../role/roleRepository';
 import { TokenDto } from '../token/tokenModel';
 import userRepository from './userRepository';
@@ -5,6 +6,7 @@ import { User } from './userModel';
 import CustomError from '../../utils/errorModel';
 import tokenService from '../token/tokenService';
 import tokenRepository from '../token/tokenRepository';
+import { ApiReponse } from '../../shared/models/responseModel';
 
 export const userService = {
   async getUserById(userId: string): Promise<User> {
@@ -95,6 +97,31 @@ export const userService = {
       amount,
     );
     return updatedToken;
+  },
+
+  async deleteUser(userId: string): Promise<ApiReponse> {
+    const user = await userRepository.getUserById(userId);
+    if (!user) {
+      throw new CustomError(404, `User with id:${userId}, not found in db`);
+    }
+    try {
+      const options = {
+        method: 'GET',
+        url: `${process.env.AUTH0_MANAGEMENT_API_URL}/users/${userId}`,
+        headers: {
+          authorization: `Bearer ${process.env.AUTH0_MANAGEMENT_API_TOKEN}`,
+        },
+      };
+      const userAuth0 = await axios(options);
+      if (userAuth0) {
+        options.method = 'DELETE';
+        await axios(options);
+      }
+    } catch (error) {
+      throw new CustomError(500, `Error deleting user from Auth0: ${error}`);
+    }
+    const deletedUser = await userRepository.deleteUser(userId);
+    return { message: 'User deleted', data: deletedUser };
   },
 };
 
