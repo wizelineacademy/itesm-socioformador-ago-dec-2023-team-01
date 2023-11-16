@@ -1,14 +1,28 @@
 import axios from 'axios';
 import roleRepository from '../role/roleRepository';
-import { TokenDto } from '../token/tokenModel';
+import { TokenDto, CreateTokenInput } from '../token/tokenModel';
 import userRepository from './userRepository';
-import { User } from './userModel';
+import { User, CreateUserInput, UserDto } from './userModel';
 import CustomError from '../../utils/errorModel';
 import tokenService from '../token/tokenService';
 import tokenRepository from '../token/tokenRepository';
 import { ApiReponse } from '../../shared/models/responseModel';
 
 export const userService = {
+  async createUser(userInput: CreateUserInput): Promise<UserDto> {
+    const user = await userRepository.createUser(userInput);
+    const oneMonthFromNow = new Date(
+      new Date().setMonth(new Date().getMonth() + 1),
+    );
+    const newToken: CreateTokenInput = {
+      userId: user.id,
+      amount: 0,
+      expiresAt: oneMonthFromNow,
+    };
+    await tokenService.createToken(newToken);
+    return user;
+  },
+
   async getUserById(userId: string): Promise<User> {
     const user = await userRepository.getUserById(userId);
     const role = await roleRepository.getRoleById(user.roleId);
