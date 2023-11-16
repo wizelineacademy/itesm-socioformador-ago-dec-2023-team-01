@@ -3,7 +3,7 @@ import { TokenDto, CreateTokenDto, CreateTokenInput } from './tokenModel';
 import tokenRepository from './tokenRepository';
 
 const tokenService = {
-  async createToken(tokenBody: any): Promise<CreateTokenDto> {
+  async createToken(tokenBody: CreateTokenInput): Promise<CreateTokenDto> {
     const tokenInput: CreateTokenInput = {
       userId: tokenBody.userId,
       amount: tokenBody.amount,
