@@ -23,10 +23,14 @@ export const groupService = {
           (total, token) => total + token.currentAmount,
           0,
         );
+        const numberOfUsersInGroup = await groupRepository.findUsersInGroupById(
+          group.id,
+        );
         return {
           group,
           totalTokens: groupTotalTokens,
           availableTokens: groupUsedTokens,
+          numberOfUsers: numberOfUsersInGroup.length,
         };
       }),
     );
