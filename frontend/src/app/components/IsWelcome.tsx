@@ -19,7 +19,6 @@ export default function IsWelcome({
   const firstName = nameParts[0];
   const lastName = nameParts.splice(1).join(' ');
   return (
-
     <Box sx={{
       display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '100vh',
     }}
@@ -27,7 +26,7 @@ export default function IsWelcome({
       <Stack justifyContent="center" alignItems="center" spacing={3}>
         <Grid container spacing={4} display="flex" justifyContent="center" alignItems="center">
           <Grid direction="column">
-            <Image width="200" height="200" src={picSource} className={styles.image} alt="Mock Wizeliner" />
+            <Image width="200" height="200" loader={() => picSource} src={picSource} className={styles.image} alt="Mock Wizeliner" />
           </Grid>
           <Grid>
             <Typography
@@ -59,15 +58,15 @@ export default function IsWelcome({
           <Grid>
             <Tooltip title="ChatGPT">
               <Link href="/mainpage">
-                <Image width="200" height="200" src="./chatgptGreen.png" className={styles.roundedimage} alt="Chat GPT Green" />
+                <Image width="200" height="200" src="/chatgptGreen.png" className={styles.roundedimage} alt="Chat GPT Green" />
               </Link>
             </Tooltip>
           </Grid>
           <Grid>
-            <Image width="200" height="200" src="./Bard.png" className={styles.roundedimage} alt="Bard" />
+            <Image width="200" height="200" src="/Bard.png" className={styles.roundedimage} alt="Bard" />
           </Grid>
           <Grid>
-            <Image width="200" height="200" src="./llama2.png" className={styles.roundedimage} alt="Llama 2" />
+            <Image width="200" height="200" src="/llama2.png" className={styles.roundedimage} alt="Llama 2" />
           </Grid>
         </Grid>
         <Grid spacing={4} container display="flex" justifyContent="center" alignItems="center">

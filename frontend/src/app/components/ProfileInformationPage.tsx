@@ -39,7 +39,7 @@ export default function UserProfile({
     >
       <Stack justifyContent="center" alignItems="center" spacing={3}>
         <Grid direction="column">
-          <Image width="200" height="200" src={profileSrc} className={styles.image} alt="Mock Wizeliner" />
+          <Image width="200" height="200" loader={() => profileSrc} src={profileSrc} className={styles.image} alt="Mock Wizeliner" />
         </Grid>
         <Grid>
           <Stack direction="column" justifyContent="space-between">

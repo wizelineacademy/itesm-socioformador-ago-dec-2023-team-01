@@ -46,7 +46,7 @@ export default function Home() {
                 justifyContent="center"
                 alignItems="center"
               >
-                <Image width="200" height="200" src="./chatgpt.png" className={styles.smallImage} alt="" />
+                <Image width="200" height="200" src="/chatgpt.png" className={styles.smallImage} alt="" />
               </Grid>
               <Grid
                 xs={4}
@@ -54,7 +54,7 @@ export default function Home() {
                 justifyContent="center"
                 alignItems="center"
               >
-                <Image width="200" height="200" src="./Bard.png" className={styles.smallImage} alt="" />
+                <Image width="200" height="200" src="/Bard.png" className={styles.smallImage} alt="" />
               </Grid>
               <Grid
                 xs={4}
@@ -62,14 +62,14 @@ export default function Home() {
                 justifyContent="center"
                 alignItems="center"
               >
-                <Image width="200" height="200" src="./llama2.png" className={styles.smallImage} alt="" />
+                <Image width="200" height="200" src="/llama2.png" className={styles.smallImage} alt="" />
               </Grid>
             </Grid>
           </div>
         </div>
       </Grid>
       <Grid xs={0} md={6}>
-        <Image width="200" height="200" src="./inspiration.jpg" className={styles.image} alt="" />
+        <Image width="1000" height="1000" src="/inspiration.jpg" className={styles.image} alt="" />
       </Grid>
     </Grid>
   );
