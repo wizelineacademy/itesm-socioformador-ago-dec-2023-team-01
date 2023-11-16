@@ -100,7 +100,7 @@ export const createGroup = async (groupName:string) => {
 
 export const deleteGroup = async (groupID:number) => {
   try {
-    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/group/delete/${groupID}`, {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/group/${groupID}`, {
       method: 'DELETE',
       headers: {
         'Content-Type': 'application/json',

@@ -3,6 +3,7 @@ import {
   Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Typography, Box,
   Stack, TextField,
 } from '@mui/material';
+import { VariantType, enqueueSnackbar } from 'notistack';
 import { Inter } from 'next/font/google';
 import styles from './iswelcome.module.css';
 import { createGroup } from '@/services/groupService';
@@ -28,6 +29,10 @@ export default function CreateGroupPopup({
   // eslint-disable-next-line max-len
   const [defaultMonthlyWizecoinsInput, setDefaultMonthlyWizecoinsInput] = useState(defaultMonthlyWizecoins);
 
+  const showNotification = (variant: VariantType, groupN:string, action:string) => {
+    enqueueSnackbar(`${action} ${groupN}`, { variant });
+  };
+
   const handleGroupNameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setGroupNameInput(event.target.value);
   };
@@ -40,6 +45,7 @@ export default function CreateGroupPopup({
     try {
       await createGroup(groupNameInput);
       onGoodButtonClick();
+      showNotification('success', groupNameInput, 'Added');
     } catch (err) {
       console.log(err);
     }

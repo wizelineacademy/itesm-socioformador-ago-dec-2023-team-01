@@ -13,6 +13,7 @@ import CodeIcon from '@mui/icons-material/Code';
 import { useRouter } from 'next/navigation';
 import { Doughnut } from 'react-chartjs-2';
 import { Chart, ArcElement } from 'chart.js';
+import { VariantType, enqueueSnackbar } from 'notistack';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
@@ -31,26 +32,14 @@ export default function Group({
   toggle,
 }: GroupProps) {
   const [isOpen, setOpen] = useState(false);
-  const router = useRouter();
-  const textCenter = {
-    id: 'textCenter',
-    beforeDatasetsDraw(chart: any) {
-      const { ctx } = chart;
-
-      ctx.save();
-      ctx.font = '20px sans-serif';
-      ctx.fillStyle = 'rgba(255,255,255,0.4)';
-      ctx.textAlign = 'center';
-      ctx.textBaseline = 'middle';
-      ctx.fillText(
-        `${data.datasets[0].data[0]}%`,
-        chart.getDatasetMeta(0).data[0].x,
-        chart.getDatasetMeta(0).data[0].y,
-      );
-    },
-  };
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
-  const open = Boolean(anchorEl);
+
+  const router = useRouter();
+
+  const showNotification = (variant: VariantType, groupName:string, action:string) => {
+    enqueueSnackbar(`${action} ${groupName}`, { variant });
+  };
+
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
     setAnchorEl(event.currentTarget);
   };
@@ -80,10 +69,31 @@ export default function Group({
       handleClosePopup();
       handleClose();
       toggle();
+      showNotification('error', title.toString(), 'deleted');
     } catch (error) {
       console.log(error);
     }
   };
+
+  const open = Boolean(anchorEl);
+  const textCenter = {
+    id: 'textCenter',
+    beforeDatasetsDraw(chart: any) {
+      const { ctx } = chart;
+
+      ctx.save();
+      ctx.font = '20px sans-serif';
+      ctx.fillStyle = 'rgba(255,255,255,0.4)';
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      ctx.fillText(
+        `${data.datasets[0].data[0]}%`,
+        chart.getDatasetMeta(0).data[0].x,
+        chart.getDatasetMeta(0).data[0].y,
+      );
+    },
+  };
+
   return (
     <>
       <Popup
