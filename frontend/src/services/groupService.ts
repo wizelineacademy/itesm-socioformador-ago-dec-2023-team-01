@@ -13,6 +13,7 @@ export const fetchGroups = async () => {
     }
 
     let groups = await response.json();
+    console.log(groups);
     groups = groups.map((group:any) => ({
       id: group.group.id,
       title: group.group.name,

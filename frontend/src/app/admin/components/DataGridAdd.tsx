@@ -3,14 +3,14 @@
 import React, { useEffect, useState } from 'react';
 import Box from '@mui/material/Box';
 import { VariantType, enqueueSnackbar } from 'notistack';
-import { DataGrid, GridColDef } from '@mui/x-data-grid';
 import Button from '@mui/material/Button';
 import Image from 'next/image';
 import AddIcon from '@mui/icons-material/Add';
 import RemoveIcon from '@mui/icons-material/Remove';
-import Styles from './DataGrid.module.css';
+import { DataGrid, GridColDef } from '@mui/x-data-grid';
 import { fetchUsers } from '@/services/usersService';
 import { fetchWizelinersInGroup, addUserToGroup, removeUserToGroup } from '@/services/groupService';
+import Styles from './DataGrid.module.css';
 
 export default function DataTable({ groupId }:{ groupId:string }) {
   const [rows, setWizeliners] = useState<any[]>([]);

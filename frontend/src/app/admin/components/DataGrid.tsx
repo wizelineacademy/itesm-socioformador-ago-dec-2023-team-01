@@ -7,9 +7,9 @@ import { VariantType, enqueueSnackbar } from 'notistack';
 import { DataGrid, GridColDef } from '@mui/x-data-grid';
 import Button from '@mui/material/Button';
 import Image from 'next/image';
-import Styles from './DataGrid.module.css';
 import { fetchWizelinersInGroup, removeUserToGroup } from '@/services/groupService';
 import Popup from '@/app/components/Popup';
+import Styles from './DataGrid.module.css';
 
 export default function DataTable({ groupId, wizeCount }:{ groupId: string, wizeCount:Function }) {
   const [usersGroup, setUsersGroup] = useState([]);

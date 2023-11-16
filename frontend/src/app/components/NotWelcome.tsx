@@ -2,6 +2,7 @@ import React from 'react';
 import {
   Typography, Stack, Button,
 } from '@mui/material';
+import Image from 'next/image';
 import styles from './iswelcome.module.css';
 
 export default function NotWelcome() {
@@ -14,7 +15,7 @@ export default function NotWelcome() {
       minHeight="100vh"
       minWidth="50px"
     >
-      <img src="./notWizeliner.jpg" className={styles.image} alt="" />
+      <Image width="200" height="200" src="./notWizeliner.jpg" className={styles.image} alt="" />
       <Typography
         sx={{
           fontWeight: 'bold',

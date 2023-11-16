@@ -17,9 +17,9 @@ import { VariantType, enqueueSnackbar } from 'notistack';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
-import { GroupProps } from './types';
 import { deleteGroup } from '@/services/groupService';
 import Popup from '@/app/components/Popup';
+import { GroupProps } from './types';
 
 Chart.register(ArcElement);
 

@@ -15,7 +15,7 @@ export default function Welcome() {
   if (user) {
     return (
       <div>
-        {true ? <IsWelcome admin name={user.name} wizecoins="120" IsWizeliner picSource={user.picture} /> : <NotWelcome />}
+        <IsWelcome admin name={user.name} wizecoins="120" IsWizeliner picSource={user.picture} />
       </div>
     );
   }

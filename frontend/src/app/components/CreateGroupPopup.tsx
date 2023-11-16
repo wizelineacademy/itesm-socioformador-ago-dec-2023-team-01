@@ -5,8 +5,8 @@ import {
 } from '@mui/material';
 import { VariantType, enqueueSnackbar } from 'notistack';
 import { Inter } from 'next/font/google';
-import styles from './iswelcome.module.css';
 import { createGroup } from '@/services/groupService';
+import styles from './iswelcome.module.css';
 
 const inter = Inter({ subsets: ['latin'] });
 

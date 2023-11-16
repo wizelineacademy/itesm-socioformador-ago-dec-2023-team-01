@@ -15,9 +15,9 @@ import { Inter } from 'next/font/google';
 import { SnackbarProvider } from 'notistack';
 import SearchIcon from '@mui/icons-material/Search';
 import AddIcon from '@mui/icons-material/Add';
-import Group from '../components/group';
 import { fetchGroups } from '@/services/groupService';
 import CreateGroupPopup from '@/app/components/CreateGroupPopup';
+import Group from '../components/group';
 
 const inter = Inter({ subsets: ['latin'] });
 
