@@ -11,6 +11,7 @@ import {
 } from '@mui/material';
 import { Inter } from 'next/font/google';
 import { useRouter, useSearchParams } from 'next/navigation';
+import { SnackbarProvider } from 'notistack';
 import DataGridAdd from '@/app/admin/components/DataGridAdd';
 
 const inter = Inter({ subsets: ['latin'] });
@@ -26,6 +27,7 @@ export default function AddWizeliner() {
 
   return (
     <Container>
+      <SnackbarProvider />
       <Box
         display="flex"
         flexDirection="column"

@@ -3,21 +3,13 @@
 import React, { useEffect, useState } from 'react';
 import Box from '@mui/material/Box';
 import RemoveIcon from '@mui/icons-material/Remove';
-import { ThemeProvider, createTheme } from '@mui/material/styles';
-import Snackbar from '@mui/material/Snackbar';
+import { VariantType, enqueueSnackbar } from 'notistack';
 import { DataGrid, GridColDef } from '@mui/x-data-grid';
 import Button from '@mui/material/Button';
 import Image from 'next/image';
-import Alert from '@mui/material/Alert';
 import Styles from './DataGrid.module.css';
 import { fetchWizelinersInGroup, removeUserToGroup } from '@/services/groupService';
 import Popup from '@/app/components/Popup';
-
-const darkTheme = createTheme({
-  palette: {
-    mode: 'dark',
-  },
-});
 
 export default function DataTable({ groupId, wizeCount }:{ groupId: string, wizeCount:Function }) {
   const [usersGroup, setUsersGroup] = useState([]);
@@ -26,7 +18,7 @@ export default function DataTable({ groupId, wizeCount }:{ groupId: string, wize
   const [isPopupOpen, setPopupOpen] = useState(false);
   const [popupText, setPopupText] = useState<string[]>([]);
   const [currUser, setCurrUser] = useState('');
-  const [open, setOpen] = useState(false);
+  const [currName, setCurrName] = useState('');
 
   useEffect(() => {
     const fetchData = async () => {
@@ -54,15 +46,8 @@ export default function DataTable({ groupId, wizeCount }:{ groupId: string, wize
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [usersGroup]);
 
-  const handleOpenDeleteConfirmation = () => {
-    setOpen(true);
-  };
-
-  const handleCloseConfirmation = (event: React.SyntheticEvent | Event, reason?: string) => {
-    if (reason === 'clickaway') {
-      return;
-    }
-    setOpen(false);
+  const showNotification = (variant: VariantType, user:string, action:string) => {
+    enqueueSnackbar(`${action} ${user}`, { variant });
   };
 
   const handleOpenPopup = () => {
@@ -77,7 +62,7 @@ export default function DataTable({ groupId, wizeCount }:{ groupId: string, wize
     removeUserToGroup(groupId, currUser);
     setChange(!change);
     handleClosePopup();
-    handleOpenDeleteConfirmation();
+    showNotification('error', currName, 'Removed');
   };
 
   const columns: GridColDef[] = [
@@ -181,15 +166,13 @@ export default function DataTable({ groupId, wizeCount }:{ groupId: string, wize
         >
           <Button
             onClick={
-                  async () => {
-                    // console.log('OnClick', params.row);
-                    // await removeUserToGroup(groupId, params.row.id);
-                    // setChange(!change);
-                    setCurrUser(params.row.id);
-                    setPopupText(['You are about to ', `remove ${params.row.username}`, ' from the ', 'group', ', proceed?']);
-                    handleOpenPopup();
-                  }
-                }
+              async () => {
+                setCurrUser(params.row.id);
+                setCurrName(params.row.username);
+                setPopupText(['You are about to ', `remove ${params.row.username}`, ' from the ', 'group', ', proceed?']);
+                handleOpenPopup();
+              }
+            }
             variant="outlined"
             sx={{
               textTransform: 'none',
@@ -214,14 +197,6 @@ export default function DataTable({ groupId, wizeCount }:{ groupId: string, wize
 
   return (
     <Box sx={{ height: 400, width: '100%', overflow: 'hidden' }}>
-      <ThemeProvider theme={darkTheme}>
-        <Snackbar open={open} autoHideDuration={6000} onClose={handleCloseConfirmation}>
-          {/*  sx={{ width: '100%', background: '#38ad2e', color: 'black' }} */}
-          <Alert onClose={handleCloseConfirmation} severity="success">
-            Wizeliner successfully removed from group
-          </Alert>
-        </Snackbar>
-      </ThemeProvider>
       <Popup
         title={[
           'Remove ',

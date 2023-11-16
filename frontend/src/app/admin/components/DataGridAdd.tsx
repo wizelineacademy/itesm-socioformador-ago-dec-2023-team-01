@@ -2,6 +2,7 @@
 
 import React, { useEffect, useState } from 'react';
 import Box from '@mui/material/Box';
+import { VariantType, enqueueSnackbar } from 'notistack';
 import { DataGrid, GridColDef } from '@mui/x-data-grid';
 import Button from '@mui/material/Button';
 import Image from 'next/image';
@@ -42,6 +43,10 @@ export default function DataTable({ groupId }:{ groupId:string }) {
     fetchData();
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [change]);
+
+  const showNotification = (variant: VariantType, user:string, action:string) => {
+    enqueueSnackbar(`${action} ${user}`, { variant });
+  };
 
   const columns: GridColDef[] = [
     {
@@ -115,6 +120,7 @@ export default function DataTable({ groupId }:{ groupId:string }) {
                     console.log(params.value);
                     await addUserToGroup(params.value.groupId, params.value.userId);
                     params.value.refetch();
+                    showNotification('success', params.row.username, 'Added');
                   }
                 }
                 variant="outlined"
@@ -142,6 +148,7 @@ export default function DataTable({ groupId }:{ groupId:string }) {
                     console.log(params.value);
                     await removeUserToGroup(params.value.groupId, params.value.userId);
                     params.value.refetch();
+                    showNotification('error', params.row.username, 'Removed');
                   }
                 }
                 variant="outlined"

@@ -11,6 +11,7 @@ import Paper from '@mui/material/Paper';
 import Button from '@mui/material/Button';
 import AddIcon from '@mui/icons-material/Add';
 import Stack from '@mui/material/Stack';
+import { SnackbarProvider } from 'notistack';
 import DataGrid from '@/app/admin/components/DataGrid';
 
 const inter = Inter({ subsets: ['latin'] });
@@ -51,6 +52,7 @@ export default function EditGroups() {
 
   return (
     <Container>
+      <SnackbarProvider />
       <Box marginBottom={2}>
         <Box
           display="flex"
