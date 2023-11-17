@@ -81,7 +81,7 @@ export default function IsWelcome({
                 href="/api/auth/logout"
                 className={styles.return}
                 onClick={() => {
-                  localStorage.removeItem('token');
+                  localStorage.clear();
                 }}
               >
                 Return to Sign-in

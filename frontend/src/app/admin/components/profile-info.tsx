@@ -32,7 +32,7 @@ export default function ProfileInfo({
   };
 
   const handleLogOut = () => {
-    localStorage.removeItem('token');
+    localStorage.clear();
     setOpen(false);
   };
 

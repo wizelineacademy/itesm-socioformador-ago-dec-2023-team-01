@@ -18,7 +18,7 @@ export const fetchGroups = async () => {
       id: group.group.id,
       title: group.group.name,
       members: group.numberOfUsers,
-      moneySpent: 20,
+      moneySpent: 0,
       data: {
         labels: ['Used'],
         datasets: [
@@ -48,7 +48,7 @@ export const fetchGroup = () => {
   console.log('fetchGroup');
 };
 
-const fetchUserCurrentTokens = async (userId:string) => {
+export const fetchUserCurrentTokens = async (userId:string) => {
   try {
     const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/users/${userId}/tokens`);
 

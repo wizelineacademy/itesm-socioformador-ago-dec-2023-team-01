@@ -9,7 +9,12 @@ import AddIcon from '@mui/icons-material/Add';
 import RemoveIcon from '@mui/icons-material/Remove';
 import { DataGrid, GridColDef } from '@mui/x-data-grid';
 import { fetchUsers } from '@/services/usersService';
-import { fetchWizelinersInGroup, addUserToGroup, removeUserToGroup } from '@/services/groupService';
+import {
+  fetchWizelinersInGroup,
+  addUserToGroup,
+  removeUserToGroup,
+  fetchUserCurrentTokens,
+} from '@/services/groupService';
 import Styles from './DataGrid.module.css';
 
 export default function DataTable({ groupId }:{ groupId:string }) {
@@ -23,18 +28,24 @@ export default function DataTable({ groupId }:{ groupId:string }) {
       try {
         const wizelinersData = await fetchUsers();
         const wizelinersInGroupData = await fetchWizelinersInGroup(groupId);
-        setWizeliners(wizelinersData.map((user:any) => ({
-          id: user.id,
-          username: user.fullName,
-          idAdmin: user.isAdmin ? 'YES' : 'NO',
-          wizecoins: 400,
-          add: {
-            inGroup: wizelinersInGroupData.some((groupUser:any) => groupUser.id === user.id),
-            userId: user.id,
-            groupId,
-            refetch: handleRefetch,
-          },
-        })));
+        const usersWithWizecoins = await Promise.all(
+          wizelinersData.map(async (user: any) => {
+            const currentCoins = await fetchUserCurrentTokens(user.id);
+            return {
+              id: user.id,
+              username: user.fullName,
+              idAdmin: user.isAdmin ? 'YES' : 'NO',
+              wizecoins: currentCoins,
+              add: {
+                inGroup: wizelinersInGroupData.some((groupUser: any) => groupUser.id === user.id),
+                userId: user.id,
+                groupId,
+                refetch: handleRefetch,
+              },
+            };
+          }),
+        );
+        setWizeliners(usersWithWizecoins);
       } catch (e) {
         console.log(e);
       }

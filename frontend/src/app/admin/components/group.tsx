@@ -187,7 +187,7 @@ export default function Group({
                 <span>
                   $
                   {moneySpent.toString()}
-                  USD
+                  {' USD'}
                 </span>
               </Typography>
               <Typography

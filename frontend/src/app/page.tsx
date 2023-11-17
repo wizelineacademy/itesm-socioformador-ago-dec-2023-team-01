@@ -22,6 +22,9 @@ export default function Home() {
     };
     tokenResponse().then((token) => {
       localStorage.setItem('token', token);
+      localStorage.setItem('picture', user.picture as string);
+      localStorage.setItem('firstName', user.given_name as string);
+      localStorage.setItem('lastName', user.family_name as string);
     }).catch((err) => {
       console.log(err);
     });
