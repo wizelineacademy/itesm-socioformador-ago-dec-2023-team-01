@@ -1,27 +1,41 @@
 'use client';
 
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Box, Stack } from '@mui/material';
 import SideNav from './components/side-nav';
 import ProfileInfo from './components/profile-info';
 import { WelcomeProps } from '../components/types';
+import Awaiting from '../components/awaiting';
 
 export default function AdminLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
-  const wizeliner: WelcomeProps = {
-    admin: true,
-    firstName: localStorage.getItem('first') as string,
-    lastName: localStorage.getItem('last') as string,
-    wizecoins: localStorage.getItem('amountTokens') as string,
-    IsWizeliner: true,
-    name: `${localStorage.getItem('first')} ${localStorage.getItem('last')}`,
-    picSource: localStorage.getItem('pic'),
-  };
+  const [wizeliner, setWizeliner] = useState<WelcomeProps>({
+    admin: false,
+    firstName: '',
+    lastName: '',
+    wizecoins: '',
+    IsWizeliner: false,
+    name: '',
+    picSource: '',
+  });
 
-  console.log(wizeliner);
+  useEffect(() => {
+    console.log(localStorage.getItem('token'));
+    setWizeliner({
+      admin: true,
+      firstName: localStorage.getItem('first') as string,
+      lastName: localStorage.getItem('last') as string,
+      wizecoins: localStorage.getItem('amountTokens') as string,
+      IsWizeliner: true,
+      name: `${localStorage.getItem('first')} ${localStorage.getItem('last')}`,
+      picSource: localStorage.getItem('pic'),
+    });
+  }, []);
+
+  if (wizeliner.firstName === '') return <Awaiting />;
 
   return (
     <Stack direction="row">

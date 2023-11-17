@@ -11,57 +11,60 @@ import Box from '@mui/material/Box';
 import SendIcon from '@mui/icons-material/Send';
 import IconButton from '@mui/material/IconButton';
 import InputAdornment from '@mui/material/InputAdornment';
-import { useChat, Message } from 'ai/react';
-import {
-  encodingForModel,
-  getEncoding,
-  type TiktokenModel,
-  type TiktokenEncoding,
-  Tiktoken,
-} from 'js-tiktoken';
+// import { useChat, Message } from 'ai/react';
+import { useChat } from 'ai/react';
+// import {
+//   encodingForModel,
+//   getEncoding,
+//   type TiktokenModel,
+//   type TiktokenEncoding,
+//   Tiktoken,
+// } from 'js-tiktoken';
 
 export default function Chat({ profileSrc }:any) {
-  function numTokensFromMessages(messages: any[], model: string = 'gpt-3.5-turbo-0613'): number {
-    let encoding:Tiktoken;
-    try {
-      encoding = encodingForModel(model as TiktokenModel);
-    } catch (error) {
-      encoding = getEncoding('cl100k_base' as TiktokenEncoding);
-    }
-    if (model === 'gpt-3.5-turbo-0613') {
-      let numTokens = -3; // fix constant -3 deviation
-      for (const message of messages) {
-        numTokens += 4; // every message follows <im_start>{role/name}\n{content}<im_end>\n
-        numTokens += (encoding.encode(message.content)).length;
-        if (message.key === 'name') {
-          numTokens -= 1;
-        }
-      }
-      numTokens += 2; // every reply is primed with <im_start>assistant
-      return numTokens;
-    }
-    throw new Error(`numTokensFromMessages() is not presently implemented for model ${model}.
-        See https://github.com/openai/openai-python/blob/main/chatml.md for information on how messages are converted to tokens.`);
-  }
+  // function numTokensFromMessages(messages: any[], model: string = 'gpt-3.5-turbo-0613'): number {
+  //   let encoding:Tiktoken;
+  //   try {
+  //     encoding = encodingForModel(model as TiktokenModel);
+  //   } catch (error) {
+  //     encoding = getEncoding('cl100k_base' as TiktokenEncoding);
+  //   }
+  //   if (model === 'gpt-3.5-turbo-0613') {
+  //     let numTokens = -3; // fix constant -3 deviation
+  //     for (const message of messages) {
+  //       numTokens += 4; // every message follows <im_start>{role/name}\n{content}<im_end>\n
+  //       numTokens += (encoding.encode(message.content)).length;
+  //       if (message.key === 'name') {
+  //         numTokens -= 1;
+  //       }
+  //     }
+  //     numTokens += 2; // every reply is primed with <im_start>assistant
+  //     return numTokens;
+  //   }
+  //   throw new Error(`numTokensFromMessages() is not presently implemented for model ${model}.
+  //       See https://github.com/openai/openai-python/blob/main/chatml.md for information on how messages are converted to tokens.`);
+  // }
 
   const {
-    input, handleInputChange, handleSubmit, isLoading, messages,
+    // input, handleInputChange, handleSubmit, isLoading, messages,
+    input, handleInputChange, handleSubmit, messages,
   } = useChat({
     api: '/api/chat',
   });
 
-  const [tokenCount, setTokenCount] = useState(0);
-  const calculateTokenCount = () => {
-    const model = 'gpt-3.5-turbo-0613';
-    const contextMessages = [
-      { role: 'system', content: 'You are a helpful assistant expert in programming.' },
-      ...messages,
-    ];
+  // const [tokenCount, setTokenCount] = useState(0);
+  const [tokenCount] = useState(0);
+  // const calculateTokenCount = () => {
+  //   const model = 'gpt-3.5-turbo-0613';
+  //   const contextMessages = [
+  //     { role: 'system', content: 'You are a helpful assistant expert in programming.' },
+  //     ...messages,
+  //   ];
 
-    const tokens = numTokensFromMessages(contextMessages, model);
+  //   const tokens = numTokensFromMessages(contextMessages, model);
 
-    setTokenCount(tokens);
-  };
+  //   setTokenCount(tokens);
+  // };
   useEffect(() => {
     console.log('1', tokenCount);
   }, [tokenCount]);
