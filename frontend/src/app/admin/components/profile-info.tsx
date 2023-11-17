@@ -14,6 +14,11 @@ import styles from './sidenav.module.css';
 
 const inter = Inter({ subsets: ['latin'] });
 
+const handleLogout = () => {
+  localStorage.clear();
+  window.location.href = '/api/auth/logout';
+};
+
 function ProfileInfo({
   firstName,
   lastName,
@@ -43,12 +48,13 @@ function ProfileInfo({
             >
               <Grid>
                 <Button
-                  href="/welcome"
+                  href="/"
                   sx={{
                     textTransform: 'none',
                   }}
                   className={`${inter.className}`}
                   startIcon={<LogoutIcon sx={{ color: '#E93D44' }} />}
+                  onClick={handleLogout}
                 >
                   <Typography
                     sx={{ fontStyle: 'bold', color: '#E93D44', fontSize: '18px' }}
@@ -56,7 +62,6 @@ function ProfileInfo({
                     Logout
                   </Typography>
                 </Button>
-
               </Grid>
             </Stack>
             <Stack

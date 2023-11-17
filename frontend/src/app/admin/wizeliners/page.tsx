@@ -29,6 +29,14 @@ export default function Wizeliners() {
 
   const router = useRouter();
 
+  function capitalizeEachWord(input: string): string {
+    return input.replace(/\b\p{L}[\p{L}'-]*\b/ug, (word) => {
+      const firstChar = word.charAt(0).toUpperCase();
+      const restOfWord = word.slice(1);
+      return firstChar + restOfWord;
+    });
+  }
+
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -130,7 +138,7 @@ export default function Wizeliners() {
                     color: '#FFF',
                   }}
                 >
-                  <TableCell sx={{ color: '#FFF' }}>{user.fullName}</TableCell>
+                  <TableCell sx={{ color: '#FFF' }}>{capitalizeEachWord(user.fullName)}</TableCell>
                   <TableCell sx={{ color: '#FFF' }}>{user.areas}</TableCell>
                   <TableCell align="center" sx={{ color: '#FFF' }}>
                     {user.isAdmin

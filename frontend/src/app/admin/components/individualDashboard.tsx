@@ -189,6 +189,18 @@ export default function UserProfileDashboard({
     handleCloseWizecoinsPopup();
   };
 
+  function capitalizeEachWord(input: string): string {
+    return input.replace(/\b\p{L}[\p{L}'-]*\b/ug, (word) => {
+      const firstChar = word.charAt(0).toUpperCase();
+      const restOfWord = word.slice(1);
+      return firstChar + restOfWord;
+    });
+  }
+
+  const handleReturn = () => {
+    router.back();
+  };
+
   return (
     <Box sx={{
       display: 'flex', justifyContent: 'center', alignItems: 'left', Height: '100vh', width: '100hh',
@@ -287,7 +299,7 @@ export default function UserProfileDashboard({
                             'You are about to ',
                             'make',
                             ' ',
-                            name,
+                            capitalizeEachWord(name),
                             ' ',
                             'an Administrator',
                             ', proceed?',
@@ -331,7 +343,7 @@ export default function UserProfileDashboard({
                   <Typography variant="body1" sx={{ color: 'white' }} className={`${inter.className}`}>Edit</Typography>
                 </Button>
                 <EditWizecoinsUserPopup
-                  fullName={name}
+                  fullName={capitalizeEachWord(name)}
                   monthlyWizecoins={monthlyWizecoins}
                   open={isWizecoinsPopupOpen}
                   onClose={handleCloseWizecoinsPopup}
@@ -347,7 +359,7 @@ export default function UserProfileDashboard({
               sx={{ fontWeight: 'bold', color: 'white' }}
               className={`${inter.className}`}
             >
-              {name}
+              {capitalizeEachWord(name)}
             </Typography>
             <Stack direction="column" paddingTop="1rem">
               <Paper
@@ -382,7 +394,7 @@ export default function UserProfileDashboard({
                       {userGroups.map((group:any) => (
                         <Grid item key={group.id}>
                           <Button
-                            onClick={() => router.push(`/admin/groups/edit?groupId=${group.id}`)}
+                            onClick={() => router.push(`/admin/groups/edit?id=${group.id}}&groupTitle=${group.name}`)}
                             style={{
                               backgroundColor: '#1D293A',
                               borderRadius: '15px',
@@ -569,7 +581,7 @@ export default function UserProfileDashboard({
           }}
           >
             <Button
-              href="/mainpage"
+              onClick={handleReturn}
               style={{
                 color: 'white',
                 backgroundColor: '#E93D44',
@@ -578,24 +590,7 @@ export default function UserProfileDashboard({
                 padding: '0px 20px',
               }}
             >
-              <Typography variant="h6" sx={{ color: 'white' }} className={`${inter.className}`}>Cancel</Typography>
-            </Button>
-          </Box>
-          <Box sx={{
-            display: 'flex', justifyContent: 'center', alignItems: 'center',
-          }}
-          >
-            <Button
-              href="/mainpage"
-              style={{
-                color: 'white',
-                backgroundColor: '#4BE93D',
-                borderRadius: '8px', // Add the border radius to the button
-                textTransform: 'none', // Set textTransform to 'none' to prevent all caps
-                padding: '0px 20px',
-              }}
-            >
-              <Typography variant="h6" sx={{ color: 'white' }} className={`${inter.className}`}>Confirm</Typography>
+              <Typography variant="h6" sx={{ color: 'white' }} className={`${inter.className}`}>Return</Typography>
             </Button>
           </Box>
         </Stack>
