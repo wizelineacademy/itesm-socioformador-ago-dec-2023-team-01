@@ -8,6 +8,7 @@ import Awaiting from '../components/awaiting';
 
 export default function Welcome() {
   const { user, error, isLoading } = useUser();
+  console.log(user);
 
   if (isLoading) return <Awaiting />;
   if (error) return <div>{error.message}</div>;

@@ -5,6 +5,7 @@ import {
 import Grid from '@mui/material/Unstable_Grid2'; // Grid version 2
 import Stack from '@mui/material/Stack';
 import { Inter } from 'next/font/google';
+import Image from 'next/image';
 import styles from './iswelcome.module.css';
 
 const inter = Inter({ subsets: ['latin'] });
@@ -38,7 +39,7 @@ export default function UserProfile({
     >
       <Stack justifyContent="center" alignItems="center" spacing={3}>
         <Grid direction="column">
-          <img src={profileSrc} className={styles.image} alt="Mock Wizeliner" />
+          <Image width="200" height="200" loader={() => profileSrc} src={profileSrc} className={styles.image} alt="Mock Wizeliner" />
         </Grid>
         <Grid>
           <Stack direction="column" justifyContent="space-between">

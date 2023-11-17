@@ -10,22 +10,17 @@ export default function AdminLayout({
 }: {
   children: React.ReactNode;
 }) {
-  // Declare state variables for the user data
-  const [firstName, setFirstName] = useState<string | null>(null);
-  const [lastName, setLastName] = useState<string | null>(null);
-  const [wizecoins, setWizecoins] = useState<string | null>(null);
-  const [picSource, setPicSource] = useState<string | null>(null);
+  const wizeliner: WelcomeProps = {
+    admin: true,
+    firstName: localStorage.getItem('firstName') as string,
+    lastName: localStorage.getItem('lastName') as string,
+    wizecoins: localStorage.getItem('amountTokens') as string,
+    IsWizeliner: true,
+    name: `${localStorage.getItem('firstName')} ${localStorage.getItem('lastName')}`,
+    picSource: localStorage.getItem('picture'),
+  };
 
-  useEffect(() => {
-    // Access localStorage here and update state variables
-    setFirstName(localStorage.getItem('first'));
-    setLastName(localStorage.getItem('last'));
-    setWizecoins(localStorage.getItem('amountTokens'));
-    setPicSource(localStorage.getItem('pic'));
-    // ... other localStorage operations
-
-    // Use the data as needed
-  }, []); // Empty dependency array ensures this effect runs once after the initial render
+  console.log(wizeliner);
 
   return (
     <Stack direction="row">
@@ -37,7 +32,10 @@ export default function AdminLayout({
           sx={{
             position: 'sticky',
             top: '0',
-            background: 'linear-gradient(rgba(0,0,0,0.5) 30%, transparent)',
+            background: 'rgba(17, 24, 35, 0.4)',
+            boxShadow: '0 4px 30px rgba(0, 0, 0, 0.1)',
+            backdropFilter: 'blur(5px)',
+            borderBottom: '1px solid rgba(255, 255, 255, 0.1)',
             zIndex: '100',
           }}
         >

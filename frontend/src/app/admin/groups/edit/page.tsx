@@ -1,24 +1,29 @@
 'use client';
 
 import React, { useState } from 'react';
+import { useSearchParams, useRouter } from 'next/navigation';
 import Image from 'next/image';
-import Link from 'next/link';
+import { Inter } from 'next/font/google';
 import Container from '@mui/material/Container';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import Paper from '@mui/material/Paper';
 import Button from '@mui/material/Button';
-import EditIcon from '@mui/icons-material/Edit';
 import AddIcon from '@mui/icons-material/Add';
-import WTitle1 from '@/app/components/WTitle1';
+import Stack from '@mui/material/Stack';
+import { SnackbarProvider } from 'notistack';
 import DataGrid from '@/app/admin/components/DataGrid';
-import Popup from '@/app/components/Popup';
+
+const inter = Inter({ subsets: ['latin'] });
 
 export default function EditGroups() {
-  const totalWizecoins = 2500;
-  const totalWizeliners = 10;
+  const params = useSearchParams();
+  const title = params.get('groupTitle');
+  const id = params.get('id');
   const [groupName, setGroupName] = useState('Software Engineers');
   const [isEditing, setIsEditing] = useState(false);
+  const [wizeCount, setWizeCount] = useState({ totalWizeCoins: 0, totalUsers: 0 });
+  const router = useRouter();
 
   const handleGroupNameChange = (e: { target: { value: React.SetStateAction<string>; }; }) => {
     setGroupName(e.target.value);
@@ -28,35 +33,62 @@ export default function EditGroups() {
     setIsEditing(!isEditing);
   };
 
-  const [isPopupOpen, setPopupOpen] = useState(false);
-
-  const handleOpenPopup = () => {
-    setPopupOpen(true);
+  const handleNavBack = () => {
+    router.back();
   };
 
-  const handleClosePopup = () => {
-    setPopupOpen(false);
+  const handleWizeCount = (wizeCountData:{ totalWizeCoins:number, totalUsers:number }) => {
+    console.log(wizeCountData);
+    setWizeCount(wizeCountData);
   };
 
-  const handleGoodButtonClick = () => {
-    handleClosePopup();
+  const handleNavigation = () => {
+    const groupId = id;
+    const searchParams = new URLSearchParams();
+    searchParams.append('id', groupId!.toString());
+    searchParams.append('groupTitle', title!.toString());
+    router.push(`/admin/groups/edit/add?${searchParams.toString()}`);
   };
 
   return (
     <Container>
-      <Box marginBottom={3}>
+      <SnackbarProvider />
+      <Box marginBottom={2}>
         <Box
           display="flex"
           alignItems="flex-end"
           justifyContent="space-between"
         >
           <Box>
-            <WTitle1 text="Edit" redText=" Groups" />
+            <Stack direction="row" spacing={0}>
+              <Typography
+                variant="h1"
+                className={inter.className}
+                sx={{
+                  fontWeight: 'bold',
+                  color: '#e93d44',
+                  padding: '0',
+                }}
+              >
+                Edit
+              </Typography>
+              <Typography
+                variant="h1"
+                className={inter.className}
+                sx={{
+                  paddingLeft: '2rem',
+                  fontWeight: 'bold',
+                  color: 'white',
+                }}
+              >
+                Group.
+              </Typography>
+            </Stack>
             <Paper
               sx={{
                 marginTop: 1,
                 padding: '10px',
-                width: '100%',
+                maxidth: '100%',
                 backgroundColor: '#111823',
                 borderRadius: '20px',
                 boxShadow: '0px 4px 4px rgba(0, 0, 0, 0.25)',
@@ -77,18 +109,9 @@ export default function EditGroups() {
                       fontWeight: 'bold',
                     }}
                   >
-                    {groupName}
+                    {title}
                   </Typography>
                 )}
-                <Box marginLeft={13}>
-                  <EditIcon
-                    style={{
-                      cursor: 'pointer',
-                      color: '#ffffff',
-                    }}
-                  />
-                  {' '}
-                </Box>
               </Box>
             </Paper>
           </Box>
@@ -108,58 +131,38 @@ export default function EditGroups() {
               marginBottom={2}
             >
               <Button
+                onClick={handleNavBack}
+                variant="contained"
+                sx={{
+                  textTransform: 'none',
+                  fontSize: '1rem',
+                  bgcolor: '#E93D44',
+                  '&:hover': {
+                    bgcolor: 'red',
+                  },
+                }}
+              >
+                Finish and go back
+              </Button>
+              <Button
+                onClick={handleNavigation}
                 variant="outlined"
                 sx={{
                   textTransform: 'none',
                   color: '#ffffff',
-                  borderColor: '#E93D44',
+                  borderColor: '#4BE93D',
                   borderRadius: '20px',
                   '&:hover': {
-                    borderColor: 'red',
+                    borderColor: 'green',
+                  },
+                  '& .MuiTouchRipple-root span': {
+                    backgroundColor: '#4BE93D',
                   },
                 }}
-                onClick={handleOpenPopup}
               >
-                Remove
+                <AddIcon />
+                New Member
               </Button>
-              <Popup
-                title={[
-                  'Remove ',
-                  'Wizeliner',
-                ]}
-                content={[
-                  'You are about to ',
-                  'remove Thomas Anderson ',
-                  'from the ',
-                  'group ',
-                  ', proceed?',
-                ]}
-                badButtonTitle="Cancel"
-                goodButtonTitle="Remove"
-                open={isPopupOpen}
-                onClose={handleClosePopup}
-                onGoodButtonClick={handleGoodButtonClick}
-              />
-              <Link href="/admin/groups/edit/add" passHref>
-                <Button
-                  variant="outlined"
-                  sx={{
-                    textTransform: 'none',
-                    color: '#ffffff',
-                    borderColor: '#4BE93D',
-                    borderRadius: '20px',
-                    '&:hover': {
-                      borderColor: 'green',
-                    },
-                    '& .MuiTouchRipple-root span': {
-                      backgroundColor: '#4BE93D',
-                    },
-                  }}
-                >
-                  <AddIcon />
-                  New Member
-                </Button>
-              </Link>
             </Box>
             <Box
               display="flex"
@@ -186,7 +189,7 @@ export default function EditGroups() {
                     color: '#ffffff',
                   }}
                 >
-                  {totalWizeliners}
+                  {wizeCount.totalUsers}
                 </Typography>
               </Box>
               <Typography
@@ -236,7 +239,7 @@ export default function EditGroups() {
                     color: '#4BE93D',
                   }}
                 >
-                  {totalWizecoins}
+                  {wizeCount.totalWizeCoins}
                 </Typography>
               </Box>
               <Typography
@@ -252,7 +255,7 @@ export default function EditGroups() {
           </Paper>
         </Box>
       </Box>
-      <DataGrid />
+      <DataGrid groupId={id!} wizeCount={handleWizeCount} />
     </Container>
   );
 }

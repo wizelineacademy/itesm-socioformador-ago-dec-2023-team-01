@@ -8,7 +8,7 @@ export default function ChatHeader() {
     <div style={{ display: 'flex', alignItems: 'center', padding: '10px' }}>
       <Avatar
         alt="Profile Picture"
-        src="./chatgpt.png"
+        src="/chatgpt.png"
         sx={{
           width: 50,
           height: 50,

@@ -9,20 +9,38 @@ import {
   Stack,
   Typography,
   Button,
+  Skeleton,
 } from '@mui/material';
 import { Inter } from 'next/font/google';
+import { SnackbarProvider } from 'notistack';
 import SearchIcon from '@mui/icons-material/Search';
 import AddIcon from '@mui/icons-material/Add';
-import mockData from '../components/data';
-import Group from '../components/group';
 import { fetchGroups } from '@/services/groupService';
+import CreateGroupPopup from '@/app/components/CreateGroupPopup';
+import Group from '../components/group';
+
 const inter = Inter({ subsets: ['latin'] });
 
 export default function Groups() {
   const [search, setSearch] = useState('');
+  const [change, setChange] = useState(true);
+  const [loading, setLoading] = useState(true);
   const [groups, setGroups] = useState([]);
+  const [isCreatePopupOpen, setCreatePopup] = useState(false);
 
-  console.log(search);
+  const handleOpenCreatePopup = () => {
+    setCreatePopup(true);
+  };
+
+  const handleCloseCreatePopup = () => {
+    // this needs to change - test only
+    setChange(!change);
+    setCreatePopup(false);
+  };
+
+  const handleRefetch = () => {
+    setChange((prevValue) => !prevValue);
+  };
 
   useEffect(() => {
     const fetchData = async () => {
@@ -30,15 +48,24 @@ export default function Groups() {
         const groupsData = await fetchGroups();
         console.log(groupsData);
         setGroups(groupsData);
+        setLoading(false);
       } catch (e) {
         console.log(e);
       }
     };
     fetchData();
-  }, []);
+  }, [change]);
 
   return (
     <Box>
+      <SnackbarProvider />
+      <CreateGroupPopup
+        groupName=""
+        defaultMonthlyWizecoins={100}
+        open={isCreatePopupOpen}
+        onClose={handleCloseCreatePopup}
+        onGoodButtonClick={handleCloseCreatePopup}
+      />
       <Stack
         direction="row"
         justifyContent="space-between"
@@ -100,6 +127,7 @@ export default function Groups() {
                 borderRadius: '20px',
                 '&:hover': { borderColor: 'red' },
               }}
+              onClick={handleOpenCreatePopup}
             >
               <AddIcon />
               New Group
@@ -108,13 +136,30 @@ export default function Groups() {
         </Paper>
       </Stack>
       <Grid container padding="3rem 0 3rem 3rem" gap={4}>
-        {groups
-          .filter((group : any) => (search.toLocaleLowerCase() === ''
-            ? group
-            : group.title.toLocaleLowerCase().includes(search)))
-          .map((group : any, index) => (
-            <Group key={index} {...group} />
-          ))}
+        {loading
+          ? (
+            <>
+              <Skeleton variant="rectangular" animation="wave" width={270} height={220} sx={{ borderRadius: '20px' }} />
+              <Skeleton variant="rectangular" animation="wave" width={270} height={220} sx={{ borderRadius: '20px' }} />
+              <Skeleton variant="rectangular" animation="wave" width={270} height={220} sx={{ borderRadius: '20px' }} />
+              <Skeleton variant="rectangular" animation="wave" width={270} height={220} sx={{ borderRadius: '20px' }} />
+            </>
+          )
+          : (groups
+            .filter((group : any) => (search.toLocaleLowerCase() === ''
+              ? group
+              : group.title.toLocaleLowerCase().includes(search)))
+            .map((group : any, index) => (
+              <Group
+                key={index}
+                id={group.id}
+                title={group.title}
+                members={group.members}
+                moneySpent={group.moneySpent}
+                data={group.data}
+                toggle={handleRefetch}
+              />
+            )))}
       </Grid>
     </Box>
   );

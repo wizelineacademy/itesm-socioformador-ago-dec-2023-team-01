@@ -1,10 +1,11 @@
 import React from 'react';
 import {
-  Typography, Box, Button, Tooltip, Avatar,
+  Typography, Box, Button, Paper, Tooltip,
 } from '@mui/material';
 import Link from 'next/link';
 import Grid from '@mui/material/Unstable_Grid2'; // Grid version 2
 import Stack from '@mui/material/Stack';
+import Image from 'next/image';
 import styles from './iswelcome.module.css';
 import { WelcomeProps } from './types';
 
@@ -18,7 +19,6 @@ export default function IsWelcome({
   const firstName = nameParts[0];
   const lastName = nameParts.splice(1).join(' ');
   return (
-
     <Box sx={{
       display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '100vh',
     }}
@@ -58,15 +58,15 @@ export default function IsWelcome({
           <Grid>
             <Tooltip title="ChatGPT">
               <Link href="/mainpage">
-                <img src="./chatgptGreen.png" className={styles.roundedimage} alt="Chat GPT Green" />
+                <Image width="200" height="200" src="/chatgptGreen.png" className={styles.roundedimage} alt="Chat GPT Green" />
               </Link>
             </Tooltip>
           </Grid>
           <Grid>
-            <img src="./Bard.png" className={styles.roundedimage} alt="Bard" />
+            <Image width="200" height="200" src="/Bard.png" className={styles.roundedimage} alt="Bard" />
           </Grid>
           <Grid>
-            <img src="./llama2.png" className={styles.roundedimage} alt="Llama 2" />
+            <Image width="200" height="200" src="/llama2.png" className={styles.roundedimage} alt="Llama 2" />
           </Grid>
         </Grid>
         <Grid spacing={4} container display="flex" justifyContent="center" alignItems="center">
@@ -77,29 +77,37 @@ export default function IsWelcome({
             >
               Not you?
               {' '}
-              <Link href="/api/auth/logout" className={styles.return}>Return to Sign-in</Link>
+              <Link
+                href="/api/auth/logout"
+                className={styles.return}
+                onClick={() => {
+                  localStorage.clear();
+                }}
+              >
+                Return to Sign-in
+              </Link>
             </Typography>
           </Grid>
           <Grid>
             {admin
-                        && (
-                        <Button
-                          variant="contained"
-                          href="/admin"
-                          sx={{
-                            borderRadius: '20px',
-                            textTransform: 'none',
-                            bgcolor: '#E93D44',
-                            fontWeight: 'bold',
-                            '&:hover': {
-                              bgcolor: 'red',
-                            },
-                          }}
-                        >
-                          {' '}
-                          Go to Dashboard
-                        </Button>
-                        )}
+              && (
+              <Button
+                variant="contained"
+                href="/admin"
+                sx={{
+                  borderRadius: '20px',
+                  textTransform: 'none',
+                  bgcolor: '#E93D44',
+                  fontWeight: 'bold',
+                  '&:hover': {
+                    bgcolor: 'red',
+                  },
+                }}
+              >
+                {' '}
+                Go to Dashboard
+              </Button>
+              )}
           </Grid>
         </Grid>
       </Stack>

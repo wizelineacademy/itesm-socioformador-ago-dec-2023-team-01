@@ -1,6 +1,6 @@
 'use client';
 
-import React from 'react';
+import React, { useState } from 'react';
 import {
   Box,
   Grid,
@@ -8,81 +8,83 @@ import {
   Stack,
   Button,
 } from '@mui/material';
+import Image from 'next/image';
 import LogoutIcon from '@mui/icons-material/Logout';
-import { Inter } from 'next/font/google';
+import IconButton from '@mui/material/IconButton';
+import Tooltip from '@mui/material/Tooltip';
+import { WelcomeProps } from '@/app/components/types';
 import styles from './sidenav.module.css';
+import LogoutPopup from './logoutPopup';
 
-const inter = Inter({ subsets: ['latin'] });
-
-const handleLogout = () => {
-  localStorage.clear();
-  window.location.href = '/api/auth/logout';
-};
-
-function ProfileInfo({
+export default function ProfileInfo({
   firstName,
   lastName,
   wizecoins,
   picSource,
-}:any) {
+}: WelcomeProps) {
+  const [isOpen, setOpen] = useState(false);
+
+  const handleOpenPopup = () => {
+    setOpen(true);
+  };
+
+  const handleClosePopup = () => {
+    setOpen(false);
+  };
+
+  const handleLogOut = () => {
+    localStorage.clear();
+    setOpen(false);
+  };
+
   return (
     <Box
       sx={{
-        width: 'calc(100vw - 16.1rem)',
+        width: 'calc(100vw - 16.5rem)',
         paddingTop: '1rem',
       }}
     >
+      <LogoutPopup
+        title={['Logout', '']}
+        content={['You are about to ', 'Logout', ', proceed?']}
+        badButtonTitle="Cancel"
+        goodButtonTitle="Logout"
+        open={isOpen}
+        onClose={handleClosePopup}
+        onGoodButtonClick={handleLogOut}
+      />
       <Grid container justifyContent="flex-end">
         <Grid>
           <Typography
-            sx={{ fontStyle: 'bold', color: 'white', fontSize: '25px' }}
+            sx={{ fontStyle: 'bold', color: 'white', fontSize: '1.2em' }}
           >
             {`${firstName} ${lastName}`}
           </Typography>
-          <Stack direction="row" justifyContent="space-between">
-            <Stack
-              gap={0}
-              direction="row"
-              alignItems="center"
-              justifyContent="space-between"
-            >
-              <Grid>
-                <Button
-                  href="/"
-                  sx={{
-                    textTransform: 'none',
-                  }}
-                  className={`${inter.className}`}
-                  startIcon={<LogoutIcon sx={{ color: '#E93D44' }} />}
-                  onClick={handleLogout}
-                >
-                  <Typography
-                    sx={{ fontStyle: 'bold', color: '#E93D44', fontSize: '18px' }}
-                  >
-                    Logout
-                  </Typography>
-                </Button>
-              </Grid>
-            </Stack>
-            <Stack
-              gap={0}
-              direction="row"
-              alignItems="center"
-              justifyContent="flex-end"
-            >
+          <Stack
+            gap={0}
+            direction="row"
+            alignItems="center"
+            justifyContent="space-between"
+          >
+            <Tooltip title="Logout">
+              <IconButton sx={{ padding: '0', color: '#e93d44' }} onClick={handleOpenPopup}>
+                <LogoutIcon />
+              </IconButton>
+            </Tooltip>
+            <Stack gap={0} direction="row" alignItems="center">
               <object
                 data="/wizecoin.svg"
                 className={styles.smallimage}
                 title="wizecoin"
               />
-              <Typography sx={{ color: '#4BE93D', fontSize: '25px' }}>
+              <Typography sx={{ color: '#4BE93D', fontSize: '1.2rem' }}>
                 {wizecoins}
               </Typography>
             </Stack>
           </Stack>
         </Grid>
         <Grid paddingLeft="1rem">
-          <img src={picSource} className={styles.images} alt="" />
+          <Image unoptimized src={picSource} width="200" height="200" className={styles.images} alt="" />
         </Grid>
       </Grid>
     </Box>

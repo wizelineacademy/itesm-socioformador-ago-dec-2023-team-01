@@ -3,7 +3,9 @@ import {
   Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Typography, Box,
   Stack, TextField,
 } from '@mui/material';
+import { VariantType, enqueueSnackbar } from 'notistack';
 import { Inter } from 'next/font/google';
+import { createGroup } from '@/services/groupService';
 import styles from './iswelcome.module.css';
 
 const inter = Inter({ subsets: ['latin'] });
@@ -27,12 +29,26 @@ export default function CreateGroupPopup({
   // eslint-disable-next-line max-len
   const [defaultMonthlyWizecoinsInput, setDefaultMonthlyWizecoinsInput] = useState(defaultMonthlyWizecoins);
 
+  const showNotification = (variant: VariantType, groupN:string, action:string) => {
+    enqueueSnackbar(`${action} ${groupN}`, { variant });
+  };
+
   const handleGroupNameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setGroupNameInput(event.target.value);
   };
 
   const handleDefaultMonthlyWizecoinsChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setDefaultMonthlyWizecoinsInput(Number(event.target.value));
+  };
+
+  const handleCreateClick = async () => {
+    try {
+      await createGroup(groupNameInput);
+      onGoodButtonClick();
+      showNotification('success', groupNameInput, 'Created group ');
+    } catch (err) {
+      console.log(err);
+    }
   };
 
   return (
@@ -188,7 +204,7 @@ export default function CreateGroupPopup({
           </Box>
           <Box>
             <Button
-              onClick={onGoodButtonClick}
+              onClick={handleCreateClick}
               style={{
                 color: 'white',
                 backgroundColor: '#4BE93D',
