@@ -15,7 +15,7 @@ export default function NotWelcome() {
       minHeight="100vh"
       minWidth="50px"
     >
-      <Image width="200" height="200" src="./notWizeliner.jpg" className={styles.image} alt="" />
+      <Image width="200" height="200" src="/notWizeliner.jpg" className={styles.image} alt="" />
       <Typography
         sx={{
           fontWeight: 'bold',

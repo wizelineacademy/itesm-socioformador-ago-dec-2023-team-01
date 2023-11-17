@@ -13,19 +13,21 @@ export const fetchGroups = async () => {
     }
 
     let groups = await response.json();
-    console.log(groups);
+    // console.log(groups);
     groups = groups.map((group:any) => ({
       id: group.group.id,
       title: group.group.name,
-      members: 20,
+      members: group.numberOfUsers,
       moneySpent: 20,
       data: {
         labels: ['Used'],
         datasets: [
           {
             label: 'Group Overview',
-            data: [Math.round((group.availableTokens / (group.totalTokens + 1)) * 100),
-              100 - Math.round((group.availableTokens / (group.totalTokens + 1)) * 100)],
+            // eslint-disable-next-line max-len
+            data: [Math.round(((group.totalTokens - group.availableTokens) / (group.totalTokens + 1)) * 100),
+              // eslint-disable-next-line max-len
+              100 - Math.round(((group.totalTokens - group.availableTokens) / (group.totalTokens + 1)) * 100)],
             backgroundColor: ['#E93D44', 'rgba(0,0,0,0)'],
             borderColor: ['rgba(0,0,0,0)', 'rgba(0,0,0,0)'],
             cutout: '37',
@@ -34,6 +36,7 @@ export const fetchGroups = async () => {
         ],
       },
     }));
+    console.log(groups);
     return groups;
   } catch (error) {
     console.error(error);
@@ -43,6 +46,24 @@ export const fetchGroups = async () => {
 
 export const fetchGroup = () => {
   console.log('fetchGroup');
+};
+
+const fetchUserCurrentTokens = async (userId:string) => {
+  try {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/users/${userId}/tokens`);
+
+    if (!response.ok) {
+      throw new Error('Network response was not ok');
+    }
+
+    const data = await response.json();
+    const tokensAmount = data.length > 0 ? data[0].amount : 0;
+
+    return tokensAmount;
+  } catch (error) {
+    console.log(error);
+    return 0;
+  }
 };
 
 export const fetchWizelinersInGroup = async (groupId:string) => {
@@ -60,13 +81,12 @@ export const fetchWizelinersInGroup = async (groupId:string) => {
     }
 
     let usersInGroup = await response.json();
-    usersInGroup = usersInGroup.map((user:any) => ({
+    usersInGroup = await Promise.all(usersInGroup.map(async (user:any) => ({
       id: user.id,
       username: `${user.firstName} ${user.lastName}`,
-      area: 'to be defined',
       idAdmin: 'Yes',
-      wizecoins: 100,
-    }));
+      wizecoins: await fetchUserCurrentTokens(user.id),
+    })));
     console.log(usersInGroup);
     return usersInGroup;
   } catch (error) {

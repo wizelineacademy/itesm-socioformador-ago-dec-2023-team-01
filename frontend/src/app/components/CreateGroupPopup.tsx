@@ -45,7 +45,7 @@ export default function CreateGroupPopup({
     try {
       await createGroup(groupNameInput);
       onGoodButtonClick();
-      showNotification('success', groupNameInput, 'Added');
+      showNotification('success', groupNameInput, 'Created group ');
     } catch (err) {
       console.log(err);
     }

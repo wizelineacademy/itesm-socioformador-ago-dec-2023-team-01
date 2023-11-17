@@ -26,8 +26,7 @@ export default function DataTable({ groupId }:{ groupId:string }) {
         setWizeliners(wizelinersData.map((user:any) => ({
           id: user.id,
           username: user.fullName,
-          area: 'To be determined',
-          idAdmin: 'Yes',
+          idAdmin: user.isAdmin ? 'YES' : 'NO',
           wizecoins: 400,
           add: {
             inGroup: wizelinersInGroupData.some((groupUser:any) => groupUser.id === user.id),
@@ -52,18 +51,12 @@ export default function DataTable({ groupId }:{ groupId:string }) {
     {
       field: 'id',
       headerName: 'ID',
-      width: 90,
+      width: 290,
     },
     {
       field: 'username',
       headerName: 'Username',
       width: 300,
-      editable: false,
-    },
-    {
-      field: 'area',
-      headerName: 'Area(s)',
-      width: 200,
       editable: false,
     },
     {

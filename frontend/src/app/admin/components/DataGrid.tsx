@@ -69,18 +69,12 @@ export default function DataTable({ groupId, wizeCount }:{ groupId: string, wize
     {
       field: 'id',
       headerName: 'ID',
-      width: 90,
+      width: 290,
     },
     {
       field: 'username',
       headerName: 'Username',
-      width: 250,
-      editable: true,
-    },
-    {
-      field: 'area',
-      headerName: 'Area(s)',
-      width: 200,
+      width: 300,
       editable: true,
     },
     {
@@ -266,7 +260,7 @@ export default function DataTable({ groupId, wizeCount }:{ groupId: string, wize
           },
         }}
         pageSizeOptions={[5]}
-        checkboxSelection
+        // checkboxSelection
         disableRowSelectionOnClick
       />
     </Box>

@@ -77,7 +77,15 @@ export default function IsWelcome({
             >
               Not you?
               {' '}
-              <Link href="/api/auth/logout" className={styles.return}>Return to Sign-in</Link>
+              <Link
+                href="/api/auth/logout"
+                className={styles.return}
+                onClick={() => {
+                  localStorage.removeItem('token');
+                }}
+              >
+                Return to Sign-in
+              </Link>
             </Typography>
           </Grid>
           <Grid>

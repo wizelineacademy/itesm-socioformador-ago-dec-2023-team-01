@@ -69,7 +69,7 @@ export default function Group({
       handleClosePopup();
       handleClose();
       toggle();
-      showNotification('error', title.toString(), 'deleted');
+      showNotification('error', title.toString(), 'Deleted group ');
     } catch (error) {
       console.log(error);
     }
