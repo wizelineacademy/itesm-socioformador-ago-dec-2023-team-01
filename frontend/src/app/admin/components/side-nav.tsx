@@ -8,6 +8,7 @@ import {
   Stack,
 } from '@mui/material';
 import Image from 'next/image';
+import Link from 'next/link';
 
 import DashboardIcon from '@mui/icons-material/Dashboard';
 import GroupsIcon from '@mui/icons-material/Groups';
@@ -54,36 +55,37 @@ export default function Sidebar() {
         </Stack>
         <Stack gap={1} alignItems="center">
           {sidebarItems.map(({ name, href, icon: Icon }) => (
-            <Button
-              href={href}
-              key={name}
-              variant="outlined"
-              sx={{
-                width: '13rem',
-                textTransform: 'none',
-                color: 'rgba(236,236,249,0.4)',
-                borderColor: '#2A323F',
-              }}
-            >
-              <Stack
-                direction="row"
-                alignItems="center"
-                justifyContent="flex-start"
-                width="100%"
+            <Link href={href}>
+              <Button
+                key={name}
+                variant="outlined"
+                sx={{
+                  width: '13rem',
+                  textTransform: 'none',
+                  color: 'rgba(236,236,249,0.4)',
+                  borderColor: '#2A323F',
+                }}
               >
-                <Icon />
-                <Typography
-                  variant="h6"
-                  sx={{
-                    color: 'white',
-                    fontStyle: 'bold',
-                    paddingLeft: '0.5rem',
-                  }}
+                <Stack
+                  direction="row"
+                  alignItems="center"
+                  justifyContent="flex-start"
+                  width="100%"
                 >
-                  {name}
-                </Typography>
-              </Stack>
-            </Button>
+                  <Icon />
+                  <Typography
+                    variant="h6"
+                    sx={{
+                      color: 'white',
+                      fontStyle: 'bold',
+                      paddingLeft: '0.5rem',
+                    }}
+                  >
+                    {name}
+                  </Typography>
+                </Stack>
+              </Button>
+            </Link>
           ))}
         </Stack>
       </Box>
