@@ -3,10 +3,13 @@
 import React, { useEffect, useState } from 'react';
 import Box from '@mui/material/Box';
 import RemoveIcon from '@mui/icons-material/Remove';
+import CheckBoxOutlinedIcon from '@mui/icons-material/CheckBoxOutlined';
+import CropSquareIcon from '@mui/icons-material/CropSquare';
 import { VariantType, enqueueSnackbar } from 'notistack';
 import { DataGrid, GridColDef } from '@mui/x-data-grid';
 import Button from '@mui/material/Button';
 import Image from 'next/image';
+import { useRouter } from 'next/navigation';
 import { fetchWizelinersInGroup, removeUserToGroup } from '@/services/groupService';
 import Popup from '@/app/components/Popup';
 import Styles from './DataGrid.module.css';
@@ -19,6 +22,8 @@ export default function DataTable({ groupId, wizeCount }:{ groupId: string, wize
   const [popupText, setPopupText] = useState<string[]>([]);
   const [currUser, setCurrUser] = useState('');
   const [currName, setCurrName] = useState('');
+
+  const router = useRouter();
 
   useEffect(() => {
     const fetchData = async () => {
@@ -65,6 +70,14 @@ export default function DataTable({ groupId, wizeCount }:{ groupId: string, wize
     showNotification('error', currName, 'Removed');
   };
 
+  function capitalizeEachWord(input: string): string {
+    return input.replace(/\b\p{L}[\p{L}'-]*\b/ug, (word) => {
+      const firstChar = word.charAt(0).toUpperCase();
+      const restOfWord = word.slice(1);
+      return firstChar + restOfWord;
+    });
+  }
+
   const columns: GridColDef[] = [
     {
       field: 'id',
@@ -75,13 +88,21 @@ export default function DataTable({ groupId, wizeCount }:{ groupId: string, wize
       field: 'username',
       headerName: 'Username',
       width: 300,
-      editable: true,
+      valueFormatter: (params) => capitalizeEachWord(params.value as string),
     },
     {
       field: 'idAdmin',
       headerName: 'Is Admin',
       width: 130,
-      editable: true,
+      renderCell: (params) => (
+        <Box display="flex" alignItems="center" justifyContent="center" height="100%" width="100%">
+          {params.row.idAdmin ? (
+            <CheckBoxOutlinedIcon fontSize="large" sx={{ color: '#4BE93D' }} />
+          ) : (
+            <CropSquareIcon fontSize="large" sx={{ color: '#4BE93D' }} />
+          )}
+        </Box>
+      ),
     },
     {
       field: 'wizecoins',
@@ -92,6 +113,9 @@ export default function DataTable({ groupId, wizeCount }:{ groupId: string, wize
         <Box
           display="flex"
           alignItems="center"
+          justifyContent="center"
+          height="100%"
+          width="100%"
           color="#4BE93D"
         >
           <Box
@@ -135,9 +159,7 @@ export default function DataTable({ groupId, wizeCount }:{ groupId: string, wize
                 backgroundColor: 'rgba(233, 61, 68, 0.7)',
               },
             }}
-            onClick={() => {
-              console.log(`Viewing user ${params.row.id}`);
-            }}
+            onClick={() => router.push(`/admin/wizeliners/edit?userId=${params.id}`)}
           >
             View
           </Button>

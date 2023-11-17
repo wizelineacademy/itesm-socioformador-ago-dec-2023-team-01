@@ -203,7 +203,7 @@ export default function UserProfileDashboard({
 
   return (
     <Box sx={{
-      display: 'flex', justifyContent: 'center', alignItems: 'left', Height: '100vh', width: '100hh',
+      display: 'flex', justifyContent: 'center', alignItems: 'left', Height: '100vh', width: '100hh', paddingTop: '1.5rem',
     }}
     >
       <Stack sx={{
