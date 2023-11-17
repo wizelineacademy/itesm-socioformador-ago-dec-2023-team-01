@@ -394,7 +394,7 @@ export default function UserProfileDashboard({
                       {userGroups.map((group:any) => (
                         <Grid item key={group.id}>
                           <Button
-                            onClick={() => router.push(`/admin/groups/edit?id=${group.id}}&groupTitle=${group.name}`)}
+                            onClick={() => router.push(`/admin/groups/edit?id=${group.id}&groupTitle=${group.name}`)}
                             style={{
                               backgroundColor: '#1D293A',
                               borderRadius: '15px',

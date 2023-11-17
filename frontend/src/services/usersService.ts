@@ -127,9 +127,10 @@ export const fetchUserGroups = async (userId:any) => {
     let userGroups = await response.json();
     console.log(userGroups);
     userGroups = userGroups.map((group:any) => ({
-      id_group: group.id,
+      id: group.id,
       name: group.name,
     }));
+    console.log(userGroups);
     return userGroups;
   } catch (error) {
     console.error(error);
