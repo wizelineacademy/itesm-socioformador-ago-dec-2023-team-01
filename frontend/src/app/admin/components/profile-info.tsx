@@ -6,7 +6,6 @@ import {
   Grid,
   Typography,
   Stack,
-  Button,
 } from '@mui/material';
 import Image from 'next/image';
 import LogoutIcon from '@mui/icons-material/Logout';
@@ -16,7 +15,7 @@ import { WelcomeProps } from '@/app/components/types';
 import styles from './sidenav.module.css';
 import LogoutPopup from './logoutPopup';
 
-export default function ProfileInfo({
+export function ProfileInfo({
   firstName,
   lastName,
   wizecoins,

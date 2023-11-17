@@ -1,6 +1,6 @@
 import React from 'react';
 import {
-  Typography, Box, Button, Paper, Tooltip,
+  Typography, Box, Button, Tooltip, Avatar,
 } from '@mui/material';
 import Link from 'next/link';
 import Grid from '@mui/material/Unstable_Grid2'; // Grid version 2

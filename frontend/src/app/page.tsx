@@ -6,10 +6,10 @@ import Link from 'next/link';
 import Grid from '@mui/material/Unstable_Grid2'; // Grid version 2
 import { useUser } from '@auth0/nextjs-auth0/client';
 import Image from 'next/image';
+import fetchUserCurrentTokens from '@/services/tokenService';
 import styles from './page.module.css';
 import TWButton from './components/TWButton';
 import WTitle1 from './components/WTitle1';
-import fetchUserCurrentTokens from '@/services/tokenService';
 
 export default function Home() {
   const { user } = useUser();

@@ -1,9 +1,10 @@
 'use client';
 
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { Box, Stack } from '@mui/material';
 import SideNav from './components/side-nav';
 import ProfileInfo from './components/profile-info';
+import { WelcomeProps } from '../components/types';
 
 export default function AdminLayout({
   children,
@@ -40,12 +41,7 @@ export default function AdminLayout({
           }}
         >
           <Box sx={{ position: 'relative', right: '3.3rem' }}>
-            <ProfileInfo
-              firstName={firstName}
-              lastName={lastName}
-              wizecoins={wizecoins}
-              picSource={picSource}
-            />
+            <ProfileInfo {...wizeliner} />
           </Box>
         </Box>
         <Box>{children}</Box>
