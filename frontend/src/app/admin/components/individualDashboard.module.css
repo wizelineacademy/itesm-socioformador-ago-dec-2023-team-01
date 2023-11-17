@@ -1,63 +1,7 @@
-.image {
-    width: 2000px;
-    height: 2000px;
-    border-radius: 50%;
-    object-fit: cover;
-    object-position: 0 30%;
-  }
-  
-  .microimage {
-    width: 1.25rem;
-    height: 1.25rem;
-    padding-right: 5px;
-    position: relative;
-    top: 5px;
-  }
-  
-  .smallimage {
-    width: 1.75rem;
-    height: 1.75rem;
-    padding-right: 5px;
-    position: relative;
-    top: 5px;
-  }
-  
-  .something {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    position: relative;
-    bottom: 5px;
-  }
-  
-  .roundedimage {
-    height: 30vh;
-    max-height: 210px;
-    width: 30vh;
-    max-width: 210px;
-    border-radius: 10%;
-  }
-  
-  .underline {
-    color: "#E93D44";
-  }
-  
-  .notwizeliner {
-    height: 30vh;
-    width: 30vh;
-    border-radius: 50%;
-  }
-  
-  .return {
-    color: #E93D44;
-  }
-  
-  @media screen and (max-width: 1000px) {
-    .apologytext {
-      font-size: 20px;
-    }
-    .notwizelinertext {
-      font-size: 40px;
-      text-align: center;
-    }
-  }
+.microimage {
+  width: 1.25rem;
+  height: 1.25rem;
+  padding-right: 5px;
+  position: relative;
+  top: 5px;
+}
