@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { useUser } from '@auth0/nextjs-auth0/client';
-import fetchUserCurrentTokens from '@/services/tokenService';
+import { fetchUserCurrentTokens } from '@/services/tokenService';
 import IsWelcome from '../components/IsWelcome';
 import NotWelcome from '../components/NotWelcome';
 import Awaiting from '../components/awaiting';

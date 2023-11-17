@@ -6,6 +6,7 @@ import { Inter } from 'next/font/google';
 import CheckBoxOutlinedIcon from '@mui/icons-material/CheckBoxOutlined';
 import CropSquareIcon from '@mui/icons-material/CropSquare';
 import { useRouter } from 'next/navigation';
+import { VariantType, enqueueSnackbar } from 'notistack';
 import Popup from '@/app/components/Popup';
 import EditWizecoinsUserPopup from '@/app/components/EditWizecoinsUserPopup';
 import { updateUserAdminStatus } from '@/services/usersService';
@@ -135,6 +136,18 @@ export default function UserProfileDashboard({
   const [isAdminPopupOpen, setAdminPopupOpen] = useState(false);
   const [isWizecoinsPopupOpen, setWizecoinsPopupOpen] = useState(false);
 
+  const showNotification = (variant: VariantType, user:string, action:string) => {
+    enqueueSnackbar(`${action} ${user}`, { variant });
+  };
+
+  function capitalizeEachWord(input: string): string {
+    return input.replace(/\b\p{L}[\p{L}'-]*\b/ug, (word) => {
+      const firstChar = word.charAt(0).toUpperCase();
+      const restOfWord = word.slice(1);
+      return firstChar + restOfWord;
+    });
+  }
+
   // Function to open the admin popup
   const handleOpenAdminPopup = () => {
     setAdminPopupOpen(true);
@@ -155,6 +168,7 @@ export default function UserProfileDashboard({
       console.error(error);
     }
     handleCloseAdminPopup();
+    showNotification('success', capitalizeEachWord(name), 'Added');
   };
 
   // Function to handle the "good" button click for admin popup
@@ -166,6 +180,7 @@ export default function UserProfileDashboard({
       console.error(error);
     }
     handleCloseAdminPopup();
+    showNotification('error', capitalizeEachWord(name), 'Removed');
   };
 
   // Function to open the Wizecoins popup
@@ -187,15 +202,8 @@ export default function UserProfileDashboard({
       console.error(error);
     }
     handleCloseWizecoinsPopup();
+    showNotification('success', capitalizeEachWord(name), 'Wizecoins amount changed for ');
   };
-
-  function capitalizeEachWord(input: string): string {
-    return input.replace(/\b\p{L}[\p{L}'-]*\b/ug, (word) => {
-      const firstChar = word.charAt(0).toUpperCase();
-      const restOfWord = word.slice(1);
-      return firstChar + restOfWord;
-    });
-  }
 
   const handleReturn = () => {
     router.back();

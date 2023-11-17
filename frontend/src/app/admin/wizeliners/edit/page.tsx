@@ -2,8 +2,9 @@
 
 import React, { useState, useEffect } from 'react';
 import { useSearchParams } from 'next/navigation';
+import { SnackbarProvider } from 'notistack';
 import { fetchUser, fetchUserGroups } from '@/services/usersService';
-import fetchUserCurrentTokens from '@/services/tokenService';
+import { fetchUserCurrentTokens } from '@/services/tokenService';
 import UserProfileDashboard from '@/app/admin/components/individualDashboard';
 
 interface Group {
@@ -61,6 +62,7 @@ export default function Wizeliner() {
 
   return (
     <div>
+      <SnackbarProvider />
       <UserProfileDashboard
         id={user.id}
         name={`${user.firstName} ${user.lastName}`}

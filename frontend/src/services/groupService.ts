@@ -57,7 +57,7 @@ export const fetchUserCurrentTokens = async (userId:string) => {
     }
 
     const data = await response.json();
-    const tokensAmount = data.length > 0 ? data[0].amount : 0;
+    const tokensAmount = data.length > 0 ? data[0].currentAmount : 0;
 
     return tokensAmount;
   } catch (error) {
@@ -84,7 +84,7 @@ export const fetchWizelinersInGroup = async (groupId:string) => {
     usersInGroup = await Promise.all(usersInGroup.map(async (user:any) => ({
       id: user.id,
       username: `${user.firstName} ${user.lastName}`,
-      idAdmin: 'Yes',
+      idAdmin: user.roleId === 1,
       wizecoins: await fetchUserCurrentTokens(user.id),
     })));
     console.log(usersInGroup);
