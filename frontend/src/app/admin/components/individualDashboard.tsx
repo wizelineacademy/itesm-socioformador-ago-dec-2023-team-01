@@ -213,7 +213,7 @@ export default function UserProfileDashboard({
         <Stack direction="row">
           <Stack direction="column" spacing="1rem">
             <Stack paddingLeft="1rem">
-              <Avatar className={styles.image} alt="Wizeliner" src={profileSrc} />
+              <Avatar sx={{ height: '200px', width: '200px' }} alt="Wizeliner" src={profileSrc} />
             </Stack>
             <Stack direction="row" spacing="0.5rem">
               <Paper
