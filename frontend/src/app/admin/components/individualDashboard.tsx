@@ -5,6 +5,7 @@ import {
 import { Inter } from 'next/font/google';
 import CheckBoxOutlinedIcon from '@mui/icons-material/CheckBoxOutlined';
 import CropSquareIcon from '@mui/icons-material/CropSquare';
+import { useRouter } from 'next/navigation';
 import Popup from '@/app/components/Popup';
 import EditWizecoinsUserPopup from '@/app/components/EditWizecoinsUserPopup';
 import { updateUserAdminStatus } from '@/services/usersService';
@@ -16,7 +17,7 @@ const inter = Inter({ subsets: ['latin'] });
 interface IndividualDashboardProps {
   id: any;
   name: any;
-  areas: string[];
+  userGroups: any;
   profileSrc: any;
   isAdmin: boolean;
   currentWizecoins: string;
@@ -31,7 +32,7 @@ interface IndividualDashboardProps {
 export default function UserProfileDashboard({
   id,
   name,
-  areas,
+  userGroups,
   profileSrc,
   isAdmin,
   currentWizecoins,
@@ -42,6 +43,7 @@ export default function UserProfileDashboard({
   stats,
   toggle,
 }: IndividualDashboardProps) {
+  const router = useRouter();
   const UserData = [
     {
       id: 1,
@@ -377,10 +379,10 @@ export default function UserProfileDashboard({
                     }}
                   >
                     <Grid sx={{ flexGrow: 1 }} container spacing={1}>
-                      {areas.map((title, index) => (
-                        <Grid item key={index}>
+                      {userGroups.map((group:any) => (
+                        <Grid item key={group.id}>
                           <Button
-                            href="/mainpage"
+                            onClick={() => router.push(`/admin/groups/edit?groupId=${group.id}`)}
                             style={{
                               backgroundColor: '#1D293A',
                               borderRadius: '15px',
@@ -398,7 +400,7 @@ export default function UserProfileDashboard({
                               }}
                               className={`${inter.className}`}
                             >
-                              {title}
+                              {group.name}
                             </Typography>
                           </Button>
                         </Grid>

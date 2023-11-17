@@ -2,9 +2,15 @@
 
 import React, { useState, useEffect } from 'react';
 import { useSearchParams } from 'next/navigation';
-import fetchUser from '@/services/usersService';
+import { fetchUser, fetchUserGroups } from '@/services/usersService';
 import fetchUserCurrentTokens from '@/services/tokenService';
 import UserProfileDashboard from '@/app/admin/components/individualDashboard';
+
+interface Group {
+  id: number;
+  name: string;
+  // Add other properties if needed
+}
 
 export default function Wizeliner() {
   const [user, setUser] = useState({
@@ -31,6 +37,8 @@ export default function Wizeliner() {
     currentAmountTokens: '0',
   });
 
+  const [userGroups, setUserGroups] = useState<Group[]>([]);
+
   const searchParams = useSearchParams();
   const userId = searchParams.get('userId');
 
@@ -40,8 +48,10 @@ export default function Wizeliner() {
         // Fetch user data using the userId from the URL
         const userData = await fetchUser(userId);
         const userTokensData = await fetchUserCurrentTokens(userId);
+        const groupsData = await fetchUserGroups(userId);
         setUser(userData);
         setUserTokens(userTokensData);
+        setUserGroups(groupsData);
       } catch (e) {
         console.error(e);
       }
@@ -54,7 +64,7 @@ export default function Wizeliner() {
       <UserProfileDashboard
         id={user.id}
         name={`${user.firstName} ${user.lastName}`}
-        areas={['Software Engineers', 'ITESM project', 'Quality Assurance', 'Testing']}
+        userGroups={userGroups}
         profileSrc={user.imageUrl}
         isAdmin={user.isAdmin}
         currentWizecoins={userTokens.currentAmountTokens}

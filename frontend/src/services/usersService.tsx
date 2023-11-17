@@ -34,7 +34,7 @@ export const fetchUsers = async () => {
   }
 };
 
-export default async function fetchUser(userId:any) {
+export async function fetchUser(userId:any) {
   try {
     const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/users/${userId}`, {
       method: 'GET',
@@ -109,3 +109,30 @@ export async function updateUserAdminStatus(userId:any, isAdmin:any) {
     throw error;
   }
 }
+
+export const fetchUserGroups = async (userId:any) => {
+  try {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/users/${userId}/groups`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${localStorage.getItem('token')}`,
+      },
+    });
+
+    if (!response.ok) {
+      throw new Error('Network response was not ok');
+    }
+
+    let userGroups = await response.json();
+    console.log(userGroups);
+    userGroups = userGroups.map((group:any) => ({
+      id_group: group.id,
+      name: group.name,
+    }));
+    return userGroups;
+  } catch (error) {
+    console.error(error);
+    throw error;
+  }
+};
