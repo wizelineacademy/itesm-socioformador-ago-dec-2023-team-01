@@ -13,12 +13,12 @@ export default function AdminLayout({
 }) {
   const wizeliner: WelcomeProps = {
     admin: true,
-    firstName: localStorage.getItem('firstName') as string,
-    lastName: localStorage.getItem('lastName') as string,
+    firstName: localStorage.getItem('first') as string,
+    lastName: localStorage.getItem('last') as string,
     wizecoins: localStorage.getItem('amountTokens') as string,
     IsWizeliner: true,
-    name: `${localStorage.getItem('firstName')} ${localStorage.getItem('lastName')}`,
-    picSource: localStorage.getItem('picture'),
+    name: `${localStorage.getItem('first')} ${localStorage.getItem('last')}`,
+    picSource: localStorage.getItem('pic'),
   };
 
   console.log(wizeliner);
