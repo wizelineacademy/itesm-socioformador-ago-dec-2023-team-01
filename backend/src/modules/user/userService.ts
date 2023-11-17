@@ -1,12 +1,28 @@
+import axios from 'axios';
 import roleRepository from '../role/roleRepository';
-import { TokenDto } from '../token/tokenModel';
+import { TokenDto, CreateTokenInput } from '../token/tokenModel';
 import userRepository from './userRepository';
-import { User } from './userModel';
+import { User, CreateUserInput, UserDto } from './userModel';
 import CustomError from '../../utils/errorModel';
 import tokenService from '../token/tokenService';
 import tokenRepository from '../token/tokenRepository';
+import { ApiReponse } from '../../shared/models/responseModel';
 
 export const userService = {
+  async createUser(userInput: CreateUserInput): Promise<UserDto> {
+    const user = await userRepository.createUser(userInput);
+    const oneMonthFromNow = new Date(
+      new Date().setMonth(new Date().getMonth() + 1),
+    );
+    const newToken: CreateTokenInput = {
+      userId: user.id,
+      amount: 0,
+      expiresAt: oneMonthFromNow,
+    };
+    await tokenService.createToken(newToken);
+    return user;
+  },
+
   async getUserById(userId: string): Promise<User> {
     const user = await userRepository.getUserById(userId);
     const role = await roleRepository.getRoleById(user.roleId);
@@ -95,6 +111,31 @@ export const userService = {
       amount,
     );
     return updatedToken;
+  },
+
+  async deleteUser(userId: string): Promise<ApiReponse> {
+    const user = await userRepository.getUserById(userId);
+    if (!user) {
+      throw new CustomError(404, `User with id:${userId}, not found in db`);
+    }
+    try {
+      const options = {
+        method: 'GET',
+        url: `${process.env.AUTH0_MANAGEMENT_API_URL}/users/${userId}`,
+        headers: {
+          authorization: `Bearer ${process.env.AUTH0_MANAGEMENT_API_TOKEN}`,
+        },
+      };
+      const userAuth0 = await axios(options);
+      if (userAuth0) {
+        options.method = 'DELETE';
+        await axios(options);
+      }
+    } catch (error) {
+      throw new CustomError(500, `Error deleting user from Auth0: ${error}`);
+    }
+    const deletedUser = await userRepository.deleteUser(userId);
+    return { message: 'User deleted', data: deletedUser };
   },
 };
 
