@@ -1,6 +1,6 @@
 import React from 'react';
 import GoogleIcon from '@mui/icons-material/Google';
-import { Button, Stack } from '@mui/material';
+import { Button } from '@mui/material';
 
 interface ButtonProps {
   text: String;

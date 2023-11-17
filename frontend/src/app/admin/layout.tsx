@@ -1,25 +1,31 @@
 'use client';
 
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Box, Stack } from '@mui/material';
 import SideNav from './components/side-nav';
 import ProfileInfo from './components/profile-info';
-import { WelcomeProps } from '../components/types';
 
 export default function AdminLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
-  const wizeliner: WelcomeProps = {
-    admin: true,
-    firstName: 'Thomas',
-    lastName: 'Anderson',
-    wizecoins: '120',
-    IsWizeliner: true,
-    name: 'Thomas Anderson',
-    picSource: 'https://i0.wp.com/imgs.hipertextual.com/wp-content/uploads/2015/11/albert-einstein-retrato-scaled.jpg?fit=2560%2C1985&quality=50&strip=all&ssl=1',
-  };
+  // Declare state variables for the user data
+  const [firstName, setFirstName] = useState<string | null>(null);
+  const [lastName, setLastName] = useState<string | null>(null);
+  const [wizecoins, setWizecoins] = useState<string | null>(null);
+  const [picSource, setPicSource] = useState<string | null>(null);
+
+  useEffect(() => {
+    // Access localStorage here and update state variables
+    setFirstName(localStorage.getItem('first'));
+    setLastName(localStorage.getItem('last'));
+    setWizecoins(localStorage.getItem('amountTokens'));
+    setPicSource(localStorage.getItem('pic'));
+    // ... other localStorage operations
+
+    // Use the data as needed
+  }, []); // Empty dependency array ensures this effect runs once after the initial render
 
   return (
     <Stack direction="row">
@@ -36,7 +42,12 @@ export default function AdminLayout({
           }}
         >
           <Box sx={{ position: 'relative', right: '3.3rem' }}>
-            <ProfileInfo {...wizeliner} />
+            <ProfileInfo
+              firstName={firstName}
+              lastName={lastName}
+              wizecoins={wizecoins}
+              picSource={picSource}
+            />
           </Box>
         </Box>
         <Box>{children}</Box>

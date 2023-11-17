@@ -15,7 +15,13 @@ export default function Welcome() {
   if (user) {
     return (
       <div>
-        {true ? <IsWelcome admin name={user.name} wizecoins="120" IsWizeliner picSource={user.picture} /> : <NotWelcome />}
+        <IsWelcome
+          admin
+          name={`${localStorage.getItem('first')} ${localStorage.getItem('last')}`}
+          wizecoins={`${localStorage.getItem('amountTokens')}`}
+          IsWizeliner
+          picSource={`${localStorage.getItem('pic')}`}
+        />
       </div>
     );
   }

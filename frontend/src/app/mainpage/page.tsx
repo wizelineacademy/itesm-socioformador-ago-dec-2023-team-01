@@ -5,15 +5,10 @@
 // @react server
 import Container from '@mui/material/Container';
 import Grid from '@mui/material/Grid';
-import Stack from '@mui/material/Stack';
-import MenuIcon from '@mui/icons-material/Menu';
-import IconButton from '@mui/material/IconButton';
 import React, { useState } from 'react';
 import { Hidden } from '@mui/material';
 import { useUser } from '@auth0/nextjs-auth0/client';
-import ChatHeader from '@/app/components/ChatHeader';
 import Chat from '@/app/components/Chat';
-import ChatInput from '@/app/components/ChatInput';
 import ChatHistory from '@/app/components/ChatHistory';
 import Navbar from '@/app/components/Navbar';
 import Awaiting from '../components/awaiting';
@@ -32,7 +27,7 @@ function Mainpage() {
         <Navbar
           profileSrc={user.picture}
           name={user.name}
-          number="9891"
+          number={`${localStorage.getItem('amountTokens')}`}
           onBurgerClick={() => setShowChatHistory((prev) => !prev)}
         />
 
