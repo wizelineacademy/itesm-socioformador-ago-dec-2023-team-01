@@ -68,7 +68,6 @@ export default function ProfileInfo({
             <Tooltip title="Logout">
               <IconButton sx={{ padding: '0', color: '#e93d44' }} onClick={handleOpenPopup}>
                 <LogoutIcon />
-                <Typography sx={{ fontSize: '15px' }}>Logout</Typography>
               </IconButton>
             </Tooltip>
             <Stack gap={0} direction="row" alignItems="center">
