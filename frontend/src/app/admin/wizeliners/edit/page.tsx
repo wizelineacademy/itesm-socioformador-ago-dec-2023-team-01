@@ -47,12 +47,14 @@ export default function Wizeliner() {
     const fetchData = async () => {
       try {
         // Fetch user data using the userId from the URL
-        const userData = await fetchUser(userId);
-        const userTokensData = await fetchUserCurrentTokens(userId);
-        const groupsData = await fetchUserGroups(userId);
-        setUser(userData);
-        setUserTokens(userTokensData);
-        setUserGroups(groupsData);
+        if (userId !== null) {
+          const userData = await fetchUser(userId);
+          const userTokensData = await fetchUserCurrentTokens(userId);
+          const groupsData = await fetchUserGroups(userId);
+          setUser(userData);
+          setUserTokens(userTokensData);
+          setUserGroups(groupsData);
+        }
       } catch (e) {
         console.error(e);
       }

@@ -1,4 +1,4 @@
-export async function fetchUserCurrentTokens(userId: any) {
+export async function fetchUserCurrentTokens(userId: string) {
   try {
     const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/users/${userId}/current-tokens`, {
       method: 'GET',
@@ -34,7 +34,8 @@ export async function fetchUserCurrentTokens(userId: any) {
   }
 }
 
-export async function updateUserAmountTokens(userId: any, operation: any, desiredAmount: any) {
+// eslint-disable-next-line max-len
+export async function updateUserAmountTokens(userId: string, operation: string, desiredAmount: number) {
   try {
     const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/users/${userId}/token-operation`, {
       method: 'PATCH',

@@ -18,7 +18,7 @@ export default function Welcome() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        if (user) {
+        if (user && user.sub) {
           const userTokensData = await fetchUserCurrentTokens(user.sub);
           setUserTokens(userTokensData);
         }
@@ -50,18 +50,18 @@ export default function Welcome() {
     }
   }, [user, userTokens.amountTokens, userTokens.currentAmountTokens]);
 
-  if (isLoading || localStorage.getItem('first') === null) return <Awaiting />;
+  if (isLoading) return <Awaiting />;
   if (error) return <div>{error.message}</div>;
 
-  if (user) {
+  if (user && user.given_name && user.family_name && user.picture) {
     return (
       <div>
         <IsWelcome
           admin
-          name={`${localStorage.getItem('first')} ${localStorage.getItem('last')}`}
-          wizecoins={`${localStorage.getItem('amountTokens')}`}
+          name={`${user.given_name} ${user.family_name}`}
+          wizecoins={userTokens.amountTokens}
           IsWizeliner
-          picSource={`${localStorage.getItem('pic')}`}
+          picSource={user.picture}
         />
       </div>
     );

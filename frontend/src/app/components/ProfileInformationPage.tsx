@@ -11,10 +11,10 @@ import styles from './iswelcome.module.css';
 const inter = Inter({ subsets: ['latin'] });
 
 interface ProfileInformationProps {
-  name: any;
-  email: any;
+  name: string;
+  email: string;
   areas: string;
-  profileSrc: any;
+  profileSrc: string;
   currentWizecoins: string;
   monthlyWizecoins: string;
 }

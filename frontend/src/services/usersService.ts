@@ -34,7 +34,7 @@ export const fetchUsers = async () => {
   }
 };
 
-export async function fetchUser(userId:any) {
+export async function fetchUser(userId:string) {
   try {
     const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/users/${userId}`, {
       method: 'GET',
@@ -70,7 +70,7 @@ export async function fetchUser(userId:any) {
   }
 }
 
-export async function updateUserAdminStatus(userId:any, isAdmin:any) {
+export async function updateUserAdminStatus(userId:string, isAdmin:boolean) {
   try {
     const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/users/admin`, {
       method: 'PATCH',
@@ -110,7 +110,7 @@ export async function updateUserAdminStatus(userId:any, isAdmin:any) {
   }
 }
 
-export const fetchUserGroups = async (userId:any) => {
+export const fetchUserGroups = async (userId:string) => {
   try {
     const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/users/${userId}/groups`, {
       method: 'GET',

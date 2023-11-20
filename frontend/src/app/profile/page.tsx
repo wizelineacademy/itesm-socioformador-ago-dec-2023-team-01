@@ -18,7 +18,7 @@ export default function ShowProfileInformation() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        if (user) {
+        if (user && user.sub) {
           const userTokensData = await fetchUserCurrentTokens(user.sub);
           setUserTokens(userTokensData);
         }
@@ -36,9 +36,9 @@ export default function ShowProfileInformation() {
     return (
       <div>
         <UserProfile
-          name={user.name}
-          email={user.email}
-          profileSrc={user.picture}
+          name={user.name ?? ''}
+          email={user.email ?? ''}
+          profileSrc={user.picture ?? ''}
           areas="Software Engineer"
           currentWizecoins={userTokens.currentAmountTokens}
           monthlyWizecoins={userTokens.amountTokens}

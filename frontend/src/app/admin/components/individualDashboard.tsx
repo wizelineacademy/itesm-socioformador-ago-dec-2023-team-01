@@ -16,10 +16,10 @@ import styles from './individualDashboard.module.css';
 const inter = Inter({ subsets: ['latin'] });
 
 interface IndividualDashboardProps {
-  id: any;
-  name: any;
+  id: string;
+  name: string;
   userGroups: any;
-  profileSrc: any;
+  profileSrc: string;
   isAdmin: boolean;
   currentWizecoins: string;
   monthlyWizecoins: string;
