@@ -1,135 +1,230 @@
 'use client';
 
-import * as React from 'react';
+import React, { useEffect, useState } from 'react';
 import Box from '@mui/material/Box';
+import RemoveIcon from '@mui/icons-material/Remove';
+import CheckBoxOutlinedIcon from '@mui/icons-material/CheckBoxOutlined';
+import CropSquareIcon from '@mui/icons-material/CropSquare';
+import { VariantType, enqueueSnackbar } from 'notistack';
 import { DataGrid, GridColDef } from '@mui/x-data-grid';
 import Button from '@mui/material/Button';
 import Image from 'next/image';
+import { useRouter } from 'next/navigation';
+import { fetchWizelinersInGroup, removeUserToGroup } from '@/services/groupService';
+import Popup from '@/app/components/Popup';
 import Styles from './DataGrid.module.css';
 
-const columns: GridColDef[] = [
-  {
-    field: 'id',
-    headerName: 'ID',
-    width: 90,
-  },
-  {
-    field: 'username',
-    headerName: 'Username',
-    width: 250,
-    editable: true,
-  },
-  {
-    field: 'area',
-    headerName: 'Area(s)',
-    width: 200,
-    editable: true,
-  },
-  {
-    field: 'idAdmin',
-    headerName: 'Is Admin',
-    width: 130,
-    editable: true,
-  },
-  {
-    field: 'wizecoins',
-    headerName: 'Wizecoins',
-    width: 150,
-    editable: false,
-    renderCell: (params) => (
-      <Box
-        display="flex"
-        alignItems="center"
-        color="#4BE93D"
-      >
-        <Box
-          sx={{ marginRight: '5px' }}
-        >
-          <Image
-            src="/wizecoin.svg"
-            alt="Wizecoin Icon"
-            width={10}
-            height={10}
-            layout="fixed"
-          />
+export default function DataTable({ groupId, wizeCount }:{ groupId: string, wizeCount:Function }) {
+  const [usersGroup, setUsersGroup] = useState([]);
+  const [totals, setTotals] = useState({ totalWizeCoins: 0, totalUsers: 0 });
+  const [change, setChange] = useState(true);
+  const [isPopupOpen, setPopupOpen] = useState(false);
+  const [popupText, setPopupText] = useState<string[]>([]);
+  const [currUser, setCurrUser] = useState('');
+  const [currName, setCurrName] = useState('');
+
+  const router = useRouter();
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const usersInGroup = await fetchWizelinersInGroup(groupId);
+        setUsersGroup(usersInGroup);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    fetchData();
+  }, [groupId, change]);
+
+  useEffect(() => {
+    const { totalWizeCoins, totalUsers } = usersGroup.reduce(
+      (accumulator, user:any) => ({
+        totalWizeCoins: accumulator.totalWizeCoins + user.wizecoins,
+        totalUsers: accumulator.totalUsers + 1,
+      }),
+      { totalWizeCoins: 0, totalUsers: 0 },
+    );
+    setTotals({ totalWizeCoins, totalUsers });
+    console.log('this should be smth', totals);
+    wizeCount({ totalWizeCoins, totalUsers });
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [usersGroup]);
+
+  const showNotification = (variant: VariantType, user:string, action:string) => {
+    enqueueSnackbar(`${action} ${user}`, { variant });
+  };
+
+  const handleOpenPopup = () => {
+    setPopupOpen(true);
+  };
+
+  const handleClosePopup = () => {
+    setPopupOpen(false);
+  };
+
+  const handleGoodButtonClick = () => {
+    removeUserToGroup(groupId, currUser);
+    setChange(!change);
+    handleClosePopup();
+    showNotification('error', currName, 'Removed');
+  };
+
+  function capitalizeEachWord(input: string): string {
+    return input.replace(/\b\p{L}[\p{L}'-]*\b/ug, (word) => {
+      const firstChar = word.charAt(0).toUpperCase();
+      const restOfWord = word.slice(1);
+      return firstChar + restOfWord;
+    });
+  }
+
+  const columns: GridColDef[] = [
+    {
+      field: 'id',
+      headerName: 'ID',
+      width: 290,
+    },
+    {
+      field: 'username',
+      headerName: 'Username',
+      width: 300,
+      valueFormatter: (params) => capitalizeEachWord(params.value as string),
+    },
+    {
+      field: 'idAdmin',
+      headerName: 'Is Admin',
+      width: 130,
+      renderCell: (params) => (
+        <Box display="flex" alignItems="center" justifyContent="center" height="100%" width="100%">
+          {params.row.idAdmin ? (
+            <CheckBoxOutlinedIcon fontSize="large" sx={{ color: '#4BE93D' }} />
+          ) : (
+            <CropSquareIcon fontSize="large" sx={{ color: '#4BE93D' }} />
+          )}
         </Box>
-        {params.value}
-      </Box>
-    ),
-  },
-  {
-    field: 'view',
-    headerName: 'View Profile',
-    width: 120,
-    sortable: false,
-    filterable: false,
-    renderCell: (params) => (
-      <Box
-        display="flex"
-        alignItems="center"
-        justifyContent="center"
-        height="100%"
-        width="100%"
-      >
-        <Button
-          variant="contained"
-          color="primary"
-          size="small"
-          sx={{
-            textTransform: 'none',
-            backgroundColor: '#E93D44',
-            color: 'white',
-            '&:hover': {
-              backgroundColor: 'rgba(233, 61, 68, 0.7)',
-            },
-          }}
-          onClick={() => {
-            console.log(`Viewing user ${params.row.id}`);
-          }}
+      ),
+    },
+    {
+      field: 'wizecoins',
+      headerName: 'Wizecoins',
+      width: 150,
+      editable: false,
+      renderCell: (params) => (
+        <Box
+          display="flex"
+          alignItems="center"
+          justifyContent="center"
+          height="100%"
+          width="100%"
+          color="#4BE93D"
         >
-          View
-        </Button>
-      </Box>
-    ),
-  },
-];
+          <Box
+            sx={{ marginRight: '5px' }}
+          >
+            <Image
+              src="/wizecoin.svg"
+              alt="Wizecoin Icon"
+              width={10}
+              height={10}
+              layout="fixed"
+            />
+          </Box>
+          {params.value}
+        </Box>
+      ),
+    },
+    {
+      field: 'view',
+      headerName: 'View Profile',
+      width: 120,
+      sortable: false,
+      filterable: false,
+      renderCell: (params) => (
+        <Box
+          display="flex"
+          alignItems="center"
+          justifyContent="center"
+          height="100%"
+          width="100%"
+        >
+          <Button
+            variant="contained"
+            color="primary"
+            size="small"
+            sx={{
+              textTransform: 'none',
+              backgroundColor: '#E93D44',
+              color: 'white',
+              '&:hover': {
+                backgroundColor: 'rgba(233, 61, 68, 0.7)',
+              },
+            }}
+            onClick={() => router.push(`/admin/wizeliners/edit?userId=${params.id}`)}
+          >
+            View
+          </Button>
+        </Box>
+      ),
+    },
+    {
+      field: 'remove',
+      headerName: 'Remove',
+      width: 160,
+      sortable: false,
+      filterable: false,
+      renderCell: (params) => (
+        <Box
+          display="flex"
+          alignItems="center"
+          justifyContent="center"
+          height="100%"
+          width="100%"
+        >
+          <Button
+            onClick={
+              async () => {
+                setCurrUser(params.row.id);
+                setCurrName(params.row.username);
+                setPopupText(['You are about to ', `remove ${params.row.username}`, ' from the ', 'group', ', proceed?']);
+                handleOpenPopup();
+              }
+            }
+            variant="outlined"
+            sx={{
+              textTransform: 'none',
+              color: '#FFF',
+              borderColor: '#E93D44',
+              borderRadius: '20px',
+              '&:hover': {
+                borderColor: 'red',
+              },
+              '& .MuiTouchRipple-root span': {
+                backgroundColor: '#4BE93D',
+              },
+            }}
+          >
+            <RemoveIcon />
+            Remove
+          </Button>
+        </Box>
+      ),
+    },
+  ];
 
-const rows = [
-  {
-    id: 1, username: 'Thomas Anderson', area: 'Full Stack', idAdmin: 'Yes', wizecoins: 400,
-  },
-  {
-    id: 2, username: 'Andrew Window', area: 'Marketing', idAdmin: 'No', wizecoins: 200,
-  },
-  {
-    id: 3, username: 'Toby Foster', area: 'Design', idAdmin: 'No', wizecoins: 100,
-  },
-  {
-    id: 4, username: 'Forest Hill', area: 'Full Stack', idAdmin: 'No', wizecoins: 50,
-  },
-  {
-    id: 5, username: 'Samuel Acosta', area: 'Front End', idAdmin: 'Yes', wizecoins: 800,
-  },
-  {
-    id: 6, username: 'Nicolas Aguirre', area: 'Back End', idAdmin: 'Yes', wizecoins: 50,
-  },
-  {
-    id: 7, username: 'Pablo Erhard', area: 'Full Stack', idAdmin: 'Yes', wizecoins: 200,
-  },
-  {
-    id: 8, username: 'Alejandro Lizarraga', area: 'QA', idAdmin: 'Yes', wizecoins: 300,
-  },
-  {
-    id: 9, username: 'Diego Esparza', area: 'Project Manager', idAdmin: 'Yes', wizecoins: 500,
-  },
-  {
-    id: 10, username: 'Leonardo Gonzalez', area: 'Front End', idAdmin: 'Yes', wizecoins: 1200,
-  },
-];
-
-export default function DataTable() {
   return (
     <Box sx={{ height: 400, width: '100%', overflow: 'hidden' }}>
+      <Popup
+        title={[
+          'Remove ',
+          'Wizeliner',
+        ]}
+        content={popupText}
+        badButtonTitle="Cancel"
+        goodButtonTitle="Remove"
+        open={isPopupOpen}
+        onClose={handleClosePopup}
+        onGoodButtonClick={handleGoodButtonClick}
+      />
       <DataGrid
         className={Styles.MenuSpan}
         sx={{
@@ -177,7 +272,7 @@ export default function DataTable() {
             color: 'white',
           },
         }}
-        rows={rows}
+        rows={usersGroup}
         columns={columns}
         initialState={{
           pagination: {
@@ -187,7 +282,7 @@ export default function DataTable() {
           },
         }}
         pageSizeOptions={[5]}
-        checkboxSelection
+        // checkboxSelection
         disableRowSelectionOnClick
       />
     </Box>

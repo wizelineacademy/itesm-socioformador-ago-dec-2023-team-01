@@ -7,15 +7,27 @@ import {
   Paper,
   Typography,
   Button,
-  Link,
+  Stack,
 } from '@mui/material';
-import WTitle1 from '@/app/components/WTitle1';
+import { Inter } from 'next/font/google';
+import { useRouter, useSearchParams } from 'next/navigation';
+import { SnackbarProvider } from 'notistack';
 import DataGridAdd from '@/app/admin/components/DataGridAdd';
 
-export default function addWizeliner() {
-  const groupName = 'Software Engineers';
+const inter = Inter({ subsets: ['latin'] });
+
+export default function AddWizeliner() {
+  const router = useRouter();
+  const params = useSearchParams();
+  const title = params.get('groupTitle');
+  const groupId = params.get('id');
+  const handleNavBack = () => {
+    router.back();
+  };
+
   return (
     <Container>
+      <SnackbarProvider />
       <Box
         display="flex"
         flexDirection="column"
@@ -23,7 +35,30 @@ export default function addWizeliner() {
         justifyContent="space-between"
         marginBottom={3}
       >
-        <WTitle1 text="Add" redText=" Wizeliner" />
+        {/* <WTitle1 text="Add" redText=" Wizeliner" /> */}
+        <Stack direction="row" spacing={0}>
+          <Typography
+            variant="h1"
+            className={inter.className}
+            sx={{
+              fontWeight: 'bold',
+              color: '#e93d44',
+            }}
+          >
+            Add
+          </Typography>
+          <Typography
+            variant="h1"
+            className={inter.className}
+            sx={{
+              paddingLeft: '2rem',
+              fontWeight: 'bold',
+              color: 'white',
+            }}
+          >
+            Wizeliner.
+          </Typography>
+        </Stack>
         <Paper
           sx={{
             marginTop: 0,
@@ -43,45 +78,30 @@ export default function addWizeliner() {
                 fontWeight: 'bold',
               }}
             >
-              {groupName}
+              {title}
             </Typography>
           </Box>
         </Paper>
       </Box>
-      <DataGridAdd />
+      <DataGridAdd groupId={groupId!} />
       <Box
         display="flex"
         justifyContent="space-between"
         marginTop={3}
       >
-        <Link href="/admin/groups/edit" underline="none">
-          <Button
-            variant="contained"
-            color="error"
-            sx={{
-              bgcolor: '#E93D44',
-              '&:hover': {
-                bgcolor: 'red',
-              },
-            }}
-          >
-            Cancel
-          </Button>
-        </Link>
-        <Link href="/admin/groups/edit" underline="none">
-          <Button
-            variant="contained"
-            color="error"
-            sx={{
-              bgcolor: '#4BE93D',
-              '&:hover': {
-                bgcolor: 'green',
-              },
-            }}
-          >
-            Confirm
-          </Button>
-        </Link>
+        <Button
+          onClick={handleNavBack}
+          variant="contained"
+          color="error"
+          sx={{
+            bgcolor: '#E93D44',
+            '&:hover': {
+              bgcolor: 'red',
+            },
+          }}
+        >
+          Go Back
+        </Button>
       </Box>
     </Container>
   );

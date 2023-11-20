@@ -1,25 +1,41 @@
 'use client';
 
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Box, Stack } from '@mui/material';
 import SideNav from './components/side-nav';
 import ProfileInfo from './components/profile-info';
 import { WelcomeProps } from '../components/types';
+import Awaiting from '../components/awaiting';
 
 export default function AdminLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
-  const wizeliner: WelcomeProps = {
-    admin: true,
-    firstName: 'Thomas',
-    lastName: 'Anderson',
-    wizecoins: '120',
-    IsWizeliner: true,
-    name: 'Thomas Anderson',
-    picSource: 'https://i0.wp.com/imgs.hipertextual.com/wp-content/uploads/2015/11/albert-einstein-retrato-scaled.jpg?fit=2560%2C1985&quality=50&strip=all&ssl=1',
-  };
+  const [wizeliner, setWizeliner] = useState<WelcomeProps>({
+    admin: false,
+    firstName: '',
+    lastName: '',
+    wizecoins: '',
+    IsWizeliner: false,
+    name: '',
+    picSource: '',
+  });
+
+  useEffect(() => {
+    console.log(localStorage.getItem('token'));
+    setWizeliner({
+      admin: true,
+      firstName: localStorage.getItem('first') as string,
+      lastName: localStorage.getItem('last') as string,
+      wizecoins: localStorage.getItem('amountTokens') as string,
+      IsWizeliner: true,
+      name: `${localStorage.getItem('first')} ${localStorage.getItem('last')}`,
+      picSource: localStorage.getItem('pic'),
+    });
+  }, []);
+
+  if (wizeliner.firstName === '') return <Awaiting />;
 
   return (
     <Stack direction="row">
@@ -31,7 +47,10 @@ export default function AdminLayout({
           sx={{
             position: 'sticky',
             top: '0',
-            background: 'linear-gradient(rgba(0,0,0,0.5) 30%, transparent)',
+            background: 'rgba(17, 24, 35, 0.4)',
+            boxShadow: '0 4px 30px rgba(0, 0, 0, 0.1)',
+            backdropFilter: 'blur(5px)',
+            borderBottom: '1px solid rgba(255, 255, 255, 0.1)',
             zIndex: '100',
           }}
         >

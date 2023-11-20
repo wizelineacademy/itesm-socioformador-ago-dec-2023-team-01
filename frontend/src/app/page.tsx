@@ -1,23 +1,14 @@
 'use client';
 
-import React, { useEffect } from 'react';
-import { useRouter } from 'next/navigation';
+import React from 'react';
 import Link from 'next/link';
 import Grid from '@mui/material/Unstable_Grid2'; // Grid version 2
-import { useUser } from '@auth0/nextjs-auth0/client';
+import Image from 'next/image';
 import styles from './page.module.css';
 import TWButton from './components/TWButton';
 import WTitle1 from './components/WTitle1';
 
 export default function Home() {
-  const { user, error, isLoading } = useUser();
-  const router = useRouter();
-
-  if (user) {
-    router.push('/welcome');
-    console.log('user', user);
-  }
-
   return (
     <Grid container spacing={0} className={styles.container}>
       <Grid xs={12} md={6} className={styles.container}>
@@ -34,7 +25,7 @@ export default function Home() {
                 justifyContent="center"
                 alignItems="center"
               >
-                <img src="./chatgpt.png" className={styles.smallImage} alt="" />
+                <Image width="200" height="200" src="/chatgpt.png" className={styles.smallImage} alt="" />
               </Grid>
               <Grid
                 xs={4}
@@ -42,7 +33,7 @@ export default function Home() {
                 justifyContent="center"
                 alignItems="center"
               >
-                <img src="./Bard.png" className={styles.smallImage} alt="" />
+                <Image width="200" height="200" src="/Bard.png" className={styles.smallImage} alt="" />
               </Grid>
               <Grid
                 xs={4}
@@ -50,14 +41,14 @@ export default function Home() {
                 justifyContent="center"
                 alignItems="center"
               >
-                <img src="./llama2.png" className={styles.smallImage} alt="" />
+                <Image width="200" height="200" src="/llama2.png" className={styles.smallImage} alt="" />
               </Grid>
             </Grid>
           </div>
         </div>
       </Grid>
       <Grid xs={0} md={6}>
-        <img src="./inspiration.jpg" className={styles.image} alt="" />
+        <Image width="1000" height="1000" src="/inspiration.jpg" className={styles.image} alt="" />
       </Grid>
     </Grid>
   );
