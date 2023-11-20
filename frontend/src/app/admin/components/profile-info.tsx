@@ -6,15 +6,25 @@ import {
   Grid,
   Typography,
   Stack,
+  Button,
 } from '@mui/material';
-import { WelcomeProps } from '@/app/components/types';
+import LogoutIcon from '@mui/icons-material/Logout';
+import { Inter } from 'next/font/google';
 import styles from './sidenav.module.css';
 
-export default function ProfileInfo({
+const inter = Inter({ subsets: ['latin'] });
+
+const handleLogout = () => {
+  localStorage.clear();
+  window.location.href = '/api/auth/logout';
+};
+
+function ProfileInfo({
   firstName,
   lastName,
   wizecoins,
-}: WelcomeProps) {
+  picSource,
+}:any) {
   return (
     <Box
       sx={{
@@ -29,26 +39,54 @@ export default function ProfileInfo({
           >
             {`${firstName} ${lastName}`}
           </Typography>
-          <Stack
-            gap={0}
-            direction="row"
-            alignItems="center"
-            justifyContent="flex-end"
-          >
-            <object
-              data="/wizecoin.svg"
-              className={styles.smallimage}
-              title="wizecoin"
-            />
-            <Typography sx={{ color: '#4BE93D', fontSize: '25px' }}>
-              {wizecoins}
-            </Typography>
+          <Stack direction="row" justifyContent="space-between">
+            <Stack
+              gap={0}
+              direction="row"
+              alignItems="center"
+              justifyContent="space-between"
+            >
+              <Grid>
+                <Button
+                  href="/"
+                  sx={{
+                    textTransform: 'none',
+                  }}
+                  className={`${inter.className}`}
+                  startIcon={<LogoutIcon sx={{ color: '#E93D44' }} />}
+                  onClick={handleLogout}
+                >
+                  <Typography
+                    sx={{ fontStyle: 'bold', color: '#E93D44', fontSize: '18px' }}
+                  >
+                    Logout
+                  </Typography>
+                </Button>
+              </Grid>
+            </Stack>
+            <Stack
+              gap={0}
+              direction="row"
+              alignItems="center"
+              justifyContent="flex-end"
+            >
+              <object
+                data="/wizecoin.svg"
+                className={styles.smallimage}
+                title="wizecoin"
+              />
+              <Typography sx={{ color: '#4BE93D', fontSize: '25px' }}>
+                {wizecoins}
+              </Typography>
+            </Stack>
           </Stack>
         </Grid>
         <Grid paddingLeft="1rem">
-          <img src="/tommy.png" className={styles.images} alt="" />
+          <img src={picSource} className={styles.images} alt="" />
         </Grid>
       </Grid>
     </Box>
   );
 }
+
+export default ProfileInfo;

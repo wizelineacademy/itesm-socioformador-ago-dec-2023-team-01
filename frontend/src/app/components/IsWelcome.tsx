@@ -1,6 +1,6 @@
 import React from 'react';
 import {
-  Typography, Box, Button, Paper, Tooltip,
+  Typography, Box, Button, Tooltip, Avatar,
 } from '@mui/material';
 import Link from 'next/link';
 import Grid from '@mui/material/Unstable_Grid2'; // Grid version 2
@@ -26,7 +26,7 @@ export default function IsWelcome({
       <Stack justifyContent="center" alignItems="center" spacing={3}>
         <Grid container spacing={4} display="flex" justifyContent="center" alignItems="center">
           <Grid direction="column">
-            <img src={picSource} className={styles.image} alt="Mock Wizeliner" />
+            <Avatar className={styles.image} alt="Wizeliner" src={picSource} />
           </Grid>
           <Grid>
             <Typography
