@@ -79,6 +79,29 @@ export const conversationRepository = {
     });
     return newConversations;
   },
+
+  async deleteConversation(conversationId: number) {
+    try {
+      await prisma.conversation.update({
+        where: {
+          id: conversationId,
+        },
+        data: {
+          isDeleted: true,
+          deletedAt: new Date(),
+        },
+      });
+    } catch (error) {
+      if (error instanceof Prisma.PrismaClientKnownRequestError) {
+        if (error.code === 'P2025') {
+          throw new CustomError(
+            404,
+            `Conversation with id:${conversationId}, not found`,
+          );
+        }
+      }
+    }
+  },
 };
 
 export default conversationRepository;
