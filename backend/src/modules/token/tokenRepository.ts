@@ -7,12 +7,27 @@ import CustomError from '../../utils/errorModel';
 const tokenRepository = {
   async createToken(tokenInput: CreateTokenDto): Promise<PostResponse> {
     try {
+      const now = new Date();
       const token = await prisma.token.create({
         data: {
           userId: tokenInput.userId,
           amount: tokenInput.amount,
           currentAmount: tokenInput.currentAmount,
-          expiresAt: tokenInput.expiresAt,
+          renewPeriodically:
+            tokenInput.renewPeriodically === undefined
+              ? false
+              : tokenInput.renewPeriodically,
+          expiresAt:
+            tokenInput.expiresAt === undefined
+              ? new Date(now.getFullYear(), now.getMonth() + 1, 1, 23, 59, 59)
+              : new Date(
+                  tokenInput.expiresAt.getFullYear(),
+                  tokenInput.expiresAt.getMonth(),
+                  tokenInput.expiresAt.getDate(),
+                  23,
+                  58,
+                  59,
+                ),
         },
       });
       const newToken: PostResponse = {
@@ -48,6 +63,7 @@ const tokenRepository = {
       userId: updatedToken.userId,
       amount: updatedToken.amount,
       currentAmount: updatedToken.currentAmount,
+      renewPeriodically: updatedToken.renewPeriodically,
       expiresAt: updatedToken.expiresAt,
       createdAt: updatedToken.createdAt,
       updatedAt: updatedToken.updatedAt ?? new Date(),
@@ -80,6 +96,7 @@ const tokenRepository = {
       userId: token.userId,
       amount: token.amount,
       currentAmount: token.currentAmount,
+      renewPeriodically: token.renewPeriodically,
       expiresAt: token.expiresAt,
       createdAt: token.createdAt,
       updatedAt: token.updatedAt ?? new Date(),
@@ -100,6 +117,7 @@ const tokenRepository = {
       userId: token.userId,
       amount: token.amount,
       currentAmount: token.currentAmount,
+      renewPeriodically: token.renewPeriodically,
       expiresAt: token.expiresAt,
       createdAt: token.createdAt,
       updatedAt: token.updatedAt ?? new Date(),

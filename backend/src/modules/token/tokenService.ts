@@ -8,6 +8,7 @@ const tokenService = {
       userId: tokenBody.userId,
       amount: tokenBody.amount,
       expiresAt: tokenBody.expiresAt,
+      renewPeriodically: tokenBody.renewPeriodically,
     };
     const expiresAt = new Date(tokenInput.expiresAt);
     if (expiresAt < new Date()) {
@@ -17,6 +18,7 @@ const tokenService = {
       userId: tokenInput.userId,
       amount: tokenInput.amount,
       currentAmount: tokenInput.amount,
+      renewPeriodically: tokenInput.renewPeriodically ?? false,
       expiresAt,
     };
     return token;
