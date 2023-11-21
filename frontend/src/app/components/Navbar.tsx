@@ -29,8 +29,6 @@ export default function Navbar({
   const firstName = nameParts[0];
   const lastName = nameParts.splice(1).join(' ');
 
-  console.log(name);
-
   return (
     <Box
       display="flex"
