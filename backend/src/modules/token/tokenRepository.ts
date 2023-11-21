@@ -107,6 +107,20 @@ const tokenRepository = {
     };
     return tokenDto;
   },
+
+  async getTokens(): Promise<TokenDto[]> {
+    const tokens = await prisma.token.findMany();
+    const tokensDto: TokenDto[] = tokens.map(token => ({
+      id: token.id,
+      userId: token.userId,
+      amount: token.amount,
+      currentAmount: token.currentAmount,
+      expiresAt: token.expiresAt,
+      createdAt: token.createdAt,
+      updatedAt: token.updatedAt ?? new Date(),
+    }));
+    return tokensDto;
+  },
 };
 
 export default tokenRepository;

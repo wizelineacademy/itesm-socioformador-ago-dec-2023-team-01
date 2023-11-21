@@ -60,6 +60,25 @@ export const conversationRepository = {
     };
     return newConversation;
   },
+
+  async getConversations(): Promise<Conversation[]> {
+    const conversations = await prisma.conversation.findMany();
+
+    const newConversations: Conversation[] = conversations.map(conversation => {
+      const newConversation: Conversation = {
+        id: conversation.id,
+        title: conversation.title,
+        isDeleted: conversation.isDeleted,
+        languageId: conversation.languageId,
+        userId: conversation.userId,
+        createdAt: conversation.createdAt,
+        updatedAt: conversation.updatedAt ?? new Date(),
+        deletedAt: conversation.deletedAt,
+      };
+      return newConversation;
+    });
+    return newConversations;
+  },
 };
 
 export default conversationRepository;
