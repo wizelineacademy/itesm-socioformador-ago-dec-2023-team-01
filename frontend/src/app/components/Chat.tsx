@@ -12,38 +12,11 @@ import SendIcon from '@mui/icons-material/Send';
 import IconButton from '@mui/material/IconButton';
 import InputAdornment from '@mui/material/InputAdornment';
 import { useChat, Message } from 'ai/react';
-import {
-  encodingForModel,
-  getEncoding,
-  type TiktokenModel,
-  type TiktokenEncoding,
-  Tiktoken,
-} from 'js-tiktoken';
+import { UserProfile } from '@auth0/nextjs-auth0/client';
+import { numTokensFromMessage, createConversation, postToConversation } from '../../services/chatService';
 
-export default function Chat({ profileSrc }:any) {
-  function numTokensFromMessages(messages: any[], model: string = 'gpt-3.5-turbo-0613'): number {
-    let encoding:Tiktoken;
-    try {
-      encoding = encodingForModel(model as TiktokenModel);
-    } catch (error) {
-      encoding = getEncoding('cl100k_base' as TiktokenEncoding);
-    }
-    if (model === 'gpt-3.5-turbo-0613') {
-      let numTokens = -3; // fix constant -3 deviation
-      for (const message of messages) {
-        numTokens += 4; // every message follows <im_start>{role/name}\n{content}<im_end>\n
-        numTokens += (encoding.encode(message.content)).length;
-        if (message.key === 'name') {
-          numTokens -= 1;
-        }
-      }
-      numTokens += 2; // every reply is primed with <im_start>assistant
-      return numTokens;
-    }
-    throw new Error(`numTokensFromMessages() is not presently implemented for model ${model}.
-        See https://github.com/openai/openai-python/blob/main/chatml.md for information on how messages are converted to tokens.`);
-  }
-
+export default function Chat({ user }: { user: UserProfile }) {
+  const [conversationId, setConversationId] = useState(0);
   const {
     input, handleInputChange, handleSubmit, isLoading, messages,
   } = useChat({
@@ -51,20 +24,57 @@ export default function Chat({ profileSrc }:any) {
   });
 
   const [tokenCount, setTokenCount] = useState(0);
-  const calculateTokenCount = () => {
-    const model = 'gpt-3.5-turbo-0613';
-    const contextMessages = [
-      { role: 'system', content: 'You are a helpful assistant expert in programming.' },
-      ...messages,
-    ];
+  // const calculateTokenCount = () => {
+  //   const model = 'gpt-3.5-turbo-0613';
+  //   const contextMessages = [
+  //     { role: 'system', content: 'You are a helpful assistant expert in programming.' },
+  //     ...messages,
+  //   ];
 
-    const tokens = numTokensFromMessages(contextMessages, model);
+  //   const tokens = numTokensFromMessage(contextMessages, model);
 
-    setTokenCount(tokens);
-  };
+  //   setTokenCount(tokens);
+  // };
   useEffect(() => {
-    console.log('1', tokenCount);
+    // console.log('1', tokenCount);
   }, [tokenCount]);
+
+  useEffect(() => {
+    if (messages.length === 1) {
+      const title = `${messages[0].content.slice(0, 15).trimEnd()}...`;
+      createConversation(user.sub ?? '', title).then((conversation) => {
+        setConversationId(conversation.id);
+      });
+    }
+  }, [messages, user]);
+
+  useEffect(() => {
+    console.log('conversationId:', conversationId);
+    console.log('cantidad de mensajes', messages.length);
+    if (!isLoading) {
+      const last2Messages = messages.slice(-2);
+      const prompt = last2Messages.filter((message) => message.role === 'user')[0];
+      const response = last2Messages.filter((message) => message.role === 'assistant')[0];
+      if (!prompt || !response) return;
+      if (last2Messages.length === 2 && conversationId !== 0) {
+        console.log('last 2 messages', last2Messages);
+        console.log('prompt', prompt);
+        const tokensFromPrompt = numTokensFromMessage(prompt);
+        console.log('tokens from prompt', tokensFromPrompt);
+        console.log('response', response);
+        const tokensFromResponse = numTokensFromMessage(response);
+        console.log('tokens from response', tokensFromResponse);
+        const tokens = tokensFromPrompt + tokensFromResponse;
+        console.log('tokens', tokens);
+        postToConversation(prompt.content, response.content, conversationId, tokens).then((conversation) => {
+          console.log('conversation', conversation);
+          console.log('posted to conversation');
+        });
+      }
+    } else {
+      console.log('loading');
+    }
+  }, [conversationId, isLoading, messages, user]);
 
   return (
     <Box
@@ -138,7 +148,7 @@ export default function Chat({ profileSrc }:any) {
             {message.role !== 'assistant' && (
               <Avatar
                 alt="User Picture"
-                src={profileSrc}
+                src={user?.picture || 'https://img.freepik.com/premium-vector/user-profile-icon-flat-style-member-avatar-vector-illustration-isolated-background-human-permission-sign-business-concept_157943-15752.jpg?size=338&ext=jpg&ga=GA1.1.1880011253.1700438400&semt=ais'}
                 sx={{
                   width: 40,
                   height: 40,
