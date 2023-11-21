@@ -25,6 +25,7 @@ export interface TokenDto {
   userId: string;
   amount: number;
   currentAmount: number;
+  renewPeriodically: boolean;
   expiresAt: Date;
   createdAt: Date;
   updatedAt: Date;
@@ -41,6 +42,8 @@ export interface TokenDto {
  *          type: string
  *        amount:
  *          type: integer
+ *        renewPeriodically:
+ *         type: boolean
  *        expiresAt:
  *          type: string
  */
@@ -48,11 +51,13 @@ export interface CreateTokenInput {
   userId: string;
   amount: number;
   expiresAt: Date;
+  renewPeriodically?: boolean;
 }
 
 export interface CreateTokenDto {
   userId: string;
   amount: number;
+  renewPeriodically?: boolean;
   currentAmount: number;
-  expiresAt: Date;
+  expiresAt?: Date;
 }

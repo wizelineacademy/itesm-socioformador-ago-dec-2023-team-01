@@ -12,6 +12,7 @@ const tokenService = {
       userId: tokenBody.userId,
       amount: tokenBody.amount,
       currentAmount: tokenBody.amount,
+      renewPeriodically: tokenBody.renewPeriodically ?? false,
       expiresAt,
     };
     return token;
