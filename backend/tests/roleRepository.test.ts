@@ -58,7 +58,8 @@ describe('roleRepository_Server', () => {
         }
       }
     });
-
+  });
+  describe('getRoleByName', () => {
     it('should get a role by name', async () => {
       const roleName = 'testrole';
 

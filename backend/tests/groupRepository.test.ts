@@ -41,15 +41,15 @@ describe('groupRepository_Server', () => {
     it('should get all groups', async () => {
       const groups = await groupRepository.listAllGroups();
       expect(groups).to.be.an('array');
-      expect(groups.length).to.equal(4);
-      expect(groups[0].id).to.equal(12);
-      expect(groups[0].name).to.equal("sam's team");
+      expect(groups.length).to.equal(13);
+      expect(groups[0].id).to.equal(50);
+      expect(groups[0].name).to.equal('amistad');
       expect(groups[0].area).to.equal('development');
       expect(groups[0].createdAt.toISOString()).to.equals(
-        '2023-11-10T18:00:12.318Z',
+        '2023-11-19T17:56:53.976Z',
       );
       expect(groups[0].updatedAt?.toISOString()).to.equals(
-        '2023-11-10T18:00:12.318Z',
+        '2023-11-19T17:56:53.976Z',
       );
     });
   });
@@ -58,11 +58,11 @@ describe('groupRepository_Server', () => {
       const groupID = 8;
       const groups = await groupRepository.findUsersInGroupById(groupID);
       expect(groups).to.be.an('array');
-      expect(groups.length).to.equal(1);
-      expect(groups[0].id).to.equal('google-oauth2|110273456643017657010');
-      expect(groups[0].firstName).to.equal('samuel');
-      expect(groups[0].lastName).to.equal('acosta');
-      expect(groups[0].roleId).to.equal(1);
+      expect(groups.length).to.equal(2);
+      expect(groups[0].id).to.equal('google-oauth2|116200628694173018266');
+      expect(groups[0].firstName).to.equal('adan');
+      expect(groups[0].lastName).to.equal('ruiz');
+      expect(groups[0].roleId).to.equal(2);
     });
     it('should not get user in inexistent group', async () => {
       const groupID = 9999;
