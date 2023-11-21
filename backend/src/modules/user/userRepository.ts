@@ -139,6 +139,7 @@ export const userRepository = {
     const conversations = await prisma.conversation.findMany({
       where: {
         userId,
+        isDeleted: false,
       },
       orderBy: {
         createdAt: 'desc',
