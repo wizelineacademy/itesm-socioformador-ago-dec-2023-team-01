@@ -12,7 +12,7 @@ const tokenRepository = {
         data: {
           userId: tokenInput.userId,
           amount: tokenInput.amount,
-          currentAmount: tokenInput.currentAmount,
+          currentAmount: tokenInput.amount,
           renewPeriodically:
             tokenInput.renewPeriodically === undefined
               ? false
@@ -42,6 +42,7 @@ const tokenRepository = {
       } else if (error instanceof Prisma.PrismaClientValidationError) {
         throw new CustomError(400, 'Invalid input.');
       }
+      console.info(error);
     }
     throw new CustomError(500, 'Internal server error');
   },

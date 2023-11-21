@@ -3,22 +3,16 @@ import { TokenDto, CreateTokenDto, CreateTokenInput } from './tokenModel';
 import tokenRepository from './tokenRepository';
 
 const tokenService = {
-  async createToken(tokenBody: any): Promise<CreateTokenDto> {
-    const tokenInput: CreateTokenInput = {
-      userId: tokenBody.userId,
-      amount: tokenBody.amount,
-      expiresAt: tokenBody.expiresAt,
-      renewPeriodically: tokenBody.renewPeriodically,
-    };
-    const expiresAt = new Date(tokenInput.expiresAt);
+  async createToken(tokenBody: CreateTokenInput): Promise<CreateTokenDto> {
+    const expiresAt = new Date(tokenBody.expiresAt);
     if (expiresAt < new Date()) {
       throw new CustomError(400, 'ExpiresAt must be in the future');
     }
     const token: CreateTokenDto = {
-      userId: tokenInput.userId,
-      amount: tokenInput.amount,
-      currentAmount: tokenInput.amount,
-      renewPeriodically: tokenInput.renewPeriodically ?? false,
+      userId: tokenBody.userId,
+      amount: tokenBody.amount,
+      currentAmount: tokenBody.amount,
+      renewPeriodically: tokenBody.renewPeriodically ?? false,
       expiresAt,
     };
     return token;
