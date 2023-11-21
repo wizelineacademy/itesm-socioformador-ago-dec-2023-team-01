@@ -53,19 +53,18 @@ export default function Welcome() {
   if (isLoading) return <Awaiting />;
   if (error) return <div>{error.message}</div>;
   console.log('outside', user);
-  if (user) {
-    console.log('inside', user);
-    return (
-      <div>
-        <IsWelcome
-          admin
-          name={`${user.given_name} ${user.family_name}`}
-          wizecoins={userTokens.amountTokens}
-          IsWizeliner
-          picSource={user.picture}
-        />
-      </div>
-    );
+  if (!user) {
+    return <NotWelcome />;
   }
-  return <NotWelcome />;
+  return (
+    <div>
+      <IsWelcome
+        admin
+        name={`${user.given_name} ${user.family_name}`}
+        wizecoins={userTokens.amountTokens}
+        IsWizeliner
+        picSource={user.picture}
+      />
+    </div>
+  );
 }
