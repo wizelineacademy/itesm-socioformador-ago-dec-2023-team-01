@@ -1,5 +1,3 @@
-// import React from "react"
-
 'use client';
 
 // @react server
@@ -40,7 +38,7 @@ function Mainpage() {
           </Hidden>
 
           <Grid item xs={12} sm={9}>
-            <Chat profileSrc={user.picture} />
+            <Chat user={user} />
           </Grid>
 
           <Hidden mdUp>
