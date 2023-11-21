@@ -31,8 +31,9 @@ export default function ShowProfileInformation() {
 
   if (isLoading) return <Awaiting />;
   if (error) return <div>{error.message}</div>;
-
+  console.log('outside', user);
   if (user) {
+    console.log('inside', user);
     return (
       <div>
         <UserProfile

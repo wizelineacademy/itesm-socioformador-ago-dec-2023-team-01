@@ -13,6 +13,7 @@ import Link from 'next/link';
 import DashboardIcon from '@mui/icons-material/Dashboard';
 import GroupsIcon from '@mui/icons-material/Groups';
 import PersonIcon from '@mui/icons-material/Person';
+import { useRouter } from 'next/navigation';
 
 const sidebarItems = [
   {
@@ -33,6 +34,7 @@ const sidebarItems = [
 ];
 
 export default function Sidebar() {
+  const router = useRouter();
   return (
     <Stack
       sx={{ backgroundColor: '#111823', width: '15rem', height: '100%' }}
@@ -95,16 +97,17 @@ export default function Sidebar() {
         justifyContent="center"
         padding="2rem"
       >
-        <Button
-          variant="contained"
-          href="/welcome"
-          sx={{
-            bgcolor: '#E93D44',
-            '&:hover': { bgcolor: 'red' },
-          }}
-        >
-          Exit Dashboard
-        </Button>
+        <Link href="welcome">
+          <Button
+            variant="contained"
+            sx={{
+              bgcolor: '#E93D44',
+              '&:hover': { bgcolor: 'red' },
+            }}
+          >
+            Exit Dashboard
+          </Button>
+        </Link>
       </Box>
     </Stack>
   );

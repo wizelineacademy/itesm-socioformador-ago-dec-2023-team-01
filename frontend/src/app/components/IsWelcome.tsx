@@ -26,7 +26,7 @@ export default function IsWelcome({
       <Stack justifyContent="center" alignItems="center" spacing={3}>
         <Grid container spacing={4} display="flex" justifyContent="center" alignItems="center">
           <Grid direction="column">
-            <Avatar className={styles.image} alt="Wizeliner" src={picSource} />
+            <Avatar sx={{ height: '175px', width: '175px' }} alt="Wizeliner" src={picSource} />
           </Grid>
           <Grid>
             <Typography
