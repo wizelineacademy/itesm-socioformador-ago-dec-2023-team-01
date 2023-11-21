@@ -52,8 +52,9 @@ export default function Welcome() {
 
   if (isLoading) return <Awaiting />;
   if (error) return <div>{error.message}</div>;
-
-  if (user && user.given_name && user.family_name && user.picture) {
+  console.log('outside', user);
+  if (user) {
+    console.log('inside', user);
     return (
       <div>
         <IsWelcome

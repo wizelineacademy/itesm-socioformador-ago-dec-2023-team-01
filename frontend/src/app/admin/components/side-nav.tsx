@@ -95,16 +95,17 @@ export default function Sidebar() {
         justifyContent="center"
         padding="2rem"
       >
-        <Button
-          variant="contained"
-          href="/welcome"
-          sx={{
-            bgcolor: '#E93D44',
-            '&:hover': { bgcolor: 'red' },
-          }}
-        >
-          Exit Dashboard
-        </Button>
+        <Link href="welcome">
+          <Button
+            variant="contained"
+            sx={{
+              bgcolor: '#E93D44',
+              '&:hover': { bgcolor: 'red' },
+            }}
+          >
+            Exit Dashboard
+          </Button>
+        </Link>
       </Box>
     </Stack>
   );
