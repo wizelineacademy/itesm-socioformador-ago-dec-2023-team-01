@@ -133,6 +133,7 @@ const tokenRepository = {
       userId: token.userId,
       amount: token.amount,
       currentAmount: token.currentAmount,
+      renewPeriodically: token.renewPeriodically,
       expiresAt: token.expiresAt,
       createdAt: token.createdAt,
       updatedAt: token.updatedAt ?? new Date(),
