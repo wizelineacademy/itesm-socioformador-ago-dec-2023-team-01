@@ -9,7 +9,6 @@ import Awaiting from '../components/awaiting';
 
 export default function Welcome() {
   const { user, error, isLoading } = useUser();
-
   const [userTokens, setUserTokens] = useState({
     amountTokens: '0',
     currentAmountTokens: '0',
@@ -52,18 +51,18 @@ export default function Welcome() {
 
   if (isLoading) return <Awaiting />;
   if (error) return <div>{error.message}</div>;
-  console.log('outside', user);
-  if (!user) {
+  console.log(user);
+  if (localStorage.getItem('first') === null) {
     return <NotWelcome />;
   }
   return (
     <div>
       <IsWelcome
         admin
-        name={`${user.given_name} ${user.family_name}`}
-        wizecoins={userTokens.amountTokens}
+        name={`${localStorage.getItem('first')} ${localStorage.getItem('last')}`}
+        wizecoins={localStorage.getItem('amountTokens')!.toString()}
         IsWizeliner
-        picSource={user.picture}
+        picSource={localStorage.getItem('pic')}
       />
     </div>
   );
