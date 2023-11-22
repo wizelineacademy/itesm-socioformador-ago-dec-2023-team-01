@@ -23,10 +23,14 @@ export const groupService = {
           (total, token) => total + token.currentAmount,
           0,
         );
+        const numberOfUsersInGroup = await groupRepository.findUsersInGroupById(
+          group.id,
+        );
         return {
           group,
           totalTokens: groupTotalTokens,
           availableTokens: groupUsedTokens,
+          numberOfUsers: numberOfUsersInGroup.length,
         };
       }),
     );
@@ -41,13 +45,21 @@ export const groupService = {
       throw new CustomError(404, `Group with id/name:${groupId}, not found`);
     }
     try {
+      const now = new Date();
       await Promise.all(
         users.map(async user => {
           const tokenDto: CreateTokenDto = {
             userId: user.id,
             amount,
             currentAmount: amount,
-            expiresAt: new Date(new Date().setMonth(new Date().getMonth() + 1)),
+            expiresAt: new Date(
+              now.getFullYear(),
+              now.getMonth() + 1,
+              1,
+              23,
+              58,
+              59,
+            ),
           };
           await tokenRepository.createToken(tokenDto);
         }),

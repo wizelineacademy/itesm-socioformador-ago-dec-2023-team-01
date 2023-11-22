@@ -2,12 +2,11 @@ import { Prisma } from '@prisma/client';
 import prisma from '../../../prisma/prisma-client';
 import CustomError from '../../utils/errorModel';
 import { CreateUserInput, UserDto } from './userModel';
-import { PostResponse } from '../../shared/models/responseModel';
 import { TokenDto } from '../token/tokenModel';
 import { Conversation } from '../conversation/conversationModel';
 
 export const userRepository = {
-  async createUser(userInput: CreateUserInput): Promise<PostResponse> {
+  async createUser(userInput: CreateUserInput): Promise<UserDto> {
     try {
       const user = await prisma.user.create({
         data: {
@@ -19,8 +18,15 @@ export const userRepository = {
           roleId: userInput.roleId,
         },
       });
-      const newUser: PostResponse = {
+      const newUser: UserDto = {
         id: user.id,
+        firstName: user.firstName,
+        lastName: user.lastName,
+        imageUrl: user.imageUrl,
+        email: user.email,
+        roleId: user.roleId,
+        createdAt: user.createdAt,
+        updatedAt: user.updatedAt ?? new Date(),
       };
       return newUser;
     } catch (error) {
@@ -96,6 +102,7 @@ export const userRepository = {
       amount: token.amount,
       currentAmount: token.currentAmount,
       expiresAt: token.expiresAt,
+      renewPeriodically: token.renewPeriodically,
       createdAt: token.createdAt,
       updatedAt: token.updatedAt ?? new Date(),
     }));
@@ -121,6 +128,7 @@ export const userRepository = {
       userId: token.userId,
       amount: token.amount,
       currentAmount: token.currentAmount,
+      renewPeriodically: token.renewPeriodically,
       expiresAt: token.expiresAt,
       createdAt: token.createdAt,
       updatedAt: token.updatedAt ?? new Date(),
@@ -131,6 +139,7 @@ export const userRepository = {
     const conversations = await prisma.conversation.findMany({
       where: {
         userId,
+        isDeleted: false,
       },
       orderBy: {
         createdAt: 'desc',
@@ -180,13 +189,25 @@ export const userRepository = {
     };
     return updateUser;
   },
-  async getGroupsFromUser(userId: string): Promise<string[]> {
+  async getGroupsFromUser(userId: string): Promise<any[]> {
     const groups = await prisma.group.findMany({
       where: {
         users: { some: { id: userId } },
       },
     });
-    return groups.map(group => group.name);
+    return groups.map(group => ({
+      id: group.id,
+      name: group.name,
+    }));
+  },
+
+  async deleteUser(userId: string): Promise<object> {
+    const user = await prisma.user.delete({
+      where: {
+        id: userId,
+      },
+    });
+    return user;
   },
 };
 

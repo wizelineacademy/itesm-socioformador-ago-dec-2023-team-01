@@ -257,6 +257,7 @@ export const groupRepository = {
       userId: token?.userId ?? '',
       amount: token?.amount ?? 0,
       currentAmount: token?.currentAmount ?? 0,
+      renewPeriodically: token?.renewPeriodically ?? false,
       expiresAt: token?.expiresAt ?? new Date(),
       createdAt: token?.createdAt ?? new Date(),
       updatedAt: token?.updatedAt ?? new Date(),

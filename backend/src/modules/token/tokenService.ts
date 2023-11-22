@@ -1,22 +1,19 @@
 import CustomError from '../../utils/errorModel';
+import userRepository from '../user/userRepository';
 import { TokenDto, CreateTokenDto, CreateTokenInput } from './tokenModel';
 import tokenRepository from './tokenRepository';
 
 const tokenService = {
-  async createToken(tokenBody: any): Promise<CreateTokenDto> {
-    const tokenInput: CreateTokenInput = {
-      userId: tokenBody.userId,
-      amount: tokenBody.amount,
-      expiresAt: tokenBody.expiresAt,
-    };
-    const expiresAt = new Date(tokenInput.expiresAt);
+  async createToken(tokenBody: CreateTokenInput): Promise<CreateTokenDto> {
+    const expiresAt = new Date(tokenBody.expiresAt);
     if (expiresAt < new Date()) {
       throw new CustomError(400, 'ExpiresAt must be in the future');
     }
     const token: CreateTokenDto = {
-      userId: tokenInput.userId,
-      amount: tokenInput.amount,
-      currentAmount: tokenInput.amount,
+      userId: tokenBody.userId,
+      amount: tokenBody.amount,
+      currentAmount: tokenBody.amount,
+      renewPeriodically: tokenBody.renewPeriodically ?? false,
       expiresAt,
     };
     return token;
@@ -45,6 +42,22 @@ const tokenService = {
     }
     const updatedToken = await tokenRepository.addTokensToUser(tokenId, amount);
     return updatedToken;
+  },
+  async getTotalTokensActive(): Promise<any> {
+    const users = await userRepository.getUsers();
+    let totalTokens = 0;
+    let totalTokensUsed = 0;
+    users.forEach(async user => {
+      const token = await userRepository.getUserCurrentToken(user.id);
+      if (token) {
+        totalTokens += token.amount;
+        totalTokensUsed += token.amount - (token.amount - token.currentAmount);
+      }
+    });
+    return {
+      totalTokens,
+      totalTokensUsed,
+    };
   },
 };
 

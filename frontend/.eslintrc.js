@@ -34,6 +34,7 @@ module.exports = {
     '@typescript-eslint/no-unused-vars': 1,
     'no-unused-vars': 1,
     'import/extensions': 0,
+    'max-len': 0,
   },
-  ignorePatterns: ['.eslintrc.js'],
+  ignorePatterns: ['.eslintrc.js', 'next.config.js'],
 };
