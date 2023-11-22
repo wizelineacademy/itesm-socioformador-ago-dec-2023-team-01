@@ -8,7 +8,11 @@ import Auth0Config from './configs/auth0-config';
 import router from './routes/index';
 import swaggerDocs from './utils/swagger';
 import errorMiddleware from './middlewares/errorMiddleware';
+import tokenJob from './utils/taskScheduler';
 
+const schedule = require('node-schedule');
+
+schedule.scheduleJob('0 0 * * *', tokenJob);
 const port = Number(process.env.PORT) || 8080;
 const app = express();
 

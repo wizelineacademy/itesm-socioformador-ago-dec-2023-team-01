@@ -3,12 +3,25 @@
 # Array of test files
 files=($(find . -name "*.test.ts"))
 
-test_failed=false
+failed_files=()
 
 for file in "${files[@]}"; do
   echo "Starting new test file: $file"
-  npx env-cmd -f ../.env mocha --require ts-node/register "$file" || { echo "Test failed: $file"; test_failed=true; }
+  if ! npx env-cmd -f ../.env mocha --require ts-node/register "$file"; then
+    echo "Test failed: $file"
+    failed_files+=("$file")
+  fi
 done
 
-# Exit with a non-zero status if any test failed
-$test_failed && exit 1
+# Check if any tests failed
+if [ ${#failed_files[@]} -eq 0 ]; then
+  # All tests passed, print in green
+  echo "$(tput setaf 2)All tests passed$(tput sgr0)"
+else
+  # Print names of files that failed and exit with a non-zero status
+  echo "$(tput setaf 1)Tests failed in the following files:$(tput sgr0)"
+  for failed_file in "${failed_files[@]}"; do
+    echo "- $failed_file"
+  done
+  exit 1
+fi

@@ -43,7 +43,7 @@ function Mainpage() {
         </Hidden>
 
         <Grid item xs={12} sm={9}>
-          <Chat profileSrc={profileSrc} />
+          <Chat />
         </Grid>
 
         <Hidden mdUp>

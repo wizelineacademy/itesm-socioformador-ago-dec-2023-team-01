@@ -1,11 +1,9 @@
-// eslint-disable-next-line import/no-extraneous-dependencies
 import { Configuration, OpenAIApi } from 'openai-edge';
-// eslint-disable-next-line import/no-extraneous-dependencies
 import { OpenAIStream, StreamingTextResponse } from 'ai';
 
 export const runtime = 'edge';
 const config = new Configuration({
-  apiKey: process.env.PUBLIC_OPENAI_API_KEY,
+  apiKey: process.env.OPENAI_API_KEY,
 });
 const openai = new OpenAIApi(config);
 

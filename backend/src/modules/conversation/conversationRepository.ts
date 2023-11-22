@@ -60,6 +60,48 @@ export const conversationRepository = {
     };
     return newConversation;
   },
+
+  async getConversations(): Promise<Conversation[]> {
+    const conversations = await prisma.conversation.findMany();
+
+    const newConversations: Conversation[] = conversations.map(conversation => {
+      const newConversation: Conversation = {
+        id: conversation.id,
+        title: conversation.title,
+        isDeleted: conversation.isDeleted,
+        languageId: conversation.languageId,
+        userId: conversation.userId,
+        createdAt: conversation.createdAt,
+        updatedAt: conversation.updatedAt ?? new Date(),
+        deletedAt: conversation.deletedAt,
+      };
+      return newConversation;
+    });
+    return newConversations;
+  },
+
+  async deleteConversation(conversationId: number) {
+    try {
+      await prisma.conversation.update({
+        where: {
+          id: conversationId,
+        },
+        data: {
+          isDeleted: true,
+          deletedAt: new Date(),
+        },
+      });
+    } catch (error) {
+      if (error instanceof Prisma.PrismaClientKnownRequestError) {
+        if (error.code === 'P2025') {
+          throw new CustomError(
+            404,
+            `Conversation with id:${conversationId}, not found`,
+          );
+        }
+      }
+    }
+  },
 };
 
 export default conversationRepository;
