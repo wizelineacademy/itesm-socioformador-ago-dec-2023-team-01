@@ -12,11 +12,13 @@ import SendIcon from '@mui/icons-material/Send';
 import IconButton from '@mui/material/IconButton';
 import InputAdornment from '@mui/material/InputAdornment';
 import { useChat, Message } from 'ai/react';
-import { UserProfile } from '@auth0/nextjs-auth0/client';
+// import { UserProfile } from '@auth0/nextjs-auth0/client';
 import { numTokensFromMessage, createConversation, postToConversation } from '../../services/chatService';
 
-export default function Chat({ user }: { user: UserProfile }) {
+export default function Chat() {
   const [conversationId, setConversationId] = useState(0);
+  const [sub, setSub] = useState('');
+  const [pic, setPic] = useState('');
   const {
     input, handleInputChange, handleSubmit, isLoading, messages,
   } = useChat({
@@ -40,13 +42,18 @@ export default function Chat({ user }: { user: UserProfile }) {
   // }, [tokenCount]);
 
   useEffect(() => {
+    setSub(`${localStorage.getItem('sub')}`);
+    setPic(`${localStorage.getItem('pic')}`);
+  }, []);
+
+  useEffect(() => {
     if (messages.length === 1) {
       const title = `${messages[0].content.slice(0, 15).trimEnd()}...`;
-      createConversation(user.sub ?? '', title).then((conversation) => {
+      createConversation(sub ?? '', title).then((conversation) => {
         setConversationId(conversation.id);
       });
     }
-  }, [messages, user]);
+  }, [messages, sub]);
 
   useEffect(() => {
     console.log('conversationId:', conversationId);
@@ -74,7 +81,7 @@ export default function Chat({ user }: { user: UserProfile }) {
     } else {
       console.log('loading');
     }
-  }, [conversationId, isLoading, messages, user]);
+  }, [conversationId, isLoading, messages, sub]);
 
   return (
     <Box
@@ -148,7 +155,7 @@ export default function Chat({ user }: { user: UserProfile }) {
             {message.role !== 'assistant' && (
               <Avatar
                 alt="User Picture"
-                src={user?.picture || 'https://img.freepik.com/premium-vector/user-profile-icon-flat-style-member-avatar-vector-illustration-isolated-background-human-permission-sign-business-concept_157943-15752.jpg?size=338&ext=jpg&ga=GA1.1.1880011253.1700438400&semt=ais'}
+                src={pic || 'https://img.freepik.com/premium-vector/user-profile-icon-flat-style-member-avatar-vector-illustration-isolated-background-human-permission-sign-business-concept_157943-15752.jpg?size=338&ext=jpg&ga=GA1.1.1880011253.1700438400&semt=ais'}
                 sx={{
                   width: 40,
                   height: 40,
