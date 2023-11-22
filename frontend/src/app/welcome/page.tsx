@@ -42,6 +42,8 @@ export default function Welcome() {
         localStorage.setItem('pic', `${user.picture}`);
         localStorage.setItem('amountTokens', `${userTokens.amountTokens}`);
         localStorage.setItem('currentAmountTokens', `${userTokens.currentAmountTokens}`);
+        localStorage.setItem('sub', `${user.sub}`);
+        localStorage.setItem('email', `${user.email}`);
       }).catch((err) => {
         console.log(err);
       });
