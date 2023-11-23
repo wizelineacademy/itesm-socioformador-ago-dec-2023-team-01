@@ -137,3 +137,14 @@ export const fetchUserGroups = async (userId:string) => {
     throw error;
   }
 };
+
+export const getHistory = async (userId: string) => {
+  try {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/users/${userId}/conversations`);
+    const history = await response.json();
+    return history;
+  } catch (error) {
+    console.error(`error getting history: ${error}`);
+    return [];
+  }
+};
