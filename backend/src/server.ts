@@ -23,6 +23,10 @@ app.use(authOpenId(Auth0Config));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static('public'));
+app.use((_req, res, next) => {
+  res.setHeader('Content-Security-Policy', "default-src 'self'");
+  next();
+});
 
 app.set('views', './src/views');
 app.set('view engine', 'ejs');
