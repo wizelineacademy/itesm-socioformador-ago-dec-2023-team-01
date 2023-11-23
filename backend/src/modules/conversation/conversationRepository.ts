@@ -102,6 +102,26 @@ export const conversationRepository = {
       }
     }
   },
+
+  async updateConversation(conversationId: number, data: any) {
+    try {
+      await prisma.conversation.update({
+        where: {
+          id: conversationId,
+        },
+        data,
+      });
+    } catch (error) {
+      if (error instanceof Prisma.PrismaClientKnownRequestError) {
+        if (error.code === 'P2025') {
+          throw new CustomError(
+            404,
+            `Conversation with id:${conversationId}, not found`,
+          );
+        }
+      }
+    }
+  },
 };
 
 export default conversationRepository;

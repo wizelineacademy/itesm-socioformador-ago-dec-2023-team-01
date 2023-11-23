@@ -1,6 +1,7 @@
 import express, { Request, Response } from 'express';
 import CustomError from '../../../utils/errorModel';
 import postRepository from './postRepository';
+import postService from './postService';
 
 const postRouter = express.Router();
 
@@ -22,7 +23,7 @@ const postRouter = express.Router();
  */
 postRouter.post('/', async (req: Request, res: Response) => {
   try {
-    const post = await postRepository.createPost(req.body);
+    const post = await postService.postToConversation(req.body);
     res.status(200).json(post);
   } catch (error) {
     if (error instanceof CustomError) {
