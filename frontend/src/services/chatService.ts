@@ -24,7 +24,6 @@ export function numTokensFromMessage(message: any, model: string = 'gpt-3.5-turb
       See https://github.com/openai/openai-python/blob/main/chatml.md for information on how messages are converted to tokens.`);
 }
 
-// eslint-disable-next-line max-len
 export const postToConversation = async (prompt: any, content: any, conversationId: number, tokenCost: number) => {
   try {
     const body = {
@@ -40,7 +39,6 @@ export const postToConversation = async (prompt: any, content: any, conversation
       },
       body: JSON.stringify(body),
     });
-    console.log('response from postToConversation:', response);
     const postId = await response.json();
     return postId;
   } catch (error) {
@@ -63,11 +61,24 @@ export const createConversation = async (userId: string, title: string) => {
       },
       body: JSON.stringify(body),
     });
-    console.log('response from postToConversation:', response);
     const conversationId = await response.json();
     return conversationId;
   } catch (error) {
     console.error(`error posting conversation: ${error}`);
     return 0;
+  }
+};
+
+export const getConversationFullChat = async (conversationId: number) => {
+  try {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/conversations/${conversationId}/full-chat`);
+    const conversation = await response.json();
+    return conversation;
+  } catch (error) {
+    console.error(`error getting conversation: ${error}`);
+    return {
+      conversation: {},
+      posts: [],
+    };
   }
 };
