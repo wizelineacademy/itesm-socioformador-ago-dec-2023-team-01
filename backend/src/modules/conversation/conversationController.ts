@@ -166,4 +166,59 @@ conversationRouter.delete('/:conversationId', async (req, res) => {
   }
 });
 
+/**
+ * @openapi
+ * '/api/conversations/{conversationId}/title':
+ *   patch:
+ *     tags:
+ *       - Conversations
+ *     parameters:
+ *       - name: conversationId
+ *         in: path
+ *         required: true
+ *         description: The ID of the conversationId to update
+ *         schema:
+ *           type: integer
+ *     requestBody:
+ *       description: new title
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               title:
+ *                 type: string
+ *                 description: new title
+ *     responses:
+ *       201:
+ *         description: title edited successfully
+ *       400:
+ *         description: Bad request, missing or invalid data
+ *       404:
+ *         description: Conversation not found
+ *       500:
+ *         description: Internal server error
+ */
+conversationRouter.patch(
+  '/:conversationId/title',
+  async (req: Request, res) => {
+    try {
+      const updated = await conversationRepository.updateConversation(
+        Number(req.params.conversationId),
+        { title: req.body.title },
+      );
+      res.status(201).json(updated);
+    } catch (error) {
+      if (error instanceof CustomError) {
+        res
+          .status(error.status)
+          .json({ error: error.message, code: error.status });
+      } else {
+        res.status(500).json({ message: 'Internal server error', error });
+      }
+    }
+  },
+);
+
 export default conversationRouter;

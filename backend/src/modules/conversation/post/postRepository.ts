@@ -45,7 +45,7 @@ export const postRepository = {
         conversationId,
       },
       orderBy: {
-        createdAt: 'desc',
+        createdAt: 'asc',
       },
     });
     const newPosts: Post[] = posts.map(post => ({

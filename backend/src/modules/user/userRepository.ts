@@ -142,7 +142,7 @@ export const userRepository = {
         isDeleted: false,
       },
       orderBy: {
-        createdAt: 'desc',
+        updatedAt: 'desc',
       },
     });
     const newConversations: Conversation[] = conversations.map(
