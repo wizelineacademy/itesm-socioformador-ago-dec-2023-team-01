@@ -13,7 +13,7 @@ export default function Home() {
     <Grid container spacing={0} className={styles.container}>
       <Grid xs={12} md={6} className={styles.container}>
         <div className={`${styles.center}`}>
-          <WTitle1 text="Welcome to WIZE" redText="PROMPT." />
+          <WTitle1 text="Welcome to WIZE" redText="PROMPT." variantBig paddings />
           <Link href="/api/auth/login">
             <TWButton text="Sign In with Google" />
           </Link>

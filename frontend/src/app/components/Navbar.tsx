@@ -41,7 +41,7 @@ export default function Navbar({
     >
       {/* display on larger screens, hidden on small screens */}
       <Box sx={{ display: { xs: 'none', sm: 'block' } }}>
-        <WTitle1 text="Wize" redText="Prompt" />
+        <WTitle1 text="Wize" redText="Prompt" variantBig={false} paddings={false} />
       </Box>
 
       {/* burger icon - display only on small screens */}

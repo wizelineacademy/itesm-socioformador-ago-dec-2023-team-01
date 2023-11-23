@@ -7,7 +7,7 @@ import WTitle1 from '../components/WTitle1';
 export default function Admin() {
   return (
     <Box>
-      <WTitle1 text="Dashboard." redText="" />
+      <WTitle1 text="Dashboard." redText="" variantBig paddings />
     </Box>
   );
 }
