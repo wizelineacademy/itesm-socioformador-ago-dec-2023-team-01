@@ -109,7 +109,7 @@ export default function Chat({
   return (
     <Box
       height={{
-        xs: '87vh', sm: '87vh', md: '87vh', lg: '85vh',
+        xs: '91vh',
       }}
       sx={{
         display: 'flex',
@@ -118,8 +118,8 @@ export default function Chat({
         borderRadius: '20px',
       }}
     >
-      <Box sx={{ display: 'flex', alignItems: 'center', padding: '10px' }}>
-        <Typography variant="h6" sx={{ color: 'white', fontWeight: 'bold' }}>
+      <Box sx={{ display: 'flex', alignItems: 'center', padding: '5px' }}>
+        <Typography variant="body1" sx={{ color: 'white', fontWeight: 'bold' }}>
           ChatGPT 4.0
         </Typography>
       </Box>
@@ -132,7 +132,7 @@ export default function Chat({
           ...conversationId === 0 ? { display: 'flex', alignItems: 'center', justifyContent: 'center' } : {},
         }}
       >
-        {conversationId === 0 && (
+        {conversationId === 0 && messages.length === 0 && (
         <Typography variant="h5" sx={{ color: '#b3b1b1', userSelect: 'none' }}>
           How can I help you?
         </Typography>
@@ -159,7 +159,7 @@ export default function Chat({
               />
             )}
             <Typography
-              variant="body1"
+              variant="body2"
               style={{
                 paddingInline: '10px',
                 borderRadius: '20px',

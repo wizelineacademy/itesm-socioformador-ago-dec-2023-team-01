@@ -29,7 +29,7 @@ export default function ChatHistory({
   return (
     <Box
       height={{
-        xs: '87vh', sm: '87vh', md: '87vh', lg: '85vh',
+        xs: '88vh',
       }}
       sx={{
         backgroundColor: '#111823',
