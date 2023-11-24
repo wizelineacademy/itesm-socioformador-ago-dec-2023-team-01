@@ -20,7 +20,8 @@ export const groupService = {
           0,
         );
         const groupUsedTokens = tokensOfGroup.reduce(
-          (total, token) => total + token.currentAmount,
+          (total, token) =>
+            total + (token.amount - (token.amount - token.currentAmount)),
           0,
         );
         const numberOfUsersInGroup = await groupRepository.findUsersInGroupById(
