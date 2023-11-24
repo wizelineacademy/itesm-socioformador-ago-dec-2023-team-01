@@ -58,8 +58,9 @@ export default function Chat({
       setMessages([]);
     } else {
       getMessages(conversationId).then((mesg) => {
-        if (mesg.length > 0) setMessages(mesg);
-        else setMessages([]);
+        if (mesg.length > 0) {
+          setMessages(mesg);
+        }
       });
     }
   }, [conversationId]);

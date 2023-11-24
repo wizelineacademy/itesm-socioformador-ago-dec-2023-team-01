@@ -15,7 +15,7 @@ export function numTokensFromMessage(message: any, model: string = 'gpt-3.5-turb
   }
   if (model === 'gpt-3.5-turbo-0613') {
     let tokensOfMessage = 0;
-    console.log('calculating for mesage:', message);
+    // console.log('calculating for mesage:', message);
     tokensOfMessage += 4; // every message follows <im_start>{role/name}\n{content}<im_end>\n
     tokensOfMessage += (encoding.encode(String(message.content))).length;
     return tokensOfMessage;
