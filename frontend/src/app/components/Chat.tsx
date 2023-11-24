@@ -12,7 +12,6 @@ import SendIcon from '@mui/icons-material/Send';
 import IconButton from '@mui/material/IconButton';
 import InputAdornment from '@mui/material/InputAdornment';
 import { useChat, Message } from 'ai/react';
-import { UserProfile } from '@auth0/nextjs-auth0/client';
 import Markdown from 'react-markdown';
 import CircularProgress from '@mui/material/CircularProgress';
 import {
@@ -21,6 +20,7 @@ import {
   postToConversation,
   getConversationFullChat,
 } from '../../services/chatService';
+import Awaiting from './awaiting';
 
 async function getMessages(conversationId: number) {
   const response = await getConversationFullChat(conversationId);
@@ -44,13 +44,20 @@ async function getMessages(conversationId: number) {
 }
 
 export default function Chat({
-  user, setConversationId, conversationId, getChatHistory,
-}: { user: UserProfile, setConversationId: (id: number) => void, conversationId: number, getChatHistory: () => void }) {
+  setConversationId, conversationId, getChatHistory,
+}: { setConversationId: (id: number) => void, conversationId: number, getChatHistory: () => void }) {
+  const [userId, setUserId] = useState('');
+  const [profileSrc, setProfileSrc] = useState('');
   const {
     input, handleInputChange, handleSubmit, isLoading, messages, setMessages,
   } = useChat({
     api: '/api/chat',
   });
+
+  useEffect(() => {
+    setUserId(`${localStorage.getItem('sub')}`);
+    setProfileSrc(`${localStorage.getItem('pic')}`);
+  }, []);
 
   // actualizar el conversationId cuando cambie el id
   useEffect(() => {
@@ -63,17 +70,19 @@ export default function Chat({
         }
       });
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [conversationId]);
 
   // crear una conversacion si no hay ninguna
   useEffect(() => {
     if (conversationId === 0 && messages.length === 1) {
       const title = messages[0].content.slice(0, 30).trimEnd();
-      createConversation(user.sub ?? '', title).then((conversation) => {
+      createConversation(userId ?? '', title).then((conversation) => {
         setConversationId(conversation.id);
         getChatHistory();
       });
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [messages]);
 
   // post new messages to conversation
@@ -106,6 +115,7 @@ export default function Chat({
     }
   }, [conversationId, isLoading, messages]);
 
+  if (userId === '') return <Awaiting />;
   return (
     <Box
       height={{
@@ -174,7 +184,7 @@ export default function Chat({
             {message.role !== 'assistant' && (
               <Avatar
                 alt="User Picture"
-                src={user?.picture || 'https://img.freepik.com/premium-vector/user-profile-icon-flat-style-member-avatar-vector-illustration-isolated-background-human-permission-sign-business-concept_157943-15752.jpg?size=338&ext=jpg&ga=GA1.1.1880011253.1700438400&semt=ais'}
+                src={profileSrc || 'https://img.freepik.com/premium-vector/user-profile-icon-flat-style-member-avatar-vector-illustration-isolated-background-human-permission-sign-business-concept_157943-15752.jpg?size=338&ext=jpg&ga=GA1.1.1880011253.1700438400&semt=ais'}
                 sx={{
                   width: 40,
                   height: 40,

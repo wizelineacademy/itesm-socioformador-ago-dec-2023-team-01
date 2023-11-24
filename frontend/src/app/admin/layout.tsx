@@ -6,6 +6,8 @@ import SideNav from './components/side-nav';
 import ProfileInfo from './components/profile-info';
 import { WelcomeProps } from '../components/types';
 import Awaiting from '../components/awaiting';
+import NotAuthorized from './components/notAuthorized';
+import { fetchUserCurrentTokens } from '@/services/tokenService';
 
 export default function AdminLayout({
   children,
@@ -22,20 +24,39 @@ export default function AdminLayout({
     picSource: '',
   });
 
+  const [userTokens, setUserTokens] = useState({
+    amountTokens: '0',
+    currentAmountTokens: '0',
+  });
+
   useEffect(() => {
-    console.log(localStorage.getItem('token'));
-    setWizeliner({
-      admin: true,
-      firstName: localStorage.getItem('first') as string,
-      lastName: localStorage.getItem('last') as string,
-      wizecoins: localStorage.getItem('amountTokens') as string,
-      IsWizeliner: true,
-      name: `${localStorage.getItem('first')} ${localStorage.getItem('last')}`,
-      picSource: localStorage.getItem('pic'),
-    });
+    const fetchData = async () => {
+      try {
+        if (localStorage.getItem('role') !== null) {
+          const userTokensData = await fetchUserCurrentTokens(`${localStorage.getItem('role')}`);
+          setUserTokens(userTokensData);
+        }
+      } catch (e) {
+        console.error(e);
+      }
+    };
+    fetchData();
   }, []);
 
+  useEffect(() => {
+    setWizeliner({
+      admin: localStorage.getItem('role') === 'admin',
+      firstName: `${localStorage.getItem('first')}`,
+      lastName: `${localStorage.getItem('last')}`,
+      wizecoins: `${userTokens.currentAmountTokens ?? 0}`,
+      IsWizeliner: true,
+      name: `${localStorage.getItem('first')} ${localStorage.getItem('last')}`,
+      picSource: `${localStorage.getItem('pic')}`,
+    });
+  }, [userTokens]);
+
   if (wizeliner.firstName === '') return <Awaiting />;
+  if (wizeliner.admin === false) return <NotAuthorized />;
 
   return (
     <Stack direction="row">

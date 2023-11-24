@@ -95,7 +95,7 @@ export default function Sidebar() {
         justifyContent="center"
         padding="2rem"
       >
-        <Link href="welcome">
+        <Link href="/welcome">
           <Button
             variant="contained"
             sx={{
