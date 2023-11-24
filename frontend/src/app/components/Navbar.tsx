@@ -36,7 +36,7 @@ export default function Navbar({
       alignItems="center"
       padding="10px"
       height={{
-        xs: '6vh', sm: '6vh', md: '6vh', lg: '8vh',
+        xs: '6vh', sm: '6vh', md: '6vh', lg: '5vh',
       }}
     >
       {/* display on larger screens, hidden on small screens */}

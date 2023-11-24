@@ -13,7 +13,7 @@ export default function WTitle1({
 }:Title1Props) {
   return (
     <Typography
-      {...variantBig ? { variant: 'h1' } : { variant: 'h3' }}
+      {...variantBig ? { variant: 'h1' } : { variant: 'h4' }}
       sx={{
         color: 'white',
         fontWeight: 'bold',
