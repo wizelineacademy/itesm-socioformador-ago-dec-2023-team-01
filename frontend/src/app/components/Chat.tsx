@@ -37,16 +37,15 @@ async function getMessages(conversationId: number) {
       content: message.content,
       role: 'assistant',
     };
-    tempMessages.push(newAssistantMessage);
     tempMessages.push(newUserMessage);
+    tempMessages.push(newAssistantMessage);
   });
-  tempMessages.reverse();
-  // console.log('mensajes traidos', tempMessages);
   return tempMessages;
 }
 
-export default function Chat({ user, convId }: { user: UserProfile, convId: number }) {
-  const [conversationId, setConversationId] = useState<number>(convId);
+export default function Chat({
+  user, setConversationId, conversationId, getChatHistory,
+}: { user: UserProfile, setConversationId: (id: number) => void, conversationId: number, getChatHistory: () => void }) {
   const {
     input, handleInputChange, handleSubmit, isLoading, messages, setMessages,
   } = useChat({
@@ -55,32 +54,26 @@ export default function Chat({ user, convId }: { user: UserProfile, convId: numb
 
   // actualizar el conversationId cuando cambie el id
   useEffect(() => {
-    console.log('id changed', convId);
-    setMessages([]);
-    setConversationId(convId);
-  }, [convId]);
-
-  // actualizar conversacion con los mensajes de la db si hay un conversationId
-  useEffect(() => {
-    // console.log('id changeddddd', convId);
-    if (conversationId !== 0) {
+    if (conversationId === 0) {
+      setMessages([]);
+    } else {
       getMessages(conversationId).then((mesg) => {
-        setMessages(mesg);
+        if (mesg.length > 0) setMessages(mesg);
+        else setMessages([]);
       });
     }
   }, [conversationId]);
 
   // crear una conversacion si no hay ninguna
   useEffect(() => {
-    if (conversationId === 0 && messages.length > 0) {
-      console.log('convesasion  no hay, messages:', messages);
+    if (conversationId === 0 && messages.length === 1) {
       const title = messages[0].content.slice(0, 30).trimEnd();
       createConversation(user.sub ?? '', title).then((conversation) => {
         setConversationId(conversation.id);
-        console.log('created new conversation with id', conversation.id);
+        getChatHistory();
       });
     }
-  }, [isLoading, messages]);
+  }, [messages]);
 
   // post new messages to conversation
   useEffect(() => {
@@ -88,30 +81,27 @@ export default function Chat({ user, convId }: { user: UserProfile, convId: numb
       const last2Messages = messages.slice(-2);
       const prompt = last2Messages.find((message) => message.role === 'user');
       const response = last2Messages.find((message) => message.role === 'assistant');
-      console.log('prompt', prompt);
-      console.log('response', response);
+      // console.log('prompt', prompt);
+      // console.log('response', response);
       if (prompt && response && conversationId) {
-        console.log('sliced messages');
+        // console.log('sliced messages');
         if (response.id.startsWith('Nic0WzPpt') || prompt.id.startsWith('Nic0WzPpt')) {
-          console.log('message already in db');
+          // console.log('message already in db');
           return;
         }
         const tokensFromPrompt = numTokensFromMessage(prompt);
         const tokensFromResponse = numTokensFromMessage(response);
         const tokens = tokensFromPrompt + tokensFromResponse;
-        console.log('tokens prompt', tokensFromPrompt);
-        console.log('tokens response', tokensFromResponse);
-        console.log('tokens', tokens);
 
         postToConversation(prompt.content, response.content, conversationId, tokens).then((conversation) => {
-          console.log('conversation', conversation);
-          console.log('posted to conversation');
+          // console.log('conversation', conversation);
+          // console.log('posted to conversation');
         });
       } else {
-        console.log('no prompt or response');
+        // console.log('no prompt or response');
       }
     } else {
-      console.log('loading');
+      // console.log('loading');
     }
   }, [conversationId, isLoading, messages]);
 
@@ -138,8 +128,14 @@ export default function Chat({ user, convId }: { user: UserProfile, convId: numb
           overflowY: 'scroll',
           padding: '10px',
           backgroundColor: 'transparent',
+          ...conversationId === 0 ? { display: 'flex', alignItems: 'center', justifyContent: 'center' } : {},
         }}
       >
+        {conversationId === 0 && (
+        <Typography variant="h5" sx={{ color: '#b3b1b1', userSelect: 'none' }}>
+          How can I help you?
+        </Typography>
+        )}
         {messages.map((message, index) => (
           <Box
             key={index}

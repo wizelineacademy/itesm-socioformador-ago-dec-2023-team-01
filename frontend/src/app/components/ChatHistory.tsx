@@ -7,13 +7,25 @@ import ListItem from '@mui/material/ListItem';
 import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
 import AddIcon from '@mui/icons-material/Add';
-import DeleteIcon from '@mui/icons-material/Delete';
+import EditIcon from '@mui/icons-material/Edit';
 import LogoutIcon from '@mui/icons-material/Logout';
 import CloseIcon from '@mui/icons-material/Close';
-import React from 'react';
+import React, { useState } from 'react';
+import {
+  Dialog, DialogActions, DialogContent, DialogTitle, Menu, MenuItem, TextField,
+} from '@mui/material';
+import ChatHistoryItem from './ChatHistoryItem';
+import { getHistory } from '@/services/usersService';
 
-export default function ChatHistory({ closeChatHistory, chatHistory, handleChatItemClick }:
-{ closeChatHistory: () => void; chatHistory: { title: string, id: number }[]; handleChatItemClick: (id: number) => void; }) {
+export default function ChatHistory({
+  closeChatHistory,
+  handleChatItemClick,
+  setConversationId,
+  chatHistory,
+  getChatHistory,
+  conversationId,
+}:
+{ closeChatHistory: () => void; handleChatItemClick: (id: number) => void; setConversationId: (id: number) => void; chatHistory: { title: string, id: number }[]; getChatHistory: () => Promise<void>; conversationId: number; }) {
   return (
     <Box
       height={{
@@ -37,6 +49,9 @@ export default function ChatHistory({ closeChatHistory, chatHistory, handleChatI
           <Button
             variant="outlined"
             startIcon={<AddIcon sx={{ color: 'white' }} />}
+            onClick={() => {
+              setConversationId(0);
+            }}
             sx={{
               textTransform: 'none',
               borderRadius: '20px',
@@ -109,47 +124,15 @@ export default function ChatHistory({ closeChatHistory, chatHistory, handleChatI
         }}
       >
         <Box sx={{ padding: '0 15px' }}>
-          <List>
-            {chatHistory.map((chatInfo, index) => (
-              <Button
-                key={index}
-                onClick={() => handleChatItemClick(chatInfo.id)}
-                sx={{ width: '100%', padding: 0 }}
-              >
-                <ListItem
-                  key={index}
-                  sx={{
-                    justifyContent: 'space-between',
-                    marginBottom: '10px',
-                    border: '1.5px solid #4D545D',
-                    borderRadius: '10px',
-                    // padding: "5px 10px",
-                    overflow: 'hidden',
-                    whiteSpace: 'nowrap',
-                    textOverflow: 'ellipsis',
-                  }}
-                >
-                  <Typography
-                    variant="body1"
-                    sx={{
-                      color: 'white',
-                      flexGrow: 1,
-                      fontWeight: 'bold',
-                      marginRight: '10px',
-                      textOverflow: 'ellipsis',
-                      overflow: 'hidden',
-                      textTransform: 'capitalize',
-                    }}
-                  >
-                    {chatInfo.title}
-                  </Typography>
-                  <IconButton size="small" sx={{ color: '#4D545D' }}>
-                    <DeleteIcon />
-                  </IconButton>
-                </ListItem>
-              </Button>
-            ))}
-          </List>
+          {chatHistory.map((chatInfo) => (
+            <ChatHistoryItem
+              chatInfo={chatInfo}
+              handleChatItemClick={handleChatItemClick}
+              getChatHistory={getChatHistory}
+              setConversationId={setConversationId}
+              conversationId={conversationId}
+            />
+          ))}
         </Box>
       </Box>
 

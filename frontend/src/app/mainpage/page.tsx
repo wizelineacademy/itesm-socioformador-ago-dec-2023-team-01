@@ -20,8 +20,25 @@ function Mainpage() {
   const [conversationId, setConversationId] = useState(0);
   const [chatsHistory, setChatsHistory] = useState([{ title: '', id: 0 }]);
 
+  const getChatHistory = async () => {
+    try {
+      const response = await getHistory(userId);
+      const chatHistory = response.map((conversation: any) => ({
+        title: conversation.title,
+        id: conversation.id,
+      }));
+      setChatsHistory(chatHistory);
+      // console.log('setting chat history', chatHistory);
+      return chatHistory;
+    } catch (er) {
+      console.log(er);
+      return [];
+    }
+  };
+
   const handleChatItemClick = (id: number) => {
     setConversationId(id);
+    // console.log('chat item clicked', id);
   };
   useEffect(() => {
     if (userId === '') return;
@@ -31,7 +48,7 @@ function Mainpage() {
         id: chat.id,
       }));
       setChatsHistory(chatInformation);
-      console.log(data);
+      // console.log(data);
     });
   }, [userId]);
 
@@ -55,12 +72,12 @@ function Mainpage() {
           {/* ChatHistory for larger screens (displayed by default) */}
           <Hidden only={['xs']}>
             <Grid item sm={2}>
-              <ChatHistory closeChatHistory={() => setShowChatHistory(false)} chatHistory={chatsHistory} handleChatItemClick={handleChatItemClick} />
+              <ChatHistory closeChatHistory={() => setShowChatHistory(false)} chatHistory={chatsHistory} handleChatItemClick={handleChatItemClick} setConversationId={setConversationId} getChatHistory={getChatHistory} conversationId={conversationId} />
             </Grid>
           </Hidden>
 
           <Grid item xs={10} sm={8}>
-            <Chat user={user} convId={conversationId} />
+            <Chat user={user} setConversationId={setConversationId} conversationId={conversationId} getChatHistory={getChatHistory} />
           </Grid>
 
           <Hidden mdUp>
@@ -76,7 +93,7 @@ function Mainpage() {
                   backgroundColor: 'rgba(0, 0, 0, 0.5)', // semi-transparent backdrop
                 }}
               >
-                <ChatHistory closeChatHistory={() => setShowChatHistory(false)} chatHistory={chatsHistory} handleChatItemClick={handleChatItemClick} />
+                <ChatHistory closeChatHistory={() => setShowChatHistory(false)} chatHistory={chatsHistory} handleChatItemClick={handleChatItemClick} setConversationId={setConversationId} getChatHistory={getChatHistory} conversationId={conversationId} />
 
               </div>
             )}
@@ -95,8 +112,7 @@ function Mainpage() {
                   backgroundColor: 'rgba(0, 0, 0, 0.5)',
                 }}
               >
-                <ChatHistory closeChatHistory={() => setShowChatHistory(false)} chatHistory={chatsHistory} handleChatItemClick={handleChatItemClick} />
-
+                <ChatHistory closeChatHistory={() => setShowChatHistory(false)} chatHistory={chatsHistory} handleChatItemClick={handleChatItemClick} setConversationId={setConversationId} getChatHistory={getChatHistory} conversationId={conversationId} />
               </div>
             )}
           </Hidden>
