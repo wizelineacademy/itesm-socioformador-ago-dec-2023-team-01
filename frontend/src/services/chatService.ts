@@ -82,3 +82,32 @@ export const getConversationFullChat = async (conversationId: number) => {
     };
   }
 };
+
+export const editConversationTitle = async (conversationId: number, title: string) => {
+  try {
+    const body = {
+      title,
+    };
+    await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/conversations/${conversationId}/title`, {
+      method: 'PATCH',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(body),
+    });
+  } catch (error) {
+    console.log(`error editing conversation title: ${error}`);
+  }
+};
+
+export const deleteConversation = async (conversationId: number) => {
+  try {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/conversations/${conversationId}`, {
+      method: 'DELETE',
+    });
+    return response;
+  } catch (error) {
+    console.log(`error deleting conversation: ${error}`);
+    return { status: 500 };
+  }
+};
