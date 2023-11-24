@@ -35,7 +35,7 @@ export default function AddWizeliner() {
         justifyContent="space-between"
         marginBottom={3}
       >
-        {/* <WTitle1 text="Add" redText=" Wizeliner" /> */}
+        {/* <WTitle1 text="Add" redText=" Wizeliner" variantBig paddings /> */}
         <Stack direction="row" spacing={0}>
           <Typography
             variant="h1"

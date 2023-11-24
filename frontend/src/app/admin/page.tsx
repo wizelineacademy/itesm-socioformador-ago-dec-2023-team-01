@@ -181,7 +181,7 @@ export default function Admin() {
   return (
     <Container maxWidth="xl">
       <Box marginLeft="100px">
-        <WTitle1 text="Dashboard." redText="" />
+        <WTitle1 text="Dashboard." redText="" variantBig paddings />
       </Box>
       <Grid container spacing={2}>
         <Grid item xs={12} md={9}>
