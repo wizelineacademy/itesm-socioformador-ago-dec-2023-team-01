@@ -7,39 +7,33 @@ import ListItem from '@mui/material/ListItem';
 import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
 import AddIcon from '@mui/icons-material/Add';
-import DeleteIcon from '@mui/icons-material/Delete';
+import EditIcon from '@mui/icons-material/Edit';
 import LogoutIcon from '@mui/icons-material/Logout';
 import CloseIcon from '@mui/icons-material/Close';
-import React from 'react';
+import React, { useState } from 'react';
+import {
+  Dialog, DialogActions, DialogContent, DialogTitle, Menu, MenuItem, TextField,
+} from '@mui/material';
+import ChatHistoryItem from './ChatHistoryItem';
+import { getHistory } from '@/services/usersService';
 
-interface ChatHistoryProps {
-  closeChatHistory?: () => void;
-}
-
-export default function ChatHistory({ closeChatHistory }: ChatHistoryProps) {
-  const chats = [
-    'NextJS breakdown',
-    'Responsive element',
-    'Inner join explanation',
-    'Prisma setup',
-    'PostgresSQL shell',
-    'Nvm in windows',
-    'User response',
-    'Best artist of 2023',
-    'Best DB for next js',
-    'Best framework',
-    'OpenAI API',
-  ];
-
-  // const [openChatHistory, setOpenChatHistory] = useState(false);
-
+export default function ChatHistory({
+  closeChatHistory,
+  handleChatItemClick,
+  setConversationId,
+  chatHistory,
+  getChatHistory,
+  conversationId,
+}:
+{ closeChatHistory: () => void; handleChatItemClick: (id: number) => void; setConversationId: (id: number) => void; chatHistory: { title: string, id: number }[]; getChatHistory: () => Promise<void>; conversationId: number; }) {
   return (
     <Box
+      height={{
+        xs: '87vh', sm: '87vh', md: '87vh', lg: '85vh',
+      }}
       sx={{
         backgroundColor: '#111823',
         padding: '10px',
-        height: '70vh',
-        // overflowY: "auto",
         borderRadius: '20px',
         display: 'flex',
         flexDirection: 'column',
@@ -55,6 +49,9 @@ export default function ChatHistory({ closeChatHistory }: ChatHistoryProps) {
           <Button
             variant="outlined"
             startIcon={<AddIcon sx={{ color: 'white' }} />}
+            onClick={() => {
+              setConversationId(0);
+            }}
             sx={{
               textTransform: 'none',
               borderRadius: '20px',
@@ -127,41 +124,15 @@ export default function ChatHistory({ closeChatHistory }: ChatHistoryProps) {
         }}
       >
         <Box sx={{ padding: '0 15px' }}>
-          <List>
-            {chats.map((chat, index) => (
-              <ListItem
-                button
-                key={index}
-                sx={{
-                  justifyContent: 'space-between',
-                  marginBottom: '10px',
-                  border: '1.5px solid #4D545D',
-                  borderRadius: '10px',
-                  // padding: "5px 10px",
-                  overflow: 'hidden',
-                  whiteSpace: 'nowrap',
-                  textOverflow: 'ellipsis',
-                }}
-              >
-                <Typography
-                  variant="body1"
-                  sx={{
-                    color: 'white',
-                    flexGrow: 1,
-                    fontWeight: 'bold',
-                    marginRight: '10px',
-                    textOverflow: 'ellipsis',
-                    overflow: 'hidden',
-                  }}
-                >
-                  {chat}
-                </Typography>
-                <IconButton size="small" sx={{ color: '#4D545D' }}>
-                  <DeleteIcon />
-                </IconButton>
-              </ListItem>
-            ))}
-          </List>
+          {chatHistory.map((chatInfo) => (
+            <ChatHistoryItem
+              chatInfo={chatInfo}
+              handleChatItemClick={handleChatItemClick}
+              getChatHistory={getChatHistory}
+              setConversationId={setConversationId}
+              conversationId={conversationId}
+            />
+          ))}
         </Box>
       </Box>
 

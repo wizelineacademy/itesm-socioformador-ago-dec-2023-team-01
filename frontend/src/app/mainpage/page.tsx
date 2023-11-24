@@ -3,42 +3,81 @@
 // @react server
 import Container from '@mui/material/Container';
 import Grid from '@mui/material/Grid';
-import React, { useState } from 'react';
-import { Hidden } from '@mui/material';
+import React, { useEffect, useState } from 'react';
+import { Box, Hidden } from '@mui/material';
 import { useUser } from '@auth0/nextjs-auth0/client';
 import Chat from '@/app/components/Chat';
 import ChatHistory from '@/app/components/ChatHistory';
 import Navbar from '@/app/components/Navbar';
 import Awaiting from '../components/awaiting';
 import NotWelcome from '../components/NotWelcome';
+import { getHistory } from '@/services/usersService';
 
 function Mainpage() {
   const [showChatHistory, setShowChatHistory] = useState(false);
   const { user, error, isLoading } = useUser();
+  const [userId, setUserId] = useState(user?.sub ?? '');
+  const [conversationId, setConversationId] = useState(0);
+  const [chatsHistory, setChatsHistory] = useState([{ title: '', id: 0 }]);
+
+  const getChatHistory = async () => {
+    try {
+      const response = await getHistory(userId);
+      const chatHistory = response.map((conversation: any) => ({
+        title: conversation.title,
+        id: conversation.id,
+      }));
+      setChatsHistory(chatHistory);
+      // console.log('setting chat history', chatHistory);
+      return chatHistory;
+    } catch (er) {
+      console.log(er);
+      return [];
+    }
+  };
+
+  const handleChatItemClick = (id: number) => {
+    setConversationId(id);
+    // console.log('chat item clicked', id);
+  };
+  useEffect(() => {
+    if (userId === '') return;
+    getHistory(userId).then((data) => {
+      const chatInformation = data.map((chat: { title: any; id: any; }) => ({
+        title: chat.title,
+        id: chat.id,
+      }));
+      setChatsHistory(chatInformation);
+      // console.log(data);
+    });
+  }, [userId]);
+
+  useEffect(() => {
+    if (user) setUserId(user.sub ?? '');
+  }, [user]);
 
   if (isLoading) return <Awaiting />;
   if (error) return <div>{error.message}</div>;
 
   if (user) {
     return (
-      <Container>
+      <Container maxWidth={false}>
         <Navbar
           profileSrc={user.picture}
           name={user.name}
           number={`${localStorage.getItem('amountTokens')}`}
           onBurgerClick={() => setShowChatHistory((prev) => !prev)}
         />
-
-        <Grid container spacing={1}>
+        <Grid container spacing={1} columns={10}>
           {/* ChatHistory for larger screens (displayed by default) */}
           <Hidden only={['xs']}>
-            <Grid item sm={3}>
-              <ChatHistory />
+            <Grid item sm={2}>
+              <ChatHistory closeChatHistory={() => setShowChatHistory(false)} chatHistory={chatsHistory} handleChatItemClick={handleChatItemClick} setConversationId={setConversationId} getChatHistory={getChatHistory} conversationId={conversationId} />
             </Grid>
           </Hidden>
 
-          <Grid item xs={12} sm={9}>
-            <Chat user={user} />
+          <Grid item xs={10} sm={8}>
+            <Chat user={user} setConversationId={setConversationId} conversationId={conversationId} getChatHistory={getChatHistory} />
           </Grid>
 
           <Hidden mdUp>
@@ -54,7 +93,8 @@ function Mainpage() {
                   backgroundColor: 'rgba(0, 0, 0, 0.5)', // semi-transparent backdrop
                 }}
               >
-                <ChatHistory closeChatHistory={() => setShowChatHistory(false)} />
+                <ChatHistory closeChatHistory={() => setShowChatHistory(false)} chatHistory={chatsHistory} handleChatItemClick={handleChatItemClick} setConversationId={setConversationId} getChatHistory={getChatHistory} conversationId={conversationId} />
+
               </div>
             )}
           </Hidden>
@@ -72,7 +112,7 @@ function Mainpage() {
                   backgroundColor: 'rgba(0, 0, 0, 0.5)',
                 }}
               >
-                <ChatHistory closeChatHistory={() => setShowChatHistory(false)} />
+                <ChatHistory closeChatHistory={() => setShowChatHistory(false)} chatHistory={chatsHistory} handleChatItemClick={handleChatItemClick} setConversationId={setConversationId} getChatHistory={getChatHistory} conversationId={conversationId} />
               </div>
             )}
           </Hidden>
