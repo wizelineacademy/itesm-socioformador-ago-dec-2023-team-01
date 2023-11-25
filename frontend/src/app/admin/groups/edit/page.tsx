@@ -13,6 +13,7 @@ import AddIcon from '@mui/icons-material/Add';
 import Stack from '@mui/material/Stack';
 import { SnackbarProvider } from 'notistack';
 import DataGrid from '@/app/admin/components/DataGrid';
+import AddTokensPopup from '../../components/addTokensPopup';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -23,6 +24,7 @@ export default function EditGroups() {
   const [groupName, setGroupName] = useState('Software Engineers');
   const [isEditing, setIsEditing] = useState(false);
   const [wizeCount, setWizeCount] = useState({ totalWizeCoins: 0, totalUsers: 0 });
+  const [isPopupOpen, setPopupOpen] = useState(false);
   const router = useRouter();
 
   const handleGroupNameChange = (e: { target: { value: React.SetStateAction<string>; }; }) => {
@@ -50,9 +52,31 @@ export default function EditGroups() {
     router.push(`/admin/groups/edit/add?${searchParams.toString()}`);
   };
 
+  const handleOpenPopup = () => {
+    setPopupOpen(true);
+  };
+
+  const handleClosePopup = () => {
+    setPopupOpen(false);
+  };
+
+  const handleAddWizecoins = () => {
+    console.log('Adding wizecoins');
+    handleClosePopup();
+  };
+
   return (
     <Container>
       <SnackbarProvider />
+      <AddTokensPopup
+        title={['Add Wizecoins', ' to group']}
+        content={['This action adds the amount of wizecoins you specify', ' to everyone in this group.', ' please type the number in correctly before you set it.']}
+        badButtonTitle="Cancel"
+        goodButtonTitle="Add Wizecoins"
+        open={isPopupOpen}
+        onClose={handleClosePopup}
+        onGoodButtonClick={handleAddWizecoins}
+      />
       <Box marginBottom={2}>
         <Box
           display="flex"
@@ -130,6 +154,7 @@ export default function EditGroups() {
               justifyContent="space-between"
               marginBottom={2}
             >
+              {/* Finish and go back */}
               <Button
                 onClick={handleNavBack}
                 variant="contained"
@@ -144,25 +169,6 @@ export default function EditGroups() {
               >
                 Finish and go back
               </Button>
-              <Button
-                onClick={handleNavigation}
-                variant="outlined"
-                sx={{
-                  textTransform: 'none',
-                  color: '#ffffff',
-                  borderColor: '#4BE93D',
-                  borderRadius: '20px',
-                  '&:hover': {
-                    borderColor: 'green',
-                  },
-                  '& .MuiTouchRipple-root span': {
-                    backgroundColor: '#4BE93D',
-                  },
-                }}
-              >
-                <AddIcon />
-                New Member
-              </Button>
             </Box>
             <Box
               display="flex"
@@ -171,6 +177,7 @@ export default function EditGroups() {
               marginBottom={1}
               marginRight={1}
             >
+              {/* Total Wizeliners */}
               <Box
                 sx={{
                   width: '50%',
@@ -192,15 +199,27 @@ export default function EditGroups() {
                   {wizeCount.totalUsers}
                 </Typography>
               </Box>
-              <Typography
-                variant="h5"
+              {/* BEFORE: Wizelienrs */}
+              {/* New member */}
+              <Button
+                onClick={handleNavigation}
+                variant="outlined"
                 sx={{
+                  textTransform: 'none',
                   color: '#ffffff',
-                  fontWeight: 'bold',
+                  borderColor: '#4BE93D',
+                  borderRadius: '20px',
+                  '&:hover': {
+                    borderColor: 'green',
+                  },
+                  '& .MuiTouchRipple-root span': {
+                    backgroundColor: '#4BE93D',
+                  },
                 }}
               >
-                Wizeliners
-              </Typography>
+                <AddIcon />
+                New Wizeliner
+              </Button>
             </Box>
             <Box
               display="flex"
@@ -208,6 +227,7 @@ export default function EditGroups() {
               justifyContent="space-between"
               marginRight={1}
             >
+              {/* Total Wizecoins */}
               <Box
                 sx={{
                   width: '50%',
@@ -242,15 +262,27 @@ export default function EditGroups() {
                   {wizeCount.totalWizeCoins}
                 </Typography>
               </Box>
-              <Typography
-                variant="h5"
+              {/* BEFORE: Wizecoins */}
+              {/* Add Wizecoins */}
+              <Button
+                onClick={handleOpenPopup}
+                variant="outlined"
                 sx={{
+                  textTransform: 'none',
                   color: '#ffffff',
-                  fontWeight: 'bold',
+                  borderColor: '#d305ff',
+                  borderRadius: '20px',
+                  '&:hover': {
+                    borderColor: 'purple',
+                  },
+                  '& .MuiTouchRipple-root span': {
+                    backgroundColor: '#d305ff',
+                  },
                 }}
               >
-                Wizecoins
-              </Typography>
+                <AddIcon />
+                Add Wizecoins
+              </Button>
             </Box>
           </Paper>
         </Box>

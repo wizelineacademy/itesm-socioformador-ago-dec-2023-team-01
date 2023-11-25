@@ -74,3 +74,26 @@ export async function updateUserAmountTokens(userId: string, operation: string, 
     throw error;
   }
 }
+
+export async function addTokensToUsersInGroup(groupId:string, amount:string) {
+  try {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/group/${groupId}/tokens`, {
+      method: 'PATCH',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${localStorage.getItem('token')}`,
+      },
+      body: JSON.stringify({
+        groupId,
+        amount,
+      }),
+    });
+
+    if (!response.ok) {
+      throw new Error('Network response was not ok');
+    }
+  } catch (error) {
+    console.log(error);
+    throw error;
+  }
+}
