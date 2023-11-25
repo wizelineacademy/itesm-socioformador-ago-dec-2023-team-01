@@ -74,3 +74,24 @@ export async function updateUserAmountTokens(userId: string, operation: string, 
     throw error;
   }
 }
+
+export async function creatTokenForUser(userId: string, amount: number, renewPeriodically: boolean, expiresAt: Date) {
+  try {
+    fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/token`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${localStorage.getItem('token')}`,
+      },
+      body: JSON.stringify({
+        userId,
+        amount,
+        renewPeriodically,
+        expiresAt,
+      }),
+    });
+  } catch (error) {
+    console.error(error);
+    throw error;
+  }
+}

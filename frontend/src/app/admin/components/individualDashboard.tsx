@@ -1,3 +1,6 @@
+'use client';
+
+/* eslint-disable import/no-extraneous-dependencies */
 import React, { useState } from 'react';
 import {
   Typography, Box, Button, Paper, Stack, Grid, IconButton, Avatar,
@@ -9,9 +12,11 @@ import { useRouter } from 'next/navigation';
 import { VariantType, enqueueSnackbar } from 'notistack';
 import Popup from '@/app/components/Popup';
 import EditWizecoinsUserPopup from '@/app/components/EditWizecoinsUserPopup';
+import CreateTokenDialog from '@/app/admin/components/tokens/CreateTokenDialog';
 import { updateUserAdminStatus } from '@/services/usersService';
 import LineChart from './LineChart';
 import styles from './individualDashboard.module.css';
+import createTokenForUser from '@/services/tokenService';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -135,6 +140,7 @@ export default function UserProfileDashboard({
 
   const [isAdminPopupOpen, setAdminPopupOpen] = useState(false);
   const [isWizecoinsPopupOpen, setWizecoinsPopupOpen] = useState(false);
+  const [isCreateTokensPopupOpen, setCreateTokensPopupOpen] = useState(false);
 
   const showNotification = (variant: VariantType, user:string, action:string) => {
     enqueueSnackbar(`${action} ${user}`, { variant });
@@ -207,6 +213,14 @@ export default function UserProfileDashboard({
 
   const handleReturn = () => {
     router.back();
+  };
+
+  const handleOpenCreateTokensPopUp = () => {
+    setCreateTokensPopupOpen(true);
+  };
+
+  const handleCloseCreateTokensPopUp = () => {
+    setCreateTokensPopupOpen(false);
   };
 
   return (
@@ -325,15 +339,29 @@ export default function UserProfileDashboard({
               </Paper>
             </Stack>
             <Stack direction="row" justifyContent="space-between">
-              <Typography
-                variant="body1"
-                sx={{ color: 'gray', textDecoration: 'underline' }}
-                className={`${inter.className}`}
+              <Box sx={{
+                display: 'flex', justifyContent: 'center', alignItems: 'center',
+              }}
               >
-                Monthly payout:
-                {' '}
-                {monthlyWizecoins}
-              </Typography>
+                <Button
+                  onClick={handleOpenCreateTokensPopUp}
+                  style={{
+                    color: 'white',
+                    backgroundColor: '#E93D44',
+                    borderRadius: '8px', // Add the border radius to the button
+                    textTransform: 'none', // Set textTransform to 'none' to prevent all caps
+                    padding: '0px 12px',
+                  }}
+                >
+                  <Typography variant="body1" sx={{ color: 'white' }} className={`${inter.className}`}>Create Token</Typography>
+                </Button>
+                <CreateTokenDialog
+                  open={isCreateTokensPopupOpen}
+                  handleClose={handleCloseCreateTokensPopUp}
+                  handleCreate={createTokenForUser}
+                  userId={id}
+                />
+              </Box>
               <Box sx={{
                 display: 'flex', justifyContent: 'center', alignItems: 'center',
               }}

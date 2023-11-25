@@ -48,9 +48,9 @@ export default function EditWizecoinsUserPopup({
             style={{ fontWeight: 'bold', color: 'white', display: 'inline' }}
             className={`${inter.className}`}
           >
-            Change
+            Add
             {' '}
-            <span>Wizecoin count</span>
+            <span>Wizecoins</span>
             .
           </Typography>
         </DialogTitle>
@@ -138,8 +138,8 @@ export default function EditWizecoinsUserPopup({
               style={{
                 color: 'white',
                 backgroundColor: '#4BE93D',
-                borderRadius: '8px', // Add the border radius to the button
-                textTransform: 'none', // Set textTransform to 'none' to prevent all caps
+                borderRadius: '8px',
+                textTransform: 'none',
                 padding: '0px 12px',
               }}
               className={`${inter.className}`}
