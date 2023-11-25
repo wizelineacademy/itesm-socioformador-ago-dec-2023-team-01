@@ -122,7 +122,7 @@ export default function Wizeliners() {
                 <TableCell align="center" sx={{ color: '#FFF' }}>Full Name</TableCell>
                 <TableCell align="center" sx={{ color: '#FFF' }}>Area(s)</TableCell>
                 <TableCell align="center" sx={{ color: '#FFF' }}>Is Administrator</TableCell>
-                <TableCell align="center" sx={{ color: '#FFF' }}>Monthly Wizecoins</TableCell>
+                <TableCell align="center" sx={{ color: '#FFF' }}>Wizecoins</TableCell>
                 <TableCell align="center" sx={{ color: '#FFF' }}>Profile Information</TableCell>
               </TableRow>
             </TableHead>
