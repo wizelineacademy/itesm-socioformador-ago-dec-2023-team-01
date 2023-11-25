@@ -1,14 +1,16 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { useUser } from '@auth0/nextjs-auth0/client';
 import { fetchUserCurrentTokens } from '@/services/tokenService';
 import UserProfile from '../components/ProfileInformationPage';
 import Awaiting from '../components/awaiting';
 import NotWelcome from '../components/NotWelcome';
 
 export default function ShowProfileInformation() {
-  const { user, error, isLoading } = useUser();
+  const [userId, setUserId] = useState('');
+  const [name, setName] = useState('');
+  const [email, setEmail] = useState('');
+  const [profileSrc, setProfileSrc] = useState('');
 
   const [userTokens, setUserTokens] = useState({
     amountTokens: '0',
@@ -16,10 +18,17 @@ export default function ShowProfileInformation() {
   });
 
   useEffect(() => {
+    setUserId(`${localStorage.getItem('sub')}`);
+    setName(`${localStorage.getItem('first')} ${localStorage.getItem('last')}`);
+    setEmail(`${localStorage.getItem('email')}`);
+    setProfileSrc(`${localStorage.getItem('pic')}`);
+  }, []);
+
+  useEffect(() => {
     const fetchData = async () => {
       try {
-        if (user && user.sub) {
-          const userTokensData = await fetchUserCurrentTokens(user.sub);
+        if (userId !== '') {
+          const userTokensData = await fetchUserCurrentTokens(userId);
           setUserTokens(userTokensData);
         }
       } catch (e) {
@@ -27,25 +36,20 @@ export default function ShowProfileInformation() {
       }
     };
     fetchData();
-  }, [user]);
+  }, [userId]);
 
-  if (isLoading) return <Awaiting />;
-  if (error) return <div>{error.message}</div>;
-  console.log('outside', user);
-  if (user) {
-    console.log('inside', user);
-    return (
-      <div>
-        <UserProfile
-          name={user.name ?? ''}
-          email={user.email ?? ''}
-          profileSrc={user.picture ?? ''}
-          areas="Software Engineer"
-          currentWizecoins={userTokens.currentAmountTokens}
-          monthlyWizecoins={userTokens.amountTokens}
-        />
-      </div>
-    );
-  }
+  if (userId === '') return <Awaiting />;
+  return (
+    <div>
+      <UserProfile
+        name={name}
+        email={email}
+        profileSrc={profileSrc}
+        areas="Software Engineer"
+        currentWizecoins={userTokens.currentAmountTokens}
+        monthlyWizecoins={userTokens.amountTokens}
+      />
+    </div>
+  );
   return <NotWelcome />;
 }

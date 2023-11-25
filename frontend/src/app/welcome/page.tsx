@@ -9,6 +9,8 @@ import Awaiting from '../components/awaiting';
 
 export default function Welcome() {
   const { user, error, isLoading } = useUser();
+  const [change, setChange] = useState(false);
+  const [first, setFirst] = useState('');
 
   const [userTokens, setUserTokens] = useState({
     amountTokens: '0',
@@ -18,8 +20,8 @@ export default function Welcome() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        if (user && user.sub) {
-          const userTokensData = await fetchUserCurrentTokens(user.sub);
+        if (localStorage.getItem('role') !== null) {
+          const userTokensData = await fetchUserCurrentTokens(`${localStorage.getItem('role')}`);
           setUserTokens(userTokensData);
         }
       } catch (e) {
@@ -27,7 +29,7 @@ export default function Welcome() {
       }
     };
     fetchData();
-  }, [user]);
+  }, []);
 
   useEffect(() => {
     if (user) {
@@ -43,27 +45,35 @@ export default function Welcome() {
         localStorage.setItem('pic', `${user.picture}`);
         localStorage.setItem('amountTokens', `${userTokens.amountTokens}`);
         localStorage.setItem('currentAmountTokens', `${userTokens.currentAmountTokens}`);
+        localStorage.setItem('sub', `${user.sub}`);
+        localStorage.setItem('role', `${user.role}`);
+        setChange(!change);
       }).catch((err) => {
         console.log(err);
       });
       console.log('user', user);
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user, userTokens.amountTokens, userTokens.currentAmountTokens]);
 
-  if (isLoading) return <Awaiting />;
+  useEffect(() => {
+    setFirst(`${localStorage.getItem('first')}`);
+  }, [change]);
+
+  if (isLoading || first === '') return <Awaiting />;
   if (error) return <div>{error.message}</div>;
   console.log('outside', user);
-  if (!user) {
+  if (localStorage.getItem('first') === null) {
     return <NotWelcome />;
   }
   return (
     <div>
       <IsWelcome
-        admin
-        name={`${user.given_name} ${user.family_name}`}
+        admin={localStorage.getItem('role') === 'admin'}
+        name={`${localStorage.getItem('first')} ${localStorage.getItem('last')}`}
         wizecoins={userTokens.amountTokens}
         IsWizeliner
-        picSource={user.picture}
+        picSource={localStorage.getItem('pic')}
       />
     </div>
   );
