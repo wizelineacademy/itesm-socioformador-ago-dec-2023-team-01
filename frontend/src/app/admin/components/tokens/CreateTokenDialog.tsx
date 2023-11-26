@@ -14,7 +14,7 @@ import FormControlLabel from '@mui/material/FormControlLabel';
 import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
 import 'react-datepicker/dist/react-datepicker.css';
-import styles from '../../components/individualDashboard.module.css';
+import styles from '../individualDashboard.module.css';
 
 interface PopupProps {
   open: boolean;
