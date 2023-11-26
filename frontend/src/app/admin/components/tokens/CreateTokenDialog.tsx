@@ -53,6 +53,26 @@ export default function TokenDialog({
   const handleMonthlyRenewChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setMonthlyRenew(event.target.checked);
   };
+  const handleCreateToken = () => {
+    try {
+      if (
+        userId === null ||
+        amount === null ||
+        monthlyRenew === null ||
+        expiresAt === null ||
+        expiresAt <= new Date() // Add this condition to check if expiresAt is greater than the current date
+      ) {
+        console.error('Invalid data');
+        return;
+      }
+      handleCreate(userId, amount, monthlyRenew, expiresAt);
+      setWizecoins(`${amount}`);
+      showNotification('success', userId, 'Tokens added for user with id: ');
+      handleClose();
+    } catch (e) {
+      console.error(e);
+    }
+  }
   return (
     <Dialog
       maxWidth="sm"
@@ -166,7 +186,7 @@ export default function TokenDialog({
           </Box>
           <Box sx={{ padding: '0 2rem 0 0' }}>
             <FormGroup sx={{ paddingBottom: '1rem' }}>
-              <Tooltip title="If enabled, the wizeliner will recieve the ammount of wizecoins that you set here at the date specified">
+              <Tooltip title="If enabled, the wizeliner will recieve the ammount of wizecoins that you set here a month from the expiring date defined">
                 <FormControlLabel
                   required
                   control={<Switch size="small" />}
@@ -203,10 +223,7 @@ export default function TokenDialog({
         </Button>
         <Button
           onClick={() => {
-            handleCreate(userId, amount, monthlyRenew, expiresAt);
-            setWizecoins(`${amount}`);
-            showNotification('success', userId, 'Tokens added for user with id: ');
-            handleClose();
+            handleCreateToken();
           }}
           style={{
             color: 'white',
@@ -215,6 +232,7 @@ export default function TokenDialog({
             textTransform: 'none', // Set textTransform to 'none' to prevent all caps
             padding: '0px 12px',
           }}
+          disabled={userId === null || amount === null || monthlyRenew === null || expiresAt === null}
           className={`${inter.className}`}
         >
           Create

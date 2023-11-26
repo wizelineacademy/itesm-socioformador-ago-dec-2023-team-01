@@ -1,7 +1,7 @@
 'use client';
 
 /* eslint-disable import/no-extraneous-dependencies */
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   Typography, Box, Button, Paper, Stack, Grid, IconButton, Avatar,
 } from '@mui/material';
@@ -141,8 +141,10 @@ export default function UserProfileDashboard({
   const [isAdminPopupOpen, setAdminPopupOpen] = useState(false);
   const [isWizecoinsPopupOpen, setWizecoinsPopupOpen] = useState(false);
   const [isCreateTokensPopupOpen, setCreateTokensPopupOpen] = useState(false);
-  const [wizecoins, setWizecoins] = useState(currentWizecoins);
-
+  const [wizecoins, setWizecoins] = useState('');
+  useEffect(() => {
+    setWizecoins(currentWizecoins);
+  }, [currentWizecoins]);
   const showNotification = (variant: VariantType, user:string, action:string) => {
     enqueueSnackbar(`${action} ${user}`, { variant });
   };
