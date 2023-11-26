@@ -75,7 +75,7 @@ export async function updateUserAmountTokens(userId: string, operation: string, 
   }
 }
 
-export async function creatTokenForUser(userId: string, amount: number, renewPeriodically: boolean, expiresAt: Date) {
+export async function createTokenForUser(userId: string, amount: number, renewPeriodically: boolean, expiresAt: Date) {
   try {
     fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/token`, {
       method: 'POST',

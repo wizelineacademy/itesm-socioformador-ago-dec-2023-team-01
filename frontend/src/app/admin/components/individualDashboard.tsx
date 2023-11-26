@@ -16,7 +16,7 @@ import CreateTokenDialog from '@/app/admin/components/tokens/CreateTokenDialog';
 import { updateUserAdminStatus } from '@/services/usersService';
 import LineChart from './LineChart';
 import styles from './individualDashboard.module.css';
-import createTokenForUser from '@/services/tokenService';
+import { createTokenForUser } from '@/services/tokenService';
 
 const inter = Inter({ subsets: ['latin'] });
 
