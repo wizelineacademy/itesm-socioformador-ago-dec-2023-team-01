@@ -120,7 +120,7 @@ export default function Chat({
           overflowY: 'scroll',
           padding: '10px',
           backgroundColor: 'transparent',
-          ...conversationId === 0 ? { display: 'flex', alignItems: 'center', justifyContent: 'center' } : {},
+          ...conversationId === 0 && messages.length === 0 ? { display: 'flex', alignItems: 'center', justifyContent: 'center' } : {},
         }}
       >
         {conversationId === 0 && messages.length === 0 && (
@@ -133,8 +133,7 @@ export default function Chat({
             key={index}
             sx={{
               display: 'flex',
-              justifyContent:
-                message.role === 'assistant' ? 'flex-start' : 'flex-end',
+              justifyContent: message.role === 'assistant' ? 'flex-start' : 'flex-end',
               marginBottom: '10px',
             }}
           >
