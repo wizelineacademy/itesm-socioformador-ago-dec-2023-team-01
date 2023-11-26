@@ -7,8 +7,8 @@ import EditIcon from '@mui/icons-material/Edit';
 import { editConversationTitle, deleteConversation } from '../../services/chatService';
 
 export default function ChatHistoryItem({
-  chatInfo, handleChatItemClick, getChatHistory, setConversationId, conversationId,
-}: { chatInfo: { title: string, id: number }; handleChatItemClick: (id: number) => void; getChatHistory: () => Promise<void>; setConversationId: (id: number) => void; conversationId: number; }) {
+  chatInfo, handleChatItemClick, getChatHistory, conversationId,
+}: { chatInfo: { title: string, id: number }; handleChatItemClick: (id: number) => void; getChatHistory: () => Promise<void>; conversationId: number; }) {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const [editedTitle, setEditedTitle] = useState<string>(chatInfo.title);
   const [isEditing, setIsEditing] = useState(false);
@@ -59,7 +59,7 @@ export default function ChatHistoryItem({
     // After successful deletion, update your chatHistory state accordingly
     await deleteConversation(chatInfo.id);
     await getChatHistory();
-    setConversationId(0);
+    handleChatItemClick(0);
     setConfirmationModalOpen(false);
     handleClose();
   };

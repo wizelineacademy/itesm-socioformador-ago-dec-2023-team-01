@@ -1,8 +1,6 @@
-/* eslint-disable no-restricted-syntax */
-
 'use client';
 
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import Avatar from '@mui/material/Avatar';
 import Image from 'next/image';
 import Typography from '@mui/material/Typography';
@@ -11,16 +9,28 @@ import Box from '@mui/material/Box';
 import SendIcon from '@mui/icons-material/Send';
 import IconButton from '@mui/material/IconButton';
 import InputAdornment from '@mui/material/InputAdornment';
-import { useChat, Message } from 'ai/react';
+import { Message } from 'ai/react';
 import { UserProfile } from '@auth0/nextjs-auth0/client';
 import Markdown from 'react-markdown';
 import CircularProgress from '@mui/material/CircularProgress';
+import { ChatRequestOptions } from 'ai';
 import {
-  numTokensFromMessage,
   createConversation,
-  postToConversation,
   getConversationFullChat,
 } from '../../services/chatService';
+
+interface ChatProps {
+  input: string;
+  handleInputChange: (e: React.ChangeEvent<HTMLInputElement> | React.ChangeEvent<HTMLTextAreaElement>) => void;
+  handleSubmit: (e: React.FormEvent<HTMLFormElement>, chatRequestOptions?: ChatRequestOptions) => void;
+  isLoading: boolean;
+  messages: Message[];
+  setMessages: (messages: Message[]) => void;
+  user: UserProfile;
+  setConversationId: (id: number) => void;
+  conversationId: number;
+  getChatHistory: () => void;
+}
 
 async function getMessages(conversationId: number) {
   const response = await getConversationFullChat(conversationId);
@@ -44,14 +54,8 @@ async function getMessages(conversationId: number) {
 }
 
 export default function Chat({
-  user, setConversationId, conversationId, getChatHistory,
-}: { user: UserProfile, setConversationId: (id: number) => void, conversationId: number, getChatHistory: () => void }) {
-  const {
-    input, handleInputChange, handleSubmit, isLoading, messages, setMessages,
-  } = useChat({
-    api: '/api/chat',
-  });
-
+  user, setConversationId, conversationId, getChatHistory, input, handleInputChange, handleSubmit, isLoading, messages, setMessages,
+}: ChatProps) {
   // actualizar el conversationId cuando cambie el id
   useEffect(() => {
     if (conversationId === 0) {
@@ -60,6 +64,8 @@ export default function Chat({
       getMessages(conversationId).then((mesg) => {
         if (mesg.length > 0) {
           setMessages(mesg);
+        } else {
+          setMessages([...messages]);
         }
       });
     }
@@ -75,36 +81,6 @@ export default function Chat({
       });
     }
   }, [messages]);
-
-  // post new messages to conversation
-  useEffect(() => {
-    if (!isLoading) {
-      const last2Messages = messages.slice(-2);
-      const prompt = last2Messages.find((message) => message.role === 'user');
-      const response = last2Messages.find((message) => message.role === 'assistant');
-      // console.log('prompt', prompt);
-      // console.log('response', response);
-      if (prompt && response && conversationId) {
-        // console.log('sliced messages');
-        if (response.id.startsWith('Nic0WzPpt') || prompt.id.startsWith('Nic0WzPpt')) {
-          // console.log('message already in db');
-          return;
-        }
-        const tokensFromPrompt = numTokensFromMessage(prompt);
-        const tokensFromResponse = numTokensFromMessage(response);
-        const tokens = tokensFromPrompt + tokensFromResponse;
-
-        postToConversation(prompt.content, response.content, conversationId, tokens).then((conversation) => {
-          // console.log('conversation', conversation);
-          // console.log('posted to conversation');
-        });
-      } else {
-        // console.log('no prompt or response');
-      }
-    } else {
-      // console.log('loading');
-    }
-  }, [conversationId, isLoading, messages]);
 
   return (
     <Box
