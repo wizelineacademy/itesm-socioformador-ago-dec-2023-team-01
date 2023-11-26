@@ -16,7 +16,7 @@ import CreateTokenDialog from '@/app/admin/components/tokens/CreateTokenDialog';
 import { updateUserAdminStatus } from '@/services/usersService';
 import LineChart from './LineChart';
 import styles from './individualDashboard.module.css';
-import { creatTokenForUser } from '@/services/tokenService';
+import { createTokenForUser } from '@/services/tokenService';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -357,9 +357,11 @@ export default function UserProfileDashboard({
                   <Typography variant="body1" sx={{ color: 'white' }} className={`${inter.className}`}>Create Token</Typography>
                 </Button>
                 <CreateTokenDialog
+                  title={['Create ', 'New Token']}
+                  content={['You are creating a ', 'New Token, CAUTION! ', 'this will ', 'overwrite ', 'any existing token.']}
                   open={isCreateTokensPopupOpen}
                   handleClose={handleCloseCreateTokensPopUp}
-                  handleCreate={creatTokenForUser}
+                  handleCreate={createTokenForUser}
                   userId={id}
                   setWizecoins={setWizecoins}
                 />
