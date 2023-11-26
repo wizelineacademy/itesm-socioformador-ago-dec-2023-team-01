@@ -98,3 +98,26 @@ export async function createTokenForUser(userId: string, amount: number, renewPe
     throw error;
   }
 }
+
+export async function addTokensToUsersInGroup(groupId:string, amount:number) {
+  try {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/group/tokens`, {
+      method: 'PATCH',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${localStorage.getItem('token')}`,
+      },
+      body: JSON.stringify({
+        groupId,
+        amount,
+      }),
+    });
+
+    if (!response.ok) {
+      throw new Error('Network response was not ok');
+    }
+  } catch (error) {
+    console.log(error);
+    throw error;
+  }
+}

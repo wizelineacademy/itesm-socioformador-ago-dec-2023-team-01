@@ -14,7 +14,6 @@ import FormControlLabel from '@mui/material/FormControlLabel';
 import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
 import 'react-datepicker/dist/react-datepicker.css';
-import { VariantType, enqueueSnackbar } from 'notistack';
 import styles from '../individualDashboard.module.css';
 
 interface PopupProps {
@@ -124,7 +123,7 @@ export default function TokenDialog({
                 },
               }}
               InputLabelProps={{ style: { color: 'white' } }}
-              onChange={(event) => {
+              onChange={(event:any) => {
                 const newAmount: any = event?.target.value;
                 setAmount(Number(newAmount));
               }}
