@@ -75,9 +75,11 @@ export async function updateUserAmountTokens(userId: string, operation: string, 
   }
 }
 
-export async function creatTokenForUser(userId: string, amount: number, renewPeriodically: boolean, expiresAt: Date) {
+export async function createTokenForUser(userId: string, amount: number, renewPeriodically: boolean, expiresAt: Date) {
   try {
-    fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/token`, {
+    const dateToString = expiresAt.toISOString();
+    console.log(userId, amount, renewPeriodically, dateToString);
+    fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/tokens`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -87,9 +89,10 @@ export async function creatTokenForUser(userId: string, amount: number, renewPer
         userId,
         amount,
         renewPeriodically,
-        expiresAt,
+        expiresAt: dateToString,
       }),
     });
+    console.log('Token created successfully');
   } catch (error) {
     console.error(error);
     throw error;

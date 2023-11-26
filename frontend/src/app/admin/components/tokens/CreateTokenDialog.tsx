@@ -14,13 +14,15 @@ import FormControlLabel from '@mui/material/FormControlLabel';
 import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
 import 'react-datepicker/dist/react-datepicker.css';
-import styles from '../../components/individualDashboard.module.css';
+import { VariantType, enqueueSnackbar } from 'notistack';
+import styles from '../individualDashboard.module.css';
 
 interface PopupProps {
   open: boolean;
   handleClose: () => void;
   handleCreate: (userId: string, amount: number, monthlyRenew: boolean, expiresAt: Date) => void;
   userId: string;
+  setWizecoins: React.Dispatch<React.SetStateAction<string>>;
 }
 
 export default function TokenDialog({
@@ -28,11 +30,16 @@ export default function TokenDialog({
   handleClose,
   handleCreate,
   userId,
+  setWizecoins,
 }: PopupProps) {
   const [monthlyWizecoinsInput, setMonthlyWizecoinsInput] = React.useState('');
   const [expiresAt, setExpiresAt] = React.useState(new Date());
   const [amount, setAmount] = React.useState(0);
   const [monthlyRenew, setMonthlyRenew] = React.useState(false);
+
+  const showNotification = (variant: VariantType, user:string, action:string) => {
+    enqueueSnackbar(`${action} ${user}`, { variant });
+  };
 
   const handleMonthlyWizecoinsChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setMonthlyWizecoinsInput(event.target.value);
@@ -127,7 +134,16 @@ export default function TokenDialog({
       </DialogContent>
       <DialogActions>
         <Button onClick={handleClose}>Cancel</Button>
-        <Button onClick={() => handleCreate(userId, amount, monthlyRenew, expiresAt)}>Create</Button>
+        <Button onClick={() => {
+          handleCreate(userId, amount, monthlyRenew, expiresAt);
+          setWizecoins(`${amount}`);
+          showNotification('success', userId, 'Tokens added for user with id: ');
+          handleClose();
+        }}
+        >
+          Create
+
+        </Button>
       </DialogActions>
     </Dialog>
   );
