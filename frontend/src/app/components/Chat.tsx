@@ -21,6 +21,19 @@ import {
   getConversationFullChat,
 } from '../../services/chatService';
 import Awaiting from './awaiting';
+import { ChatRequestOptions } from 'ai';
+
+interface ChatProps {
+  input: string;
+  handleInputChange: (e: React.ChangeEvent<HTMLInputElement> | React.ChangeEvent<HTMLTextAreaElement>) => void;
+  handleSubmit: (e: React.FormEvent<HTMLFormElement>, chatRequestOptions?: ChatRequestOptions) => void;
+  isLoading: boolean;
+  messages: Message[];
+  setMessages: (messages: Message[]) => void;
+  setConversationId: (id: number) => void;
+  conversationId: number;
+  getChatHistory: () => void;
+}
 
 async function getMessages(conversationId: number) {
   const response = await getConversationFullChat(conversationId);
@@ -45,15 +58,10 @@ async function getMessages(conversationId: number) {
 }
 
 export default function Chat({
-  setConversationId, conversationId, getChatHistory,
-}: { setConversationId: (id: number) => void, conversationId: number, getChatHistory: () => void }) {
+  setConversationId, conversationId, getChatHistory, input, handleInputChange, handleSubmit, isLoading, messages, setMessages,
+}: ChatProps) {
   const [userId, setUserId] = useState('');
   const [profileSrc, setProfileSrc] = useState('');
-  const {
-    input, handleInputChange, handleSubmit, isLoading, messages, setMessages,
-  } = useChat({
-    api: '/api/chat',
-  });
 
   useEffect(() => {
     setUserId(`${localStorage.getItem('sub')}`);
@@ -68,6 +76,8 @@ export default function Chat({
       getMessages(conversationId).then((mesg) => {
         if (mesg.length > 0) {
           setMessages(mesg);
+        } else {
+          setMessages([...messages]);
         }
       });
     }
@@ -85,36 +95,6 @@ export default function Chat({
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [messages]);
-
-  // post new messages to conversation
-  useEffect(() => {
-    if (!isLoading) {
-      const last2Messages = messages.slice(-2);
-      const prompt = last2Messages.find((message) => message.role === 'user');
-      const response = last2Messages.find((message) => message.role === 'assistant');
-      // console.log('prompt', prompt);
-      // console.log('response', response);
-      if (prompt && response && conversationId) {
-        // console.log('sliced messages');
-        if (response.id.startsWith('Nic0WzPpt') || prompt.id.startsWith('Nic0WzPpt')) {
-          // console.log('message already in db');
-          return;
-        }
-        const tokensFromPrompt = numTokensFromMessage(prompt);
-        const tokensFromResponse = numTokensFromMessage(response);
-        const tokens = tokensFromPrompt + tokensFromResponse;
-
-        postToConversation(prompt.content, response.content, conversationId, tokens).then((conversation) => {
-          // console.log('conversation', conversation);
-          // console.log('posted to conversation');
-        });
-      } else {
-        // console.log('no prompt or response');
-      }
-    } else {
-      // console.log('loading');
-    }
-  }, [conversationId, isLoading, messages]);
 
   if (userId === '') return <Awaiting />;
   return (
@@ -140,7 +120,7 @@ export default function Chat({
           overflowY: 'scroll',
           padding: '10px',
           backgroundColor: 'transparent',
-          ...conversationId === 0 ? { display: 'flex', alignItems: 'center', justifyContent: 'center' } : {},
+          ...conversationId === 0 && messages.length === 0 ? { display: 'flex', alignItems: 'center', justifyContent: 'center' } : {},
         }}
       >
         {conversationId === 0 && messages.length === 0 && (
@@ -153,8 +133,7 @@ export default function Chat({
             key={index}
             sx={{
               display: 'flex',
-              justifyContent:
-                message.role === 'assistant' ? 'flex-start' : 'flex-end',
+              justifyContent: message.role === 'assistant' ? 'flex-start' : 'flex-end',
               marginBottom: '10px',
             }}
           >

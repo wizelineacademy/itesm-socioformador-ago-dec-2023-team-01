@@ -20,12 +20,11 @@ import { getHistory } from '@/services/usersService';
 export default function ChatHistory({
   closeChatHistory,
   handleChatItemClick,
-  setConversationId,
   chatHistory,
   getChatHistory,
   conversationId,
 }:
-{ closeChatHistory: () => void; handleChatItemClick: (id: number) => void; setConversationId: (id: number) => void; chatHistory: { title: string, id: number }[]; getChatHistory: () => Promise<void>; conversationId: number; }) {
+{ closeChatHistory: () => void; handleChatItemClick: (id: number) => void; chatHistory: { title: string, id: number }[]; getChatHistory: () => Promise<void>; conversationId: number; }) {
   return (
     <Box
       height={{
@@ -50,7 +49,7 @@ export default function ChatHistory({
             variant="outlined"
             startIcon={<AddIcon sx={{ color: 'white' }} />}
             onClick={() => {
-              setConversationId(0);
+              handleChatItemClick(0);
             }}
             sx={{
               textTransform: 'none',
@@ -129,7 +128,6 @@ export default function ChatHistory({
               chatInfo={chatInfo}
               handleChatItemClick={handleChatItemClick}
               getChatHistory={getChatHistory}
-              setConversationId={setConversationId}
               conversationId={conversationId}
             />
           ))}
