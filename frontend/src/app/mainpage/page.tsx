@@ -4,6 +4,8 @@
 import Container from '@mui/material/Container';
 import Grid from '@mui/material/Grid';
 import React, { useEffect, useState } from 'react';
+import { Message } from 'ai';
+import { useChat } from 'ai/react';
 import { Hidden } from '@mui/material';
 import Chat from '@/app/components/Chat';
 import ChatHistory from '@/app/components/ChatHistory';
@@ -11,6 +13,32 @@ import Navbar from '@/app/components/Navbar';
 import Awaiting from '../components/awaiting';
 import NotWelcome from '../components/NotWelcome';
 import { getHistory } from '@/services/usersService';
+import { numTokensFromMessage, postToConversation } from '@/services/chatService';
+
+const postMessagesToConversation = async (conversationId: number, messages: Message[]) => {
+  const last2Messages = messages.slice(-2);
+  const prompt = last2Messages.find((message) => message.role === 'user');
+  const response = last2Messages.find((message) => message.role === 'assistant');
+  // console.log('prompt', prompt);
+  // console.log('response', response);
+  if (prompt && response && conversationId) {
+    // console.log('sliced messages');
+    if (response.id.startsWith('Nic0WzPpt') || prompt.id.startsWith('Nic0WzPpt')) {
+      // console.log('message already in db');
+      return;
+    }
+    const tokensFromPrompt = numTokensFromMessage(prompt);
+    const tokensFromResponse = numTokensFromMessage(response);
+    const tokens = tokensFromPrompt + tokensFromResponse;
+
+    await postToConversation(prompt.content, response.content, conversationId, tokens);
+    console.log('posted to conversation', messages);
+    // console.log('conversation', conversation);
+    // console.log('posted to conversation');
+  } else {
+    // console.log('no prompt or response');
+  }
+};
 
 function Mainpage() {
   const [showChatHistory, setShowChatHistory] = useState(false);
@@ -19,6 +47,45 @@ function Mainpage() {
   const [profileSrc, setProfileSrc] = useState('');
   const [conversationId, setConversationId] = useState(0);
   const [chatsHistory, setChatsHistory] = useState([{ title: '', id: 0 }]);
+  const [isChatStopped, setIsChatStopped] = useState(false);
+  const [prevConversationId, setPrevConversationId] = useState(0);
+  const {
+    input, handleInputChange, handleSubmit, isLoading: chatIsLoading, messages, setMessages, stop,
+  } = useChat({
+    api: '/api/chat',
+  });
+
+  const executePostMessagesToConversation = async (convId: number) => {
+    if (!chatIsLoading && isChatStopped) {
+      setIsChatStopped(false);
+      setPrevConversationId(0);
+      // console.log('finishing posting messages to conversation with id', convId);
+      postMessagesToConversation(convId, messages);
+    } else if (!chatIsLoading) {
+      postMessagesToConversation(convId, messages);
+    } else {
+      // console.log('loading');
+    }
+  };
+
+  const handleChatItemClick = async (id: number) => {
+    if (chatIsLoading) {
+      // console.log('chat is loading, stopping response, the new id will be:,', id);
+      setIsChatStopped(true);
+      setPrevConversationId(conversationId);
+      stop();
+      // console.log('finishing posting messages to conversation with id', conversationId);
+      // await postMessagesToConversation(conversationId, messages);
+    }
+    // console.log('chat item clicked', id);
+    setConversationId(id);
+    // console.log('chat item clicked', id);
+  };
+
+  // post new messages to conversation
+  useEffect(() => {
+    executePostMessagesToConversation(prevConversationId === 0 ? conversationId : prevConversationId);
+  }, [chatIsLoading, messages]);
 
   const getChatHistory = async () => {
     try {
@@ -34,11 +101,6 @@ function Mainpage() {
       console.log(er);
       return [];
     }
-  };
-
-  const handleChatItemClick = (id: number) => {
-    setConversationId(id);
-    // console.log('chat item clicked', id);
   };
 
   useEffect(() => {
@@ -80,12 +142,22 @@ function Mainpage() {
         {/* ChatHistory for larger screens (displayed by default) */}
         <Hidden only={['xs']}>
           <Grid item sm={2}>
-            <ChatHistory closeChatHistory={() => setShowChatHistory(false)} chatHistory={chatsHistory} handleChatItemClick={handleChatItemClick} setConversationId={setConversationId} getChatHistory={getChatHistory} conversationId={conversationId} />
+            <ChatHistory closeChatHistory={() => setShowChatHistory(false)} chatHistory={chatsHistory} handleChatItemClick={handleChatItemClick} getChatHistory={getChatHistory} conversationId={conversationId} />
           </Grid>
         </Hidden>
 
         <Grid item xs={10} sm={8}>
-          <Chat setConversationId={setConversationId} conversationId={conversationId} getChatHistory={getChatHistory} />
+          <Chat
+            setConversationId={setConversationId}
+            conversationId={conversationId}
+            getChatHistory={getChatHistory}
+            input={input}
+            handleInputChange={handleInputChange}
+            handleSubmit={handleSubmit}
+            isLoading={chatIsLoading}
+            messages={messages}
+            setMessages={setMessages}
+          />
         </Grid>
 
         <Hidden mdUp>
@@ -101,7 +173,7 @@ function Mainpage() {
                 backgroundColor: 'rgba(0, 0, 0, 0.5)', // semi-transparent backdrop
               }}
             >
-              <ChatHistory closeChatHistory={() => setShowChatHistory(false)} chatHistory={chatsHistory} handleChatItemClick={handleChatItemClick} setConversationId={setConversationId} getChatHistory={getChatHistory} conversationId={conversationId} />
+              <ChatHistory closeChatHistory={() => setShowChatHistory(false)} chatHistory={chatsHistory} handleChatItemClick={handleChatItemClick} getChatHistory={getChatHistory} conversationId={conversationId} />
 
             </div>
           )}
@@ -120,7 +192,7 @@ function Mainpage() {
                 backgroundColor: 'rgba(0, 0, 0, 0.5)',
               }}
             >
-              <ChatHistory closeChatHistory={() => setShowChatHistory(false)} chatHistory={chatsHistory} handleChatItemClick={handleChatItemClick} setConversationId={setConversationId} getChatHistory={getChatHistory} conversationId={conversationId} />
+              <ChatHistory closeChatHistory={() => setShowChatHistory(false)} chatHistory={chatsHistory} handleChatItemClick={handleChatItemClick} getChatHistory={getChatHistory} conversationId={conversationId} />
             </div>
           )}
         </Hidden>
