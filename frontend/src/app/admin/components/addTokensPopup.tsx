@@ -11,18 +11,20 @@ import {
   TextField,
   Stack,
 } from '@mui/material';
+import { VariantType, enqueueSnackbar } from 'notistack';
 import Image from 'next/image';
-
 import { Inter } from 'next/font/google';
+import { addTokensToUsersInGroup } from '@/services/tokenService';
 
 const inter = Inter({ subsets: ['latin'] });
 
-interface PopupProps {
+interface AddTokenProps {
   title: string[]; // Change title properties to an array of strings
   content: string[]; // Change content properties to an array of strings
   badButtonTitle: string;
   goodButtonTitle: string;
   open: boolean;
+  groupId: string,
   onClose: () => void;
   onGoodButtonClick: () => void;
 }
@@ -34,9 +36,15 @@ export default function AddTokensPopup({
   goodButtonTitle,
   open,
   onClose,
+  groupId,
   onGoodButtonClick,
-}: PopupProps) {
+}: AddTokenProps) {
   const [tokens, setTokens] = useState(0);
+
+  const showNotification = (variant: VariantType, text:string, action:string) => {
+    enqueueSnackbar(`${action} ${text}`, { variant });
+  };
+
   const handleChangeTokens = (event: React.ChangeEvent<HTMLInputElement>) => {
     const userInput = Number(event.target.value);
     if (!Number.isNaN(userInput)) {
@@ -44,6 +52,17 @@ export default function AddTokensPopup({
       console.log(userInput);
     }
   };
+
+  const handleaddTokensClick = async () => {
+    try {
+      await addTokensToUsersInGroup(groupId, tokens);
+      showNotification('success', 'tokens to everyone in this group', 'Added ');
+      onGoodButtonClick();
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   return (
     <Dialog
       maxWidth="xs"
@@ -155,7 +174,7 @@ export default function AddTokensPopup({
           </Box>
           <Box>
             <Button
-              onClick={onGoodButtonClick}
+              onClick={handleaddTokensClick}
               style={{
                 color: 'white',
                 backgroundColor: '#4BE93D',

@@ -11,6 +11,7 @@ import Paper from '@mui/material/Paper';
 import Button from '@mui/material/Button';
 import AddIcon from '@mui/icons-material/Add';
 import Stack from '@mui/material/Stack';
+import Tooltip from '@mui/material/Tooltip';
 import { SnackbarProvider } from 'notistack';
 import DataGrid from '@/app/admin/components/DataGrid';
 import AddTokensPopup from '../../components/addTokensPopup';
@@ -25,6 +26,7 @@ export default function EditGroups() {
   const [isEditing, setIsEditing] = useState(false);
   const [wizeCount, setWizeCount] = useState({ totalWizeCoins: 0, totalUsers: 0 });
   const [isPopupOpen, setPopupOpen] = useState(false);
+  const [triggerFetch, setTriggerFetch] = useState(false);
   const router = useRouter();
 
   const handleGroupNameChange = (e: { target: { value: React.SetStateAction<string>; }; }) => {
@@ -60,9 +62,9 @@ export default function EditGroups() {
     setPopupOpen(false);
   };
 
-  const handleAddWizecoins = () => {
-    console.log('Adding wizecoins');
-    handleClosePopup();
+  const handleGoodButtonClick = () => {
+    setTriggerFetch((prevState) => !prevState);
+    setPopupOpen(false);
   };
 
   return (
@@ -74,8 +76,9 @@ export default function EditGroups() {
         badButtonTitle="Cancel"
         goodButtonTitle="Add Wizecoins"
         open={isPopupOpen}
+        groupId={id!}
         onClose={handleClosePopup}
-        onGoodButtonClick={handleAddWizecoins}
+        onGoodButtonClick={handleGoodButtonClick}
       />
       <Box marginBottom={2}>
         <Box
@@ -177,29 +180,29 @@ export default function EditGroups() {
               marginBottom={1}
               marginRight={1}
             >
-              {/* Total Wizeliners */}
-              <Box
-                sx={{
-                  width: '50%',
-                  height: '40px',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  border: '3px solid #4D545D',
-                  borderRadius: '10px',
-                }}
-              >
-                <Typography
-                  variant="h6"
+              <Tooltip title="Total Amount of Wizeliners">
+                <Box
                   sx={{
-                    fontWeight: 'bold',
-                    color: '#ffffff',
+                    width: '50%',
+                    height: '40px',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    border: '3px solid #4D545D',
+                    borderRadius: '10px',
                   }}
                 >
-                  {wizeCount.totalUsers}
-                </Typography>
-              </Box>
-              {/* BEFORE: Wizelienrs */}
+                  <Typography
+                    variant="h6"
+                    sx={{
+                      fontWeight: 'bold',
+                      color: '#ffffff',
+                    }}
+                  >
+                    {wizeCount.totalUsers}
+                  </Typography>
+                </Box>
+              </Tooltip>
               {/* New member */}
               <Button
                 onClick={handleNavigation}
@@ -218,7 +221,7 @@ export default function EditGroups() {
                 }}
               >
                 <AddIcon />
-                New Wizeliner
+                Add Wizeliners
               </Button>
             </Box>
             <Box
@@ -228,40 +231,42 @@ export default function EditGroups() {
               marginRight={1}
             >
               {/* Total Wizecoins */}
-              <Box
-                sx={{
-                  width: '50%',
-                  height: '40px',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  border: '3px solid #4D545D',
-                  borderRadius: '10px',
-                }}
-              >
+              <Tooltip title="Total ammount of wizecoins">
                 <Box
                   sx={{
-                    marginRight: '5px',
+                    width: '50%',
+                    height: '40px',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    border: '3px solid #4D545D',
+                    borderRadius: '10px',
                   }}
                 >
-                  <Image
-                    src="/wizecoin.svg"
-                    alt="Wizecoin Icon"
-                    width={12}
-                    height={12}
-                    layout="fixed"
-                  />
+                  <Box
+                    sx={{
+                      marginRight: '5px',
+                    }}
+                  >
+                    <Image
+                      src="/wizecoin.svg"
+                      alt="Wizecoin Icon"
+                      width={12}
+                      height={12}
+                      layout="fixed"
+                    />
+                  </Box>
+                  <Typography
+                    variant="h6"
+                    sx={{
+                      fontWeight: 'bold',
+                      color: '#4BE93D',
+                    }}
+                  >
+                    {wizeCount.totalWizeCoins}
+                  </Typography>
                 </Box>
-                <Typography
-                  variant="h6"
-                  sx={{
-                    fontWeight: 'bold',
-                    color: '#4BE93D',
-                  }}
-                >
-                  {wizeCount.totalWizeCoins}
-                </Typography>
-              </Box>
+              </Tooltip>
               {/* BEFORE: Wizecoins */}
               {/* Add Wizecoins */}
               <Button
@@ -287,7 +292,7 @@ export default function EditGroups() {
           </Paper>
         </Box>
       </Box>
-      <DataGrid groupId={id!} wizeCount={handleWizeCount} />
+      <DataGrid groupId={id!} wizeCount={handleWizeCount} triggerFetch={triggerFetch} />
     </Container>
   );
 }

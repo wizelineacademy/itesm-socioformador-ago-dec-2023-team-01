@@ -96,9 +96,9 @@ export async function creatTokenForUser(userId: string, amount: number, renewPer
   }
 }
 
-export async function addTokensToUsersInGroup(groupId:string, amount:string) {
+export async function addTokensToUsersInGroup(groupId:string, amount:number) {
   try {
-    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/group/${groupId}/tokens`, {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/group/tokens`, {
       method: 'PATCH',
       headers: {
         'Content-Type': 'application/json',

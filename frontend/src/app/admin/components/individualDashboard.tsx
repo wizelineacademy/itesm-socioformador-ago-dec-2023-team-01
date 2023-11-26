@@ -16,7 +16,7 @@ import CreateTokenDialog from '@/app/admin/components/tokens/CreateTokenDialog';
 import { updateUserAdminStatus } from '@/services/usersService';
 import LineChart from './LineChart';
 import styles from './individualDashboard.module.css';
-import createTokenForUser from '@/services/tokenService';
+import { creatTokenForUser } from '@/services/tokenService';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -358,7 +358,7 @@ export default function UserProfileDashboard({
                 <CreateTokenDialog
                   open={isCreateTokensPopupOpen}
                   handleClose={handleCloseCreateTokensPopUp}
-                  handleCreate={createTokenForUser}
+                  handleCreate={creatTokenForUser}
                   userId={id}
                 />
               </Box>
