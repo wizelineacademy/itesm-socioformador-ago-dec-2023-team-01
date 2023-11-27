@@ -34,7 +34,7 @@ interface User {
   createdAt: string;
   updatedAt: string;
   isAdmin: boolean;
-  currentAmount: number;
+  currentTokens: number;
   amountTokens: number;
 }
 
@@ -137,7 +137,8 @@ export default function Wizeliners() {
               <TableRow sx={{ backgroundColor: '#111823' }}>
                 <TableCell align="center" sx={{ color: '#FFF' }}>Full Name</TableCell>
                 <TableCell align="center" sx={{ color: '#FFF' }}>Is Administrator</TableCell>
-                <TableCell align="center" sx={{ color: '#FFF' }}>Wizecoins</TableCell>
+                <TableCell align="center" sx={{ color: '#FFF' }}>Current Wizecoins</TableCell>
+                <TableCell align="center" sx={{ color: '#FFF' }}>Monthly Wizecoins</TableCell>
                 <TableCell align="center" sx={{ color: '#FFF' }}>Profile Information</TableCell>
               </TableRow>
             </TableHead>
@@ -162,6 +163,33 @@ export default function Wizeliners() {
                       : (
                         <CropSquareIcon fontSize="large" sx={{ color: '#4BE93D' }} />
                       )}
+                  </TableCell>
+                  <TableCell align="center" sx={{ color: '#FFF' }}>
+                    <Box
+                      display="flex"
+                      alignItems="center"
+                      justifyContent="center"
+                      height="100%"
+                      width="100%"
+                      color="#4BE93D"
+                    >
+                      <Box
+                        sx={{ marginRight: '5px' }}
+                      >
+                        <Image
+                          src="/wizecoin.svg"
+                          alt="Wizecoin Icon"
+                          width={10}
+                          height={10}
+                          layout="fixed"
+                        />
+                      </Box>
+                      {user.currentTokens}
+                      {' '}
+                      /
+                      {' '}
+                      {user.amountTokens}
+                    </Box>
                   </TableCell>
                   <TableCell align="center" sx={{ color: '#FFF' }}>
                     <Box
