@@ -38,7 +38,7 @@ pipeline {
             steps {
                 dir('frontend') {
                     sh 'npm install'
-                    sh 'while true; do echo "."; sleep 5; done & npm run build; kill %1'
+                    sh 'npm run build'
                 }
             }
         }
