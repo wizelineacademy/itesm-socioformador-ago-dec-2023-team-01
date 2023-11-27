@@ -1,7 +1,7 @@
 'use client';
 
 /* eslint-disable import/no-extraneous-dependencies */
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   Typography, Box, Button, Paper, Stack, Grid, IconButton, Avatar,
 } from '@mui/material';
@@ -16,7 +16,7 @@ import CreateTokenDialog from '@/app/admin/components/tokens/CreateTokenDialog';
 import { updateUserAdminStatus } from '@/services/usersService';
 import LineChart from './LineChart';
 import styles from './individualDashboard.module.css';
-import createTokenForUser from '@/services/tokenService';
+import { createTokenForUser } from '@/services/tokenService';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -141,7 +141,10 @@ export default function UserProfileDashboard({
   const [isAdminPopupOpen, setAdminPopupOpen] = useState(false);
   const [isWizecoinsPopupOpen, setWizecoinsPopupOpen] = useState(false);
   const [isCreateTokensPopupOpen, setCreateTokensPopupOpen] = useState(false);
-
+  const [wizecoins, setWizecoins] = useState('');
+  useEffect(() => {
+    setWizecoins(currentWizecoins);
+  }, [currentWizecoins]);
   const showNotification = (variant: VariantType, user:string, action:string) => {
     enqueueSnackbar(`${action} ${user}`, { variant });
   };
@@ -258,7 +261,7 @@ export default function UserProfileDashboard({
                       className={styles.microimage}
                       title="wizecoin"
                     />
-                    <Typography variant="h6" sx={{ color: '#4BE93D' }} className={`${inter.className}`}>{currentWizecoins}</Typography>
+                    <Typography variant="h6" sx={{ color: '#4BE93D' }} className={`${inter.className}`}>{wizecoins}</Typography>
                   </Stack>
                 </Stack>
               </Paper>
@@ -356,10 +359,13 @@ export default function UserProfileDashboard({
                   <Typography variant="body1" sx={{ color: 'white' }} className={`${inter.className}`}>Create Token</Typography>
                 </Button>
                 <CreateTokenDialog
+                  title={['Create ', 'New Token']}
+                  content={['You are creating a ', 'New Token, CAUTION! ', 'this will ', 'overwrite ', 'any existing token.']}
                   open={isCreateTokensPopupOpen}
                   handleClose={handleCloseCreateTokensPopUp}
                   handleCreate={createTokenForUser}
                   userId={id}
+                  setWizecoins={setWizecoins}
                 />
               </Box>
               <Box sx={{
