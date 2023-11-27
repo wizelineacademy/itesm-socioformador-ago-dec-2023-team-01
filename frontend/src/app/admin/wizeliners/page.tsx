@@ -137,8 +137,7 @@ export default function Wizeliners() {
               <TableRow sx={{ backgroundColor: '#111823' }}>
                 <TableCell align="center" sx={{ color: '#FFF' }}>Full Name</TableCell>
                 <TableCell align="center" sx={{ color: '#FFF' }}>Is Administrator</TableCell>
-                <TableCell align="center" sx={{ color: '#FFF' }}>Current Wizecoins</TableCell>
-                <TableCell align="center" sx={{ color: '#FFF' }}>Monthly Wizecoins</TableCell>
+                <TableCell align="center" sx={{ color: '#FFF' }}>Wizecoins</TableCell>
                 <TableCell align="center" sx={{ color: '#FFF' }}>Profile Information</TableCell>
               </TableRow>
             </TableHead>
@@ -184,33 +183,11 @@ export default function Wizeliners() {
                           layout="fixed"
                         />
                       </Box>
-                      {user.currentTokens}
-                      {' '}
+                      <Box sx={{ color: '#f5f264', marginRight: '4px' }}>
+                        {user.currentTokens}
+                      </Box>
                       /
                       {' '}
-                      {user.amountTokens}
-                    </Box>
-                  </TableCell>
-                  <TableCell align="center" sx={{ color: '#FFF' }}>
-                    <Box
-                      display="flex"
-                      alignItems="center"
-                      justifyContent="center"
-                      height="100%"
-                      width="100%"
-                      color="#4BE93D"
-                    >
-                      <Box
-                        sx={{ marginRight: '5px' }}
-                      >
-                        <Image
-                          src="/wizecoin.svg"
-                          alt="Wizecoin Icon"
-                          width={10}
-                          height={10}
-                          layout="fixed"
-                        />
-                      </Box>
                       {user.amountTokens}
                     </Box>
                   </TableCell>
