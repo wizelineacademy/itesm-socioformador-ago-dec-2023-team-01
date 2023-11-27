@@ -10,10 +10,10 @@ import { Hidden } from '@mui/material';
 import Chat from '@/app/components/Chat';
 import ChatHistory from '@/app/components/ChatHistory';
 import Navbar from '@/app/components/Navbar';
-import Awaiting from '../components/awaiting';
-import NotWelcome from '../components/NotWelcome';
 import { getHistory } from '@/services/usersService';
 import { numTokensFromMessage, postToConversation } from '@/services/chatService';
+import Awaiting from '../components/awaiting';
+import NotWelcome from '../components/NotWelcome';
 
 const postMessagesToConversation = async (conversationId: number, messages: Message[]) => {
   const last2Messages = messages.slice(-2);
