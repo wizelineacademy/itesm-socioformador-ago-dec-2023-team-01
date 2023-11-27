@@ -101,7 +101,7 @@ export default function Groups() {
           >
             <SearchIcon sx={{ fontSize: '35px' }} />
             <TextField
-              onChange={(e) => setSearch(e.target.value)}
+              onChange={(e:any) => setSearch(e.target.value)}
               id="filled-search"
               label="Search groups"
               type="search"
