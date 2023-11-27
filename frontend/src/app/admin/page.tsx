@@ -1,6 +1,10 @@
 'use client';
 
-import React from 'react';
+import React,
+{
+  useState,
+  useEffect,
+} from 'react';
 import {
   Box,
   Container,
@@ -25,6 +29,8 @@ import {
   Legend,
   ArcElement,
   BarElement,
+  ChartData,
+  Filler,
 } from 'chart.js';
 import {
   Line,
@@ -46,11 +52,25 @@ ChartJS.register(
   Title,
   Tooltip,
   Legend,
+  Filler,
 );
 
 export default function Admin() {
-  const data = fetchDashboard();
-  console.log(data);
+  const [dashboardData, setDashboardData] = useState<DashboardData | null>(null);
+
+  useEffect(() => {
+    fetchDashboard()
+      .then((data) => {
+        setDashboardData(data);
+        console.log(data);
+      })
+      .catch((error) => console.error('Error fetching dashboard data: ', error));
+  }, []);
+
+  if (!dashboardData) {
+    return <div>LOADING...</div>;
+  }
+
   const recentUpdates = [
     {
       id: 1, title: 'Thomas Anderson', description: 'Gave 1,000 tokens to Software Engineers', imageUrl: '/tommy.png',
@@ -87,13 +107,61 @@ export default function Admin() {
       },
     ],
   };
+  interface GroupInfo {
+    availableTokens: number;
+    group: {
+      area: string;
+      createdAt: string;
+      id: number;
+      name: string;
+      updatedAt: string;
+    };
+    numberOfUsers: number;
+    totalTokens: number;
+  }
 
-  const teamUsageData = {
-    labels: ['Team A', 'Team B', 'Team C', 'Team D', 'Team E', 'Team F'],
+  interface UsersInfo {
+    amount: number;
+    currentAmount: number;
+    user: {
+      createdAt: string;
+      email: string;
+      firstName: string;
+      id: string;
+      imageUrl: string;
+      lastName: string;
+      roleId: number;
+      updatedAt: string;
+    };
+  }
+
+  interface UsersTokenInfo {
+    amount: number;
+    currentAmount: number;
+    user: {
+      createdAt: string;
+      email: string;
+      firstName: string;
+      id: string;
+      imageUrl: string;
+      lastName: string;
+      roleId: number;
+      updatedAt: string;
+    };
+  }
+
+  interface DashboardData {
+    groupsWithMostUsedTokens: GroupInfo[];
+    userWithMostTokens: UsersInfo[];
+    usersWithMostUsedTokens: UsersTokenInfo[];
+  }
+
+  const teamUsageData: ChartData<'pie', number[], string> = dashboardData && Array.isArray(dashboardData.groupsWithMostUsedTokens) && dashboardData.groupsWithMostUsedTokens.length > 0 ? {
+    labels: dashboardData.groupsWithMostUsedTokens.map((group) => group.group.name),
     datasets: [
       {
         label: 'Token Usage per Team',
-        data: [300, 200, 100, 400, 250, 100],
+        data: dashboardData.groupsWithMostUsedTokens.map((group) => group.totalTokens),
         backgroundColor: [
           '#E93D44',
           '#AE282C',
@@ -111,6 +179,14 @@ export default function Admin() {
         ],
       },
     ],
+  } : {
+    labels: [],
+    datasets: [{
+      label: 'Token Usage per Team',
+      data: [],
+      backgroundColor: [],
+      hoverBackgroundColor: [],
+    }],
   };
 
   const responseTimeWeeklyData = {
@@ -129,6 +205,73 @@ export default function Admin() {
     ],
   };
 
+  const userTokenTop: ChartData<'pie', number[], string> = dashboardData && Array.isArray(dashboardData.userWithMostTokens) && dashboardData.userWithMostTokens.length > 0 ? {
+    labels: dashboardData.userWithMostTokens.map((user) => user.user.firstName),
+    datasets: [
+      {
+        label: 'Users with Most Tokens',
+        data: dashboardData.userWithMostTokens.map((user) => user.amount),
+        backgroundColor: [
+          '#E93D44',
+          '#AE282C',
+          '#E93D44',
+          '#AE282C',
+          '#E93D44',
+          '#AE282C',
+        ],
+        hoverBackgroundColor: [
+          '#E7E9ED',
+          '#E7E9ED',
+          '#E7E9ED',
+          '#E7E9ED',
+          '#E7E9ED',
+        ],
+      },
+    ],
+  } : {
+    labels: [],
+    datasets: [{
+      label: 'Users with Most Tokens',
+      data: [],
+      backgroundColor: [],
+      hoverBackgroundColor: [],
+    }],
+  };
+
+  const userTokenUsage: ChartData<'pie', number[], string> = dashboardData && Array.isArray(dashboardData.usersWithMostUsedTokens) && dashboardData.usersWithMostUsedTokens.length > 0 ? {
+    labels: dashboardData.usersWithMostUsedTokens.map((user) => user.user.firstName),
+    datasets: [
+      {
+        label: 'Users Token Usage',
+        data: dashboardData.usersWithMostUsedTokens.map((user) => user.amount),
+        backgroundColor: [
+          '#E93D44',
+          '#AE282C',
+          '#E93D44',
+          '#AE282C',
+          '#E93D44',
+          '#AE282C',
+        ],
+        hoverBackgroundColor: [
+          '#E7E9ED',
+          '#E7E9ED',
+          '#E7E9ED',
+          '#E7E9ED',
+          '#E7E9ED',
+        ],
+      },
+    ],
+  } : {
+    labels: [],
+    datasets: [{
+      label: 'Users Token Usage',
+      data: [],
+      backgroundColor: [],
+      hoverBackgroundColor: [],
+    }],
+  };
+
+  // THIS IS TO EDIT CHART DESIGN
   const options = {
     indexAxis: 'y' as const,
     scales: {
@@ -178,6 +321,8 @@ export default function Admin() {
     ],
   };
 
+  // console.log('Users Data:', JSON.stringify(userTokenUsage, null, 2));
+  // console.log('Groups Data:', JSON.stringify(teamUsageData, null, 2));
   return (
     <Container maxWidth="xl">
       <Box marginLeft="100px">
@@ -209,7 +354,7 @@ export default function Admin() {
               <Line data={tokenUsageData} />
             </Card>
           </Grid>
-          {/* pie chart y bar chart */}
+          {/* TOKEN USAGE PER TEAM */}
           <Grid container padding="0rem 4rem 3rem 6rem" gap={0}>
             <Grid item xs={6} md={6}>
               <Card sx={{
@@ -245,6 +390,7 @@ export default function Admin() {
               </Card>
             </Grid>
           </Grid>
+          {/* BAR CHART */}
           <Grid padding="0rem 3rem 3rem 5rem" gap={4}>
             <Card sx={{
               margin: '20px',
@@ -260,6 +406,41 @@ export default function Admin() {
                 <Line data={errorRateData} />
               </CardContent>
             </Card>
+          </Grid>
+          {/* USER WITH MOST TOKENS AND USER WITH MOST TOKENS USED */}
+          <Grid container padding="0rem 4rem 3rem 6rem" gap={0}>
+            <Grid item xs={6} md={6}>
+              <Card sx={{
+                margin: '5px',
+                padding: '5px',
+                backgroundColor: '#000',
+                color: '#fff',
+                boxShadow: '0px 4px 8px rgba(0, 0, 0, 1)',
+                borderRadius: '20px',
+              }}
+              >
+                <CardContent>
+                  <Typography variant="h5">User With Most Tokens</Typography>
+                  <Pie data={userTokenTop} options={pieChartOptions} />
+                </CardContent>
+              </Card>
+            </Grid>
+            <Grid item xs={6} md={6}>
+              <Card sx={{
+                margin: '5px',
+                padding: '5px',
+                backgroundColor: '#000',
+                color: '#fff',
+                boxShadow: '0px 4px 8px rgba(0, 0, 0, 1)',
+                borderRadius: '20px',
+              }}
+              >
+                <CardContent>
+                  <Typography variant="h5">Users Token Usage</Typography>
+                  <Pie data={userTokenUsage} options={pieChartOptions} />
+                </CardContent>
+              </Card>
+            </Grid>
           </Grid>
         </Grid>
         {/* menu derecha */}
