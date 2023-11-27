@@ -77,7 +77,9 @@ export async function updateUserAmountTokens(userId: string, operation: string, 
 
 export async function createTokenForUser(userId: string, amount: number, renewPeriodically: boolean, expiresAt: Date) {
   try {
-    fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/token`, {
+    const dateToString = expiresAt.toISOString();
+    console.log(userId, amount, renewPeriodically, dateToString);
+    fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/tokens`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -87,11 +89,35 @@ export async function createTokenForUser(userId: string, amount: number, renewPe
         userId,
         amount,
         renewPeriodically,
-        expiresAt,
+        expiresAt: dateToString,
       }),
     });
+    console.log('Token created successfully');
   } catch (error) {
     console.error(error);
+    throw error;
+  }
+}
+
+export async function addTokensToUsersInGroup(groupId:string, amount:number) {
+  try {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/group/tokens`, {
+      method: 'PATCH',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${localStorage.getItem('token')}`,
+      },
+      body: JSON.stringify({
+        groupId,
+        amount,
+      }),
+    });
+
+    if (!response.ok) {
+      throw new Error('Network response was not ok');
+    }
+  } catch (error) {
+    console.log(error);
     throw error;
   }
 }

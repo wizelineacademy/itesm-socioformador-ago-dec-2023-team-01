@@ -14,7 +14,7 @@ import { fetchWizelinersInGroup, removeUserToGroup } from '@/services/groupServi
 import Popup from '@/app/components/Popup';
 import Styles from './DataGrid.module.css';
 
-export default function DataTable({ groupId, wizeCount }:{ groupId: string, wizeCount:Function }) {
+export default function DataTable({ groupId, wizeCount, triggerFetch }:{ groupId: string, wizeCount:Function, triggerFetch:Boolean }) {
   const [usersGroup, setUsersGroup] = useState([]);
   const [totals, setTotals] = useState({ totalWizeCoins: 0, totalUsers: 0 });
   const [change, setChange] = useState(true);
@@ -35,7 +35,7 @@ export default function DataTable({ groupId, wizeCount }:{ groupId: string, wize
       }
     };
     fetchData();
-  }, [groupId, change]);
+  }, [groupId, change, triggerFetch]);
 
   useEffect(() => {
     const { totalWizeCoins, totalUsers } = usersGroup.reduce(
