@@ -56,11 +56,11 @@ export default function TokenDialog({
   const handleCreateToken = () => {
     try {
       if (
-        userId === null ||
-        amount === null ||
-        monthlyRenew === null ||
-        expiresAt === null ||
-        expiresAt <= new Date() // Add this condition to check if expiresAt is greater than the current date
+        userId === null
+        || amount === null
+        || monthlyRenew === null
+        || expiresAt === null
+        || expiresAt <= new Date() // Add this condition to check if expiresAt is greater than the current date
       ) {
         console.error('Invalid data');
         return;
@@ -72,7 +72,7 @@ export default function TokenDialog({
     } catch (e) {
       console.error(e);
     }
-  }
+  };
   return (
     <Dialog
       maxWidth="sm"
