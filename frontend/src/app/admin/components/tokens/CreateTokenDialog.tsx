@@ -43,7 +43,9 @@ export default function TokenDialog({
   userId,
   setWizecoins,
 }: PopupProps) {
-  const [expiresAt, setExpiresAt] = React.useState(new Date());
+  const tomorrow = new Date();
+  tomorrow.setDate(tomorrow.getDate() + 1);
+  const [expiresAt, setExpiresAt] = React.useState(tomorrow);
   const [amount, setAmount] = React.useState(0);
   const [monthlyRenew, setMonthlyRenew] = React.useState(false);
 
@@ -201,7 +203,7 @@ export default function TokenDialog({
                 setExpiresAt(date);
                 console.log(date);
               }}
-              minDate={subDays(new Date(), 0)}
+              minDate={subDays(new Date(), -1)}
               inline
             />
           </Box>
