@@ -29,6 +29,7 @@
     "js-tiktoken": "^1.0.8",
     "next": "13.5.3",
     "notistack": "^3.0.1",
+    "numeral": "^2.0.6",
     "openai": "^4.16.1",
     "openai-edge": "^1.2.2",
     "react": "18.2.0",

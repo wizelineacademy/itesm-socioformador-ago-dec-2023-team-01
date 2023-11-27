@@ -9,6 +9,8 @@ import Image from 'next/image';
 import styles from './iswelcome.module.css';
 import { WelcomeProps } from './types';
 
+const numeral = require('numeral');
+
 export default function IsWelcome({
   admin,
   name,
@@ -49,7 +51,7 @@ export default function IsWelcome({
               </Typography>
               <Stack direction="row">
                 <object data="./wizecoin.svg" className={styles.smallimage} title="wizecoin" />
-                <Typography variant="h4" sx={{ color: '#4BE93D' }}>{wizecoins}</Typography>
+                <Typography variant="h4" sx={{ color: '#4BE93D' }}>{Number(wizecoins) > 1000 ? numeral(wizecoins).format('0.0a') : wizecoins}</Typography>
               </Stack>
             </Stack>
           </Grid>

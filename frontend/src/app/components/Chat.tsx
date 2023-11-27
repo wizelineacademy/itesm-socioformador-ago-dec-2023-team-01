@@ -2,7 +2,7 @@
 
 'use client';
 
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import Avatar from '@mui/material/Avatar';
 import Image from 'next/image';
 import Typography from '@mui/material/Typography';
@@ -62,6 +62,18 @@ export default function Chat({
 }: ChatProps) {
   const [userId, setUserId] = useState('');
   const [profileSrc, setProfileSrc] = useState('');
+  const scrollRef = useRef(null);
+
+  const scrollToBottom = () => {
+    if (scrollRef.current) {
+      const scrollElement = scrollRef.current as HTMLDivElement;
+      scrollElement.scrollTop = scrollElement.scrollHeight;
+    }
+  };
+
+  useEffect(() => {
+    scrollToBottom();
+  }, [messages]);
 
   useEffect(() => {
     setUserId(`${localStorage.getItem('sub')}`);
@@ -115,6 +127,7 @@ export default function Chat({
         </Typography>
       </Box>
       <Box
+        ref={scrollRef}
         sx={{
           flexGrow: 1,
           overflowY: 'scroll',
