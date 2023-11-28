@@ -6,6 +6,7 @@ import Link from 'next/link';
 import Grid from '@mui/material/Unstable_Grid2'; // Grid version 2
 import Stack from '@mui/material/Stack';
 import Image from 'next/image';
+import LockClockIcon from '@mui/icons-material/LockClock';
 import styles from './iswelcome.module.css';
 import { WelcomeProps } from './types';
 
@@ -56,17 +57,47 @@ export default function IsWelcome({
         </Grid>
         <Grid container spacing={7} display="flex" justifyContent="center" alignItems="center">
           <Grid>
-            <Tooltip title="ChatGPT">
+            <Tooltip title="OpenAI ChatGPT">
               <Link href="/mainpage">
                 <Image width="200" height="200" src="/chatgptGreen.png" className={styles.roundedimage} alt="Chat GPT Green" />
               </Link>
             </Tooltip>
           </Grid>
           <Grid>
-            <Image width="200" height="200" src="/Bard.png" className={styles.roundedimage} alt="Bard" />
+            <Tooltip title="Google Bard (comming soon)">
+              <Box className={styles.container}>
+                <Image
+                  width="200"
+                  height="200"
+                  src="/Bard.png"
+                  alt="Bard"
+                  className={styles.blockedImage}
+                />
+                <Box className={styles.overlay}>
+                  <LockClockIcon
+                    sx={{ fontSize: '7rem', padding: '2.7rem 0 0 3.3rem', color: 'white' }}
+                  />
+                </Box>
+              </Box>
+            </Tooltip>
           </Grid>
           <Grid>
-            <Image width="200" height="200" src="/llama2.png" className={styles.roundedimage} alt="Llama 2" />
+            <Tooltip title="Meta Llama2 (comming soon)">
+              <Box className={styles.container}>
+                <Image
+                  width="200"
+                  height="200"
+                  src="/llama2.png"
+                  alt="Llama icon"
+                  className={styles.blockedImage}
+                />
+                <Box className={styles.overlay}>
+                  <LockClockIcon
+                    sx={{ fontSize: '7rem', padding: '2.7rem 0 0 3.3rem', color: 'white' }}
+                  />
+                </Box>
+              </Box>
+            </Tooltip>
           </Grid>
         </Grid>
         <Grid spacing={4} container display="flex" justifyContent="center" alignItems="center">
