@@ -100,9 +100,8 @@ export default function Admin() {
     datasets: [
       {
         label: 'Token Usage',
-        data: [0, 200, 800, 300, 750, 200, 500],
+        data: [7678, 5033, 7340, 3455, 2390, 7637, 8378],
         fill: true,
-        backgroundColor: '#E93D44',
         borderColor: '#E93D44',
       },
     ],
@@ -163,12 +162,11 @@ export default function Admin() {
         label: 'Token Usage per Team',
         data: dashboardData.groupsWithMostUsedTokens.map((group) => group.totalTokens),
         backgroundColor: [
-          '#E93D44',
-          '#AE282C',
-          '#E93D44',
-          '#AE282C',
-          '#E93D44',
-          '#AE282C',
+          '#6622CC',
+          '#FF47DA',
+          '#23C9FF',
+          '#F1C40F',
+          '#FF6542',
         ],
         hoverBackgroundColor: [
           '#E7E9ED',
@@ -212,12 +210,11 @@ export default function Admin() {
         label: 'Users with Most Tokens',
         data: dashboardData.userWithMostTokens.map((user) => user.amount),
         backgroundColor: [
-          '#E93D44',
-          '#AE282C',
-          '#E93D44',
-          '#AE282C',
-          '#E93D44',
-          '#AE282C',
+          '#6622CC',
+          '#FF47DA',
+          '#23C9FF',
+          '#F1C40F',
+          '#FF6542',
         ],
         hoverBackgroundColor: [
           '#E7E9ED',
@@ -245,12 +242,11 @@ export default function Admin() {
         label: 'Users Token Usage',
         data: dashboardData.usersWithMostUsedTokens.map((user) => user.amount),
         backgroundColor: [
-          '#E93D44',
-          '#AE282C',
-          '#E93D44',
-          '#AE282C',
-          '#E93D44',
-          '#AE282C',
+          '#6622CC',
+          '#FF47DA',
+          '#23C9FF',
+          '#F1C40F',
+          '#FF6542',
         ],
         hoverBackgroundColor: [
           '#E7E9ED',
@@ -293,11 +289,28 @@ export default function Admin() {
     },
   };
 
+  const lineChartOptions = {
+    animation: {
+      animateScale: true,
+      duration: 5000,
+    },
+    scales: {
+      y: {
+        beginAtZero: true,
+      },
+    },
+  };
+
   const pieChartOptions = {
     plugins: {
       legend: {
         // position: 'left' as const,
       },
+    },
+    animation: {
+      animationRotate: true,
+      animateScale: true,
+      duration: 5000,
     },
   };
 
@@ -351,7 +364,7 @@ export default function Admin() {
             }}
             >
               <Typography variant="h5">Daily Token Usage</Typography>
-              <Line data={tokenUsageData} />
+              <Line data={tokenUsageData} options={lineChartOptions} />
             </Card>
           </Grid>
           {/* TOKEN USAGE PER TEAM */}
