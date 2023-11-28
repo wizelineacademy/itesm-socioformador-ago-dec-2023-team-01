@@ -11,11 +11,16 @@ import Box from '@mui/material/Box';
 import SendIcon from '@mui/icons-material/Send';
 import IconButton from '@mui/material/IconButton';
 import InputAdornment from '@mui/material/InputAdornment';
-import Stack from '@mui/material/Stack';
+import ContentCopyIcon from '@mui/icons-material/ContentCopy';
+import CheckIcon from '@mui/icons-material/Check';
 import { useChat, Message } from 'ai/react';
 import Markdown from 'react-markdown';
 import CircularProgress from '@mui/material/CircularProgress';
 import { ChatRequestOptions } from 'ai';
+import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
+import { nord } from 'react-syntax-highlighter/dist/esm/styles/prism';
+import { Button, Stack } from '@mui/material';
+import CopyToClipboard from 'react-copy-to-clipboard';
 import {
   numTokensFromMessage,
   createConversation,
@@ -64,6 +69,7 @@ export default function Chat({
 }: ChatProps) {
   const [userId, setUserId] = useState('');
   const [profileSrc, setProfileSrc] = useState('');
+  const [isCopied, setCopied] = useState(false);
   const scrollRef = useRef(null);
   const formRef = useRef<HTMLFormElement>(null);
   const scrollToBottom = () => {
@@ -109,6 +115,14 @@ export default function Chat({
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [messages]);
+
+  const handleCopy = () => {
+    setCopied(true);
+    console.log(isCopied);
+    setTimeout(() => {
+      setCopied(false);
+    }, 1000);
+  };
 
   if (userId === '') return <Awaiting />;
   return (
@@ -172,9 +186,75 @@ export default function Chat({
                 color: 'white',
               }}
             >
-              <Markdown>
-                {message.content}
-              </Markdown>
+              <Markdown
+                  // eslint-disable-next-line react/no-children-prop
+                children={message.content}
+                components={{
+                  // eslint-disable-next-line react/no-unstable-nested-components
+                  code(props) {
+                    const {
+                      // eslint-disable-next-line react/prop-types
+                      children, className, node, ...rest
+                    } = props;
+                    const match = /language-(\w+)/.exec(className || '');
+                    return match ? (
+                      <Box
+                        sx={{
+                          width: '90%',
+                          margin: 'auto',
+                          paddingBottom: '0.70rem',
+                        }}
+                      >
+                        <Stack
+                          direction="row"
+                          alignItems="center"
+                          justifyContent="flex-end"
+                          sx={{
+                            borderRadius: '10px 10px 0 0',
+                            backgroundColor: 'black',
+                            height: '30px',
+                            position: 'relative',
+                            top: '10px',
+                            color: 'white',
+                          }}
+                        >
+                          <CopyToClipboard text={String(children)}>
+                            <Button sx={{ textTransform: 'none', color: 'white' }} onClick={handleCopy}>
+                              {isCopied ? (
+                                <Stack direction="row">
+                                  <CheckIcon sx={{ fontSize: '15px' }} />
+                                  <Box sx={{ padding: '2px' }} />
+                                  <Typography sx={{ color: 'white', fontSize: '11px' }}>Copied!</Typography>
+                                </Stack>
+                              ) : (
+                                <Stack direction="row">
+                                  <ContentCopyIcon sx={{ fontSize: '15px' }} />
+                                  <Box sx={{ padding: '2px' }} />
+                                  <Typography sx={{ color: 'white', fontSize: '11px' }}>Copy Code</Typography>
+                                </Stack>
+                              )}
+                            </Button>
+                          </CopyToClipboard>
+                        </Stack>
+                        {// @ts-ignore}
+                          <SyntaxHighlighter
+                            {...rest}
+                            PreTag="div"
+                              // eslint-disable-next-line react/no-children-prop
+                            children={String(children).replace(/\n$/, '')}
+                            language={match[1]}
+                            style={nord}
+                          />
+                          }
+                      </Box>
+                    ) : (
+                      <code {...rest} className={className}>
+                        {children}
+                      </code>
+                    );
+                  },
+                }}
+              />
             </Typography>
             {message.role !== 'assistant' && (
               <Avatar

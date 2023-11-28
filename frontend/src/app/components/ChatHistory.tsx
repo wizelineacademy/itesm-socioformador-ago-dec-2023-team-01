@@ -14,8 +14,8 @@ import React, { useState } from 'react';
 import {
   Dialog, DialogActions, DialogContent, DialogTitle, Menu, MenuItem, TextField,
 } from '@mui/material';
-import ChatHistoryItem from './ChatHistoryItem';
 import { getHistory } from '@/services/usersService';
+import ChatHistoryItem from './ChatHistoryItem';
 
 export default function ChatHistory({
   closeChatHistory,
