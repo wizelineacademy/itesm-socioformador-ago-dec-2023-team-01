@@ -12,12 +12,15 @@ import SendIcon from '@mui/icons-material/Send';
 import IconButton from '@mui/material/IconButton';
 import InputAdornment from '@mui/material/InputAdornment';
 import ContentCopyIcon from '@mui/icons-material/ContentCopy';
+import CheckIcon from '@mui/icons-material/Check';
 import { useChat, Message } from 'ai/react';
 import Markdown from 'react-markdown';
 import CircularProgress from '@mui/material/CircularProgress';
 import { ChatRequestOptions } from 'ai';
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
-import { oneDark } from 'react-syntax-highlighter/dist/esm/styles/prism';
+import { nord } from 'react-syntax-highlighter/dist/esm/styles/prism';
+import { Button, Stack } from '@mui/material';
+import CopyToClipboard from 'react-copy-to-clipboard';
 import {
   numTokensFromMessage,
   createConversation,
@@ -25,7 +28,6 @@ import {
   getConversationFullChat,
 } from '../../services/chatService';
 import Awaiting from './awaiting';
-import { Button, Stack } from '@mui/material';
 
 interface ChatProps {
   input: string;
@@ -66,6 +68,7 @@ export default function Chat({
 }: ChatProps) {
   const [userId, setUserId] = useState('');
   const [profileSrc, setProfileSrc] = useState('');
+  const [isCopied, setCopied] = useState(false);
 
   useEffect(() => {
     setUserId(`${localStorage.getItem('sub')}`);
@@ -99,6 +102,14 @@ export default function Chat({
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [messages]);
+
+  const handleCopy = () => {
+    setCopied(true);
+    console.log(isCopied);
+    setTimeout(() => {
+      setCopied(false);
+    }, 1000);
+  };
 
   if (userId === '') return <Awaiting />;
   return (
@@ -193,11 +204,23 @@ export default function Chat({
                             color: 'white',
                           }}
                         >
-                          <Button sx={{ textTransform: 'none', color: 'white' }}>
-                            <ContentCopyIcon sx={{ fontSize: '15px' }} />
-                            <Box sx={{ padding: '2px' }} />
-                            <Typography sx={{ color: 'white', fontSize: '11px' }}>Copy Code</Typography>
-                          </Button>
+                          <CopyToClipboard text={String(children)}>
+                            <Button sx={{ textTransform: 'none', color: 'white' }} onClick={handleCopy}>
+                              {isCopied ? (
+                                <Stack direction="row">
+                                  <CheckIcon sx={{ fontSize: '15px' }} />
+                                  <Box sx={{ padding: '2px' }} />
+                                  <Typography sx={{ color: 'white', fontSize: '11px' }}>Copied!</Typography>
+                                </Stack>
+                              ) : (
+                                <Stack direction="row">
+                                  <ContentCopyIcon sx={{ fontSize: '15px' }} />
+                                  <Box sx={{ padding: '2px' }} />
+                                  <Typography sx={{ color: 'white', fontSize: '11px' }}>Copy Code</Typography>
+                                </Stack>
+                              )}
+                            </Button>
+                          </CopyToClipboard>
                         </Stack>
                         {// @ts-ignore}
                           <SyntaxHighlighter
@@ -206,7 +229,7 @@ export default function Chat({
                               // eslint-disable-next-line react/no-children-prop
                             children={String(children).replace(/\n$/, '')}
                             language={match[1]}
-                            style={oneDark}
+                            style={nord}
                           />
                           }
                       </Box>
