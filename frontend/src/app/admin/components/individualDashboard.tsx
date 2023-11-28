@@ -19,6 +19,7 @@ import LineChart from './LineChart';
 import styles from './individualDashboard.module.css';
 
 const inter = Inter({ subsets: ['latin'] });
+const numeral = require('numeral');
 
 interface IndividualDashboardProps {
   id: string;
@@ -261,7 +262,7 @@ export default function UserProfileDashboard({
                       className={styles.microimage}
                       title="wizecoin"
                     />
-                    <Typography variant="h6" sx={{ color: '#4BE93D' }} className={`${inter.className}`}>{wizecoins}</Typography>
+                    <Typography variant="h6" sx={{ color: '#4BE93D' }} className={`${inter.className}`}>{Number(wizecoins) > 1000 ? numeral(wizecoins).format('0.0a') : wizecoins}</Typography>
                   </Stack>
                 </Stack>
               </Paper>

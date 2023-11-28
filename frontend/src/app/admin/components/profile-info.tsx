@@ -15,6 +15,8 @@ import { WelcomeProps } from '@/app/components/types';
 import styles from './sidenav.module.css';
 import LogoutPopup from './logoutPopup';
 
+const numeral = require('numeral');
+
 export function ProfileInfo({
   firstName,
   lastName,
@@ -22,7 +24,6 @@ export function ProfileInfo({
   picSource,
 }: WelcomeProps) {
   const [isOpen, setOpen] = useState(false);
-
   const handleOpenPopup = () => {
     setOpen(true);
   };
@@ -77,7 +78,7 @@ export function ProfileInfo({
                 title="wizecoin"
               />
               <Typography sx={{ color: '#4BE93D', fontSize: '1.2rem' }}>
-                {wizecoins}
+                {Number(wizecoins) > 1000 ? numeral(wizecoins).format('0.0a') : wizecoins}
               </Typography>
             </Stack>
           </Stack>
