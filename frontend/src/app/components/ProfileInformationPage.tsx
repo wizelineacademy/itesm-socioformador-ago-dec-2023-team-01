@@ -6,6 +6,7 @@ import Grid from '@mui/material/Unstable_Grid2'; // Grid version 2
 import Stack from '@mui/material/Stack';
 import { Inter } from 'next/font/google';
 import Image from 'next/image';
+import Link from 'next/link';
 import styles from './iswelcome.module.css';
 
 const inter = Inter({ subsets: ['latin'] });
@@ -141,18 +142,19 @@ export default function UserProfile({
                 display: 'flex', justifyContent: 'center', alignItems: 'center',
               }}
               >
-                <Button
-                  href="/mainpage"
-                  style={{
-                    color: 'white',
-                    backgroundColor: '#E93D44',
-                    borderRadius: '8px', // Add the border radius to the button
-                    textTransform: 'none', // Set textTransform to 'none' to prevent all caps
-                    padding: '0px 12px',
-                  }}
-                >
-                  <Typography variant="h6" sx={{ color: 'white' }} className={`${inter.className}`}>Return</Typography>
-                </Button>
+                <Link href="/mainpage">
+                  <Button
+                    style={{
+                      color: 'white',
+                      backgroundColor: '#E93D44',
+                      borderRadius: '8px', // Add the border radius to the button
+                      textTransform: 'none', // Set textTransform to 'none' to prevent all caps
+                      padding: '0px 12px',
+                    }}
+                  >
+                    <Typography variant="h6" sx={{ color: 'white' }} className={`${inter.className}`}>Return</Typography>
+                  </Button>
+                </Link>
               </Box>
             </Stack>
           </Box>

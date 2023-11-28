@@ -10,6 +10,7 @@ import CheckBoxOutlinedIcon from '@mui/icons-material/CheckBoxOutlined';
 import CropSquareIcon from '@mui/icons-material/CropSquare';
 import { useRouter } from 'next/navigation';
 import { VariantType, enqueueSnackbar } from 'notistack';
+import Link from 'next/link';
 import Popup from '@/app/components/Popup';
 import EditWizecoinsUserPopup from '@/app/components/EditWizecoinsUserPopup';
 import CreateTokenDialog from '@/app/admin/components/tokens/CreateTokenDialog';
@@ -575,40 +576,41 @@ export default function UserProfileDashboard({
                   <Grid sx={{ flexGrow: 1 }} container spacing={1}>
                     {stats.map((area, index) => (
                       <Grid item key={index}>
-                        <Button
-                          key={index}
-                          href="/mainpage"
-                          style={{
-                            backgroundColor: '#1D293A',
-                            width: '200px',
-                            borderRadius: '15px', // Add the border radius to the button
-                            textTransform: 'none', // Set textTransform to 'none' to prevent all caps
-                            padding: '6px',
-                          }}
-                        >
-                          <Stack direction="row" display="flex" justifyContent="space-between" alignItems="left" spacing="1rem">
-                            <Typography
-                              variant="caption"
-                              sx={{
-                                color: 'white', fontWeight: 'bold',
-                              }}
-                              className={`${inter.className}`}
-                            >
-                              {area[0]}
-                            </Typography>
-                            <Typography
-                              variant="caption"
-                              sx={{
-                                color: 'white', fontWeight: 'bold',
-                              }}
-                              className={`${inter.className}`}
-                            >
-                              {area[1]}
-                              { ' ' }
-                              hrs
-                            </Typography>
-                          </Stack>
-                        </Button>
+                        <Link href="/mainpage">
+                          <Button
+                            key={index}
+                            style={{
+                              backgroundColor: '#1D293A',
+                              width: '200px',
+                              borderRadius: '15px', // Add the border radius to the button
+                              textTransform: 'none', // Set textTransform to 'none' to prevent all caps
+                              padding: '6px',
+                            }}
+                          >
+                            <Stack direction="row" display="flex" justifyContent="space-between" alignItems="left" spacing="1rem">
+                              <Typography
+                                variant="caption"
+                                sx={{
+                                  color: 'white', fontWeight: 'bold',
+                                }}
+                                className={`${inter.className}`}
+                              >
+                                {area[0]}
+                              </Typography>
+                              <Typography
+                                variant="caption"
+                                sx={{
+                                  color: 'white', fontWeight: 'bold',
+                                }}
+                                className={`${inter.className}`}
+                              >
+                                {area[1]}
+                                { ' ' }
+                                hrs
+                              </Typography>
+                            </Stack>
+                          </Button>
+                        </Link>
                       </Grid>
                     ))}
                   </Grid>

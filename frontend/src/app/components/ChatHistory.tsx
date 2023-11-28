@@ -12,8 +12,9 @@ import LogoutIcon from '@mui/icons-material/Logout';
 import CloseIcon from '@mui/icons-material/Close';
 import React, { useState } from 'react';
 import {
-  Dialog, DialogActions, DialogContent, DialogTitle, Menu, MenuItem, TextField,
+  Dialog, DialogActions, DialogContent, DialogTitle, Grid, Menu, MenuItem, TextField,
 } from '@mui/material';
+import Link from 'next/link';
 import ChatHistoryItem from './ChatHistoryItem';
 import { getHistory } from '@/services/usersService';
 
@@ -40,11 +41,20 @@ export default function ChatHistory({
     >
       <Box
         display="flex"
+        justifyContent="flex-end"
+        sx={{ display: { xs: 'block', sm: 'none' } }}
+      >
+        <IconButton color="inherit" onClick={closeChatHistory}>
+          <CloseIcon sx={{ color: 'white' }} />
+        </IconButton>
+      </Box>
+      <Grid
+        container
         justifyContent="space-between"
-        alignItems="center"
+        spacing={1}
         marginBottom="10px"
       >
-        <Box display="flex" alignItems="center">
+        <Grid item xs={12} lg={6}>
           <Button
             variant="outlined"
             startIcon={<AddIcon sx={{ color: 'white' }} />}
@@ -65,33 +75,31 @@ export default function ChatHistory({
               '& .MuiTouchRipple-root span': {
                 backgroundColor: 'white',
               },
+              width: '100%',
             }}
           >
             New Chat
           </Button>
-        </Box>
-        <Box
-          display="flex"
-          justifyContent="flex-end"
-          sx={{ display: { xs: 'block', sm: 'none' } }}
+        </Grid>
+        <Grid
+          xs={12}
+          lg={6}
+          item
         >
-          <IconButton color="inherit" onClick={closeChatHistory}>
-            <CloseIcon sx={{ color: 'white' }} />
-          </IconButton>
-        </Box>
-
-        <Button
-          variant="outlined"
-          color="error"
-          startIcon={<LogoutIcon />}
-          sx={{
-            textTransform: 'none',
-            borderRadius: '20px',
-          }}
-        >
-          Logout
-        </Button>
-      </Box>
+          <Button
+            variant="outlined"
+            color="error"
+            startIcon={<LogoutIcon />}
+            sx={{
+              textTransform: 'none',
+              borderRadius: '20px',
+              width: '100%',
+            }}
+          >
+            Logout
+          </Button>
+        </Grid>
+      </Grid>
 
       <Typography
         variant="h5"
@@ -135,17 +143,18 @@ export default function ChatHistory({
       </Box>
 
       <Box display="flex" justifyContent="center" marginTop="20px">
-        <Button
-          href="/welcome"
-          variant="contained"
-          color="error"
-          sx={{
-            borderRadius: '5px',
-            textTransform: 'none',
-          }}
-        >
-          Return Home
-        </Button>
+        <Link href="/welcome">
+          <Button
+            variant="contained"
+            color="error"
+            sx={{
+              borderRadius: '5px',
+              textTransform: 'none',
+            }}
+          >
+            Return Home
+          </Button>
+        </Link>
       </Box>
     </Box>
   );
