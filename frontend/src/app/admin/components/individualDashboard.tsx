@@ -14,9 +14,9 @@ import Popup from '@/app/components/Popup';
 import EditWizecoinsUserPopup from '@/app/components/EditWizecoinsUserPopup';
 import CreateTokenDialog from '@/app/admin/components/tokens/CreateTokenDialog';
 import { updateUserAdminStatus } from '@/services/usersService';
+import { createTokenForUser } from '@/services/tokenService';
 import LineChart from './LineChart';
 import styles from './individualDashboard.module.css';
-import { createTokenForUser } from '@/services/tokenService';
 
 const inter = Inter({ subsets: ['latin'] });
 

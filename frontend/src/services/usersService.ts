@@ -1,4 +1,6 @@
 // eslint-disable-next-line import/prefer-default-export
+import { fetchUserCurrentTokens } from '@/services/tokenService';
+
 export const fetchUsers = async () => {
   try {
     const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/users`, {
@@ -13,21 +15,27 @@ export const fetchUsers = async () => {
       throw new Error('Network response was not ok');
     }
 
-    let users = await response.json();
+    const users = await response.json();
     console.log(users);
-    users = users.map((user:any) => ({
-      id: user.id,
-      firstName: user.firstName,
-      lastName: user.lastName,
-      fullName: `${user.firstName} ${user.lastName}`,
-      imageUrl: user.imageUrl,
-      email: user.email,
-      roleId: user.role,
-      createdAt: user.createdAt,
-      updatedAt: user.updatedAt,
-      isAdmin: user.roleId === 1,
+
+    const usersWithTokens = await Promise.all(users.map(async (user: any) => {
+      const tokens = await fetchUserCurrentTokens(user.id);
+      return {
+        id: user.id,
+        firstName: user.firstName,
+        lastName: user.lastName,
+        fullName: `${user.firstName} ${user.lastName}`,
+        imageUrl: user.imageUrl,
+        email: user.email,
+        roleId: user.role,
+        createdAt: user.createdAt,
+        updatedAt: user.updatedAt,
+        isAdmin: user.roleId === 1,
+        currentTokens: tokens.currentAmountTokens,
+        amountTokens: tokens.amountTokens,
+      };
     }));
-    return users;
+    return usersWithTokens;
   } catch (error) {
     console.error(error);
     throw error;

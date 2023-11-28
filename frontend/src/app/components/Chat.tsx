@@ -14,6 +14,7 @@ import InputAdornment from '@mui/material/InputAdornment';
 import { useChat, Message } from 'ai/react';
 import Markdown from 'react-markdown';
 import CircularProgress from '@mui/material/CircularProgress';
+import { ChatRequestOptions } from 'ai';
 import {
   numTokensFromMessage,
   createConversation,
@@ -21,7 +22,6 @@ import {
   getConversationFullChat,
 } from '../../services/chatService';
 import Awaiting from './awaiting';
-import { ChatRequestOptions } from 'ai';
 
 interface ChatProps {
   input: string;

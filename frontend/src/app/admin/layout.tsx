@@ -2,12 +2,12 @@
 
 import React, { useEffect, useState } from 'react';
 import { Box, Stack } from '@mui/material';
+import { fetchUserCurrentTokens } from '@/services/tokenService';
 import SideNav from './components/side-nav';
 import ProfileInfo from './components/profile-info';
 import { WelcomeProps } from '../components/types';
 import Awaiting from '../components/awaiting';
 import NotAuthorized from './components/notAuthorized';
-import { fetchUserCurrentTokens } from '@/services/tokenService';
 
 export default function AdminLayout({
   children,

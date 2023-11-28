@@ -31,10 +31,10 @@ import {
   Pie,
   Bar,
 } from 'react-chartjs-2';
+import { fetchDashboard } from '@/services/dashboardService';
 import WTitle1 from '../components/WTitle1';
 import mockData from './components/data1';
 import Group from './components/group1';
-import { fetchDashboard } from '@/services/dashboardService';
 
 ChartJS.register(
   CategoryScale,
