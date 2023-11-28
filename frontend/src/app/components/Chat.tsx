@@ -11,9 +11,13 @@ import Box from '@mui/material/Box';
 import SendIcon from '@mui/icons-material/Send';
 import IconButton from '@mui/material/IconButton';
 import InputAdornment from '@mui/material/InputAdornment';
+import ContentCopyIcon from '@mui/icons-material/ContentCopy';
 import { useChat, Message } from 'ai/react';
 import Markdown from 'react-markdown';
 import CircularProgress from '@mui/material/CircularProgress';
+import { ChatRequestOptions } from 'ai';
+import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
+import { oneDark } from 'react-syntax-highlighter/dist/esm/styles/prism';
 import {
   numTokensFromMessage,
   createConversation,
@@ -21,7 +25,7 @@ import {
   getConversationFullChat,
 } from '../../services/chatService';
 import Awaiting from './awaiting';
-import { ChatRequestOptions } from 'ai';
+import { Button, Stack } from '@mui/material';
 
 interface ChatProps {
   input: string;
@@ -157,9 +161,63 @@ export default function Chat({
                 color: 'white',
               }}
             >
-              <Markdown>
-                {message.content}
-              </Markdown>
+              <Markdown
+                  // eslint-disable-next-line react/no-children-prop
+                children={message.content}
+                components={{
+                  // eslint-disable-next-line react/no-unstable-nested-components
+                  code(props) {
+                    const {
+                      // eslint-disable-next-line react/prop-types
+                      children, className, node, ...rest
+                    } = props;
+                    const match = /language-(\w+)/.exec(className || '');
+                    return match ? (
+                      <Box
+                        sx={{
+                          width: '90%',
+                          margin: 'auto',
+                          paddingBottom: '0.70rem',
+                        }}
+                      >
+                        <Stack
+                          direction="row"
+                          alignItems="center"
+                          justifyContent="flex-end"
+                          sx={{
+                            borderRadius: '10px 10px 0 0',
+                            backgroundColor: 'black',
+                            height: '30px',
+                            position: 'relative',
+                            top: '10px',
+                            color: 'white',
+                          }}
+                        >
+                          <Button sx={{ textTransform: 'none', color: 'white' }}>
+                            <ContentCopyIcon sx={{ fontSize: '15px' }} />
+                            <Box sx={{ padding: '2px' }} />
+                            <Typography sx={{ color: 'white', fontSize: '11px' }}>Copy Code</Typography>
+                          </Button>
+                        </Stack>
+                        {// @ts-ignore}
+                          <SyntaxHighlighter
+                            {...rest}
+                            PreTag="div"
+                              // eslint-disable-next-line react/no-children-prop
+                            children={String(children).replace(/\n$/, '')}
+                            language={match[1]}
+                            style={oneDark}
+                          />
+                          }
+                      </Box>
+                    ) : (
+                      <code {...rest} className={className}>
+                        {children}
+                      </code>
+                    );
+                  },
+                }}
+              />
             </Typography>
             {message.role !== 'assistant' && (
               <Avatar
