@@ -17,12 +17,12 @@ export type User = {
 };
 
 type UserState = {
-  user: User | null;
+  userInfo: User | null;
   isLoading: boolean;
 };
 
 const initialState: UserState = {
-  user: null,
+  userInfo: null,
   isLoading: false,
 };
 
@@ -30,17 +30,22 @@ export const user = createSlice({
   name: 'user',
   initialState,
   reducers: {
-    setUser: (state, action) => {
-      state.user = action.payload;
+    setUserInfo: (state, action) => {
+      if (action.payload === null) {
+        console.log('User is set to null');
+      } else {
+        console.log('User is set to', action.payload);
+      }
+      state.userInfo = action.payload;
     },
     addTokens: (state, action) => {
-      if (state.user) {
-        state.user.tokens.currentAmountTokens += action.payload;
+      if (state.userInfo) {
+        state.userInfo.tokens.currentAmountTokens += action.payload;
       }
     },
     subtractTokens: (state, action) => {
-      if (state.user) {
-        state.user.tokens.currentAmountTokens -= action.payload;
+      if (state.userInfo) {
+        state.userInfo.tokens.currentAmountTokens -= action.payload;
       }
     },
     setIsLoading: (state, action) => {
@@ -50,6 +55,6 @@ export const user = createSlice({
 });
 
 export const {
-  setUser, addTokens, subtractTokens, setIsLoading,
+  setUserInfo, addTokens, subtractTokens, setIsLoading,
 } = user.actions;
 export default user.reducer;
