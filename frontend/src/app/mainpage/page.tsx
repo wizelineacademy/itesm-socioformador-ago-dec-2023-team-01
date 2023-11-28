@@ -50,7 +50,7 @@ function Mainpage() {
   const [isChatStopped, setIsChatStopped] = useState(false);
   const [prevConversationId, setPrevConversationId] = useState(0);
   const {
-    input, handleInputChange, handleSubmit, isLoading: chatIsLoading, messages, setMessages, stop,
+    input, setInput, handleInputChange, handleSubmit, isLoading: chatIsLoading, messages, setMessages, stop,
   } = useChat({
     api: '/api/chat',
   });
@@ -152,6 +152,7 @@ function Mainpage() {
             conversationId={conversationId}
             getChatHistory={getChatHistory}
             input={input}
+            setInput={setInput}
             handleInputChange={handleInputChange}
             handleSubmit={handleSubmit}
             isLoading={chatIsLoading}

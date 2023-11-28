@@ -11,9 +11,11 @@ import Box from '@mui/material/Box';
 import SendIcon from '@mui/icons-material/Send';
 import IconButton from '@mui/material/IconButton';
 import InputAdornment from '@mui/material/InputAdornment';
+import Stack from '@mui/material/Stack';
 import { useChat, Message } from 'ai/react';
 import Markdown from 'react-markdown';
 import CircularProgress from '@mui/material/CircularProgress';
+import { ChatRequestOptions } from 'ai';
 import {
   numTokensFromMessage,
   createConversation,
@@ -21,10 +23,10 @@ import {
   getConversationFullChat,
 } from '../../services/chatService';
 import Awaiting from './awaiting';
-import { ChatRequestOptions } from 'ai';
 
 interface ChatProps {
   input: string;
+  setInput: React.Dispatch<React.SetStateAction<string>>;
   handleInputChange: (e: React.ChangeEvent<HTMLInputElement> | React.ChangeEvent<HTMLTextAreaElement>) => void;
   handleSubmit: (e: React.FormEvent<HTMLFormElement>, chatRequestOptions?: ChatRequestOptions) => void;
   isLoading: boolean;
@@ -58,12 +60,12 @@ async function getMessages(conversationId: number) {
 }
 
 export default function Chat({
-  setConversationId, conversationId, getChatHistory, input, handleInputChange, handleSubmit, isLoading, messages, setMessages,
+  setConversationId, conversationId, getChatHistory, input, setInput, handleInputChange, handleSubmit, isLoading, messages, setMessages,
 }: ChatProps) {
   const [userId, setUserId] = useState('');
   const [profileSrc, setProfileSrc] = useState('');
   const scrollRef = useRef(null);
-
+  const formRef = useRef<HTMLFormElement>(null);
   const scrollToBottom = () => {
     if (scrollRef.current) {
       const scrollElement = scrollRef.current as HTMLDivElement;
@@ -189,11 +191,8 @@ export default function Chat({
         ))}
       </Box>
       <Box
-        style={{
-          display: 'flex',
-          alignItems: 'center',
+        sx={{
           padding: '10px',
-          position: 'sticky',
           bottom: 0,
         }}
       >
@@ -202,60 +201,74 @@ export default function Chat({
             e.preventDefault();
             handleSubmit(e);
           }}
+          ref={formRef}
           style={{ width: '100%' }}
         >
-          <div style={{ display: 'flex', alignItems: 'center' }}>
-            <TextField
-              fullWidth
-              value={input}
-              onChange={handleInputChange}
-              variant="outlined"
-              placeholder="Type a message..."
-              sx={{
-                '& .MuiOutlinedInput-root': {
-                  '& fieldset': {
-                    borderColor: '#4E555E',
-                  },
-                  '&:hover fieldset': {
-                    borderColor: 'white',
-                  },
-                  '&.Mui-focused fieldset': {
-                    borderColor: 'white',
-                  },
-                },
-              }}
-              InputProps={{
-                style: {
-                  borderRadius: '20px',
+          <TextField
+            fullWidth
+            value={input}
+            multiline
+            onKeyDown={(e) => {
+              if (e.key === 'Enter' && !e.shiftKey) {
+                e.preventDefault();
+                if (formRef.current !== undefined) {
+                  formRef.current?.dispatchEvent(new Event('submit', { cancelable: true, bubbles: true }));
+                }
+              } else if (e.key === 'Enter' && e.shiftKey) {
+                setInput(`${input}\n`);
+              }
+            }}
+            autoComplete="off"
+            onChange={handleInputChange}
+            placeholder="Type a message..."
+            maxRows={5}
+            sx={{
+
+              overflowY: 'auto',
+              maxHeight: '200px',
+              '& .MuiOutlinedInput-root': {
+                '& fieldset': {
                   borderColor: '#4E555E',
-                  background: 'transparent',
-                  color: 'white',
                 },
-                endAdornment: (
-                  <InputAdornment position="end">
-                    {isLoading ? <CircularProgress size={35} thickness={4} sx={{ color: 'white', marginRight: '10px' }} />
-                      : (
-                        <IconButton type="submit">
-                          <SendIcon sx={{ color: 'white' }} />
-                        </IconButton>
-                      )}
-                    <Box sx={{ transform: 'rotate(180deg)' }}>
-                      <Image
-                        src="wizecoin.svg"
-                        alt="Wizecoin Icon"
-                        width={20}
-                        height={20}
-                        layout="fixed"
-                      />
-                    </Box>
-                    <Typography variant="body1" style={{ color: 'red' }}>
-                      17
-                    </Typography>
-                  </InputAdornment>
-                ),
-              }}
-            />
-          </div>
+                '&:hover fieldset': {
+                  borderColor: 'white',
+                },
+                '&.Mui-focused fieldset': {
+                  borderColor: 'white',
+                },
+              },
+            }}
+            InputProps={{
+              style: {
+                borderRadius: '20px',
+                borderColor: '#4E555E',
+                background: 'transparent',
+                color: 'white',
+              },
+              endAdornment: (
+                <InputAdornment position="end" sx={{ position: 'inherit' }}>
+                  {isLoading ? <CircularProgress size={35} thickness={4} sx={{ color: 'white', marginRight: '10px' }} />
+                    : (
+                      <IconButton type="submit">
+                        <SendIcon sx={{ color: 'white' }} />
+                      </IconButton>
+                    )}
+                  <Box sx={{ transform: 'rotate(180deg)' }}>
+                    <Image
+                      src="wizecoin.svg"
+                      alt="Wizecoin Icon"
+                      width={20}
+                      height={20}
+                      layout="fixed"
+                    />
+                  </Box>
+                  <Typography variant="body1" style={{ color: 'red' }}>
+                    17
+                  </Typography>
+                </InputAdornment>
+              ),
+            }}
+          />
         </form>
       </Box>
     </Box>
