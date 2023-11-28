@@ -2,13 +2,13 @@ import React, { useEffect, useState } from 'react';
 import {
   Typography, Stack, Button, Avatar,
 } from '@mui/material';
+import { useSelector } from 'react-redux';
+import Link from 'next/link';
 import styles from '../../components/iswelcome.module.css';
+import { RootState } from '@/app/redux/store';
 
 export default function NotAuthorized() {
-  const [profileSrc, setProfileSrc] = useState('');
-  useEffect(() => {
-    setProfileSrc(`${localStorage.getItem('pic')}`);
-  }, []);
+  const user = useSelector((state: RootState) => state.user.userInfo);
   return (
     <Stack
       gap={0}
@@ -18,7 +18,7 @@ export default function NotAuthorized() {
       minHeight="100vh"
       minWidth="50px"
     >
-      <Avatar sx={{ height: '175px', width: '175px' }} alt="Wizeliner" src={profileSrc} />
+      <Avatar sx={{ height: '175px', width: '175px' }} alt="Wizeliner" src={user?.picture} />
       <Typography
         sx={{
           fontWeight: 'bold',
@@ -45,21 +45,22 @@ export default function NotAuthorized() {
         {' '}
         <span>administrators.</span>
       </Typography>
-      <Button
-        href="/welcome"
-        variant="contained"
-        sx={{
-          borderRadius: '20px',
-          textTransform: 'none',
-          bgcolor: '#E93D44',
-          fontWeight: 'bold',
-          '&:hover': {
-            bgcolor: 'red',
-          },
-        }}
-      >
-        Return to welcome
-      </Button>
+      <Link href="/welcome">
+        <Button
+          variant="contained"
+          sx={{
+            borderRadius: '20px',
+            textTransform: 'none',
+            bgcolor: '#E93D44',
+            fontWeight: 'bold',
+            '&:hover': {
+              bgcolor: 'red',
+            },
+          }}
+        >
+          Return to welcome
+        </Button>
+      </Link>
     </Stack>
   );
 }

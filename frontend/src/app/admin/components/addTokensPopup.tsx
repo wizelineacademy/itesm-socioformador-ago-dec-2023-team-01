@@ -1,3 +1,5 @@
+'use client';
+
 import React, { useState } from 'react';
 import {
   Button,
@@ -14,7 +16,9 @@ import {
 import { VariantType, enqueueSnackbar } from 'notistack';
 import Image from 'next/image';
 import { Inter } from 'next/font/google';
+import { useSelector } from 'react-redux';
 import { addTokensToUsersInGroup } from '@/services/tokenService';
+import { RootState } from '@/app/redux/store';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -40,6 +44,7 @@ export default function AddTokensPopup({
   onGoodButtonClick,
 }: AddTokenProps) {
   const [tokens, setTokens] = useState(0);
+  const user = useSelector((state: RootState) => state.user.userInfo);
 
   const showNotification = (variant: VariantType, text:string, action:string) => {
     enqueueSnackbar(`${action} ${text}`, { variant });
@@ -55,7 +60,7 @@ export default function AddTokensPopup({
 
   const handleaddTokensClick = async () => {
     try {
-      await addTokensToUsersInGroup(groupId, tokens);
+      await addTokensToUsersInGroup(groupId, tokens, user?.jwtToken ?? '');
       showNotification('success', 'tokens to everyone in this group', 'Added ');
       onGoodButtonClick();
     } catch (error) {
