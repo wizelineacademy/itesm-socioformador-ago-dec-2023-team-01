@@ -16,11 +16,12 @@ import CheckIcon from '@mui/icons-material/Check';
 import { useChat, Message } from 'ai/react';
 import Markdown from 'react-markdown';
 import CircularProgress from '@mui/material/CircularProgress';
-import { ChatRequestOptions } from 'ai';
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
 import { nord } from 'react-syntax-highlighter/dist/esm/styles/prism';
 import { Button, Stack } from '@mui/material';
 import CopyToClipboard from 'react-copy-to-clipboard';
+import { ChatRequestOptions } from 'ai';
+import { useSelector } from 'react-redux';
 import {
   numTokensFromMessage,
   createConversation,
@@ -28,8 +29,6 @@ import {
   getConversationFullChat,
 } from '../../services/chatService';
 import Awaiting from './awaiting';
-import { ChatRequestOptions } from 'ai';
-import { useSelector } from 'react-redux';
 import { RootState } from '../redux/store';
 import NotWelcome from './NotWelcome';
 
@@ -86,11 +85,6 @@ export default function Chat({
     scrollToBottom();
   }, [messages]);
 
-  useEffect(() => {
-    setUserId(`${localStorage.getItem('sub')}`);
-    setProfileSrc(`${localStorage.getItem('pic')}`);
-  }, []);
-
   // actualizar el conversationId cuando cambie el id
   useEffect(() => {
     if (conversationId === 0) {
@@ -119,14 +113,6 @@ export default function Chat({
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [messages]);
-
-  const handleCopy = () => {
-    setCopied(true);
-    console.log(isCopied);
-    setTimeout(() => {
-      setCopied(false);
-    }, 1000);
-  };
 
   const handleCopy = () => {
     setCopied(true);

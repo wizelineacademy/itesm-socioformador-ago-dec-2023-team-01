@@ -45,7 +45,7 @@ export default function NotWelcome() {
         {' '}
         employees.
       </Typography>
-      <Link href="/welcome">
+      <Link href="/">
         <Button
           variant="contained"
           sx={{

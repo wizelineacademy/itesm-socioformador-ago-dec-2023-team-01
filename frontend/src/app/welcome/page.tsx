@@ -20,12 +20,12 @@ const getAuthToken = async () => {
 export default function Welcome() {
   const dispatch = useDispatch<AppDispatch>();
   const { user: auth0User, error, isLoading: auth0Loading } = useUser();
-  const [user, setUserState] = useState<User | null>(null);
   const isLoading = useSelector((state: RootState) => state.user.isLoading);
+  const user = useSelector((state: RootState) => state.user.userInfo);
 
   useEffect(() => {
     const fetchData = async () => {
-      if (auth0Loading || error || !auth0User || !auth0User.sub) {
+      if (auth0Loading || error || !auth0User || !auth0User.sub || user) {
         return;
       }
 
@@ -43,17 +43,19 @@ export default function Welcome() {
         tokens: userTokensData,
       };
 
-      setUserState(newUser);
       dispatch(setUserInfo(newUser));
       dispatch(setIsLoading(false));
     };
     try {
       dispatch(setIsLoading(true));
-      fetchData();
+      fetchData().then(() => {
+        dispatch(setIsLoading(false));
+      });
     } catch (e) {
       console.error(e);
+      dispatch(setIsLoading(false));
     }
-  }, [auth0User, error, dispatch, auth0Loading]);
+  }, [auth0User, error, dispatch, auth0Loading, user]);
 
   if (auth0Loading || isLoading) return <Awaiting />;
   if (error) return <div>{error.message}</div>;

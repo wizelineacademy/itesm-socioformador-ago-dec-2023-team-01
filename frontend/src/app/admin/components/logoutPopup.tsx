@@ -30,7 +30,6 @@ export default function LogoutPopup({
   onClose,
   onGoodButtonClick,
 }: PopupProps) {
-  const dispatch = useDispatch<AppDispatch>();
   return (
     <Dialog
       maxWidth="xs"
@@ -88,24 +87,22 @@ export default function LogoutPopup({
             </Button>
           </Box>
           <Box>
-            <Link href="/api/auth/logout">
-              <Button
-                onClick={() => {
-                  onGoodButtonClick();
-                  dispatch(setUserInfo(null));
-                }}
-                style={{
-                  color: 'white',
-                  backgroundColor: '#4BE93D',
-                  borderRadius: '8px', // Add the border radius to the button
-                  textTransform: 'none', // Set textTransform to 'none' to prevent all caps
-                  padding: '0px 12px',
-                }}
-                className={`${inter.className}`}
-              >
-                {goodButtonTitle}
-              </Button>
-            </Link>
+            <Button
+              href="/api/auth/logout"
+              onClick={() => {
+                onGoodButtonClick();
+              }}
+              style={{
+                color: 'white',
+                backgroundColor: '#4BE93D',
+                borderRadius: '8px', // Add the border radius to the button
+                textTransform: 'none', // Set textTransform to 'none' to prevent all caps
+                padding: '0px 12px',
+              }}
+              className={`${inter.className}`}
+            >
+              {goodButtonTitle}
+            </Button>
           </Box>
         </DialogActions>
       </Box>

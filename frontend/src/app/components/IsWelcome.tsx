@@ -77,7 +77,7 @@ export default function IsWelcome({
           </Grid>
         </Grid>
         <Grid spacing={4} container display="flex" justifyContent="center" alignItems="center">
-          <Grid>
+          {/* <Grid>
             <Typography
               variant="h6"
               sx={{ color: 'white' }}
@@ -94,7 +94,7 @@ export default function IsWelcome({
                 Return to Sign-in
               </Link>
             </Typography>
-          </Grid>
+          </Grid> */}
           <Grid>
             {isAdmin
               && (

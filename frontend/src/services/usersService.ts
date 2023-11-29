@@ -26,7 +26,7 @@ export const fetchUsers = async () => {
         updatedAt: user.updatedAt,
         isAdmin: user.roleId === 1,
         currentTokens: tokens.currentAmountTokens,
-        amountTokens: tokens.amountTokens,
+        amountTokens: tokens.totalAmountTokens,
       };
     }));
     return usersWithTokens;

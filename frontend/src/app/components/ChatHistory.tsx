@@ -2,21 +2,16 @@
 
 import Button from '@mui/material/Button';
 import IconButton from '@mui/material/IconButton';
-import List from '@mui/material/List';
-import ListItem from '@mui/material/ListItem';
 import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
 import AddIcon from '@mui/icons-material/Add';
-import EditIcon from '@mui/icons-material/Edit';
 import LogoutIcon from '@mui/icons-material/Logout';
 import CloseIcon from '@mui/icons-material/Close';
-import React, { useState } from 'react';
+import React from 'react';
 import {
-  Dialog, DialogActions, DialogContent, DialogTitle, Grid, Menu, MenuItem, TextField,
+  Grid,
 } from '@mui/material';
 import Link from 'next/link';
-import ChatHistoryItem from './ChatHistoryItem';
-import { getHistory } from '@/services/usersService';
 import ChatHistoryItem from './ChatHistoryItem';
 
 export default function ChatHistory({
