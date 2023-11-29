@@ -34,7 +34,7 @@ export default function Wizeliner() {
   };
 
   const [userTokens, setUserTokens] = useState({
-    amountTokens: '0',
+    totalAmountTokens: '0',
     currentAmountTokens: '0',
   });
 
@@ -72,7 +72,7 @@ export default function Wizeliner() {
         profileSrc={user.imageUrl}
         isAdmin={user.isAdmin}
         currentWizecoins={userTokens.currentAmountTokens}
-        monthlyWizecoins={userTokens.amountTokens}
+        monthlyWizecoins={userTokens.totalAmountTokens}
         ChatGPTPrompts="50"
         GoogleBardPrompts="23"
         Llama2Prompts="10"

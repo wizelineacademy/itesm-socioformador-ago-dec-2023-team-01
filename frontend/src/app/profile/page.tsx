@@ -1,55 +1,24 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
-import { fetchUserCurrentTokens } from '@/services/tokenService';
+import React, { useEffect } from 'react';
+import { useSelector } from 'react-redux';
 import UserProfile from '../components/ProfileInformationPage';
 import Awaiting from '../components/awaiting';
 import NotWelcome from '../components/NotWelcome';
+import { RootState } from '../redux/store';
 
 export default function ShowProfileInformation() {
-  const [userId, setUserId] = useState('');
-  const [name, setName] = useState('');
-  const [email, setEmail] = useState('');
-  const [profileSrc, setProfileSrc] = useState('');
+  const user = useSelector((state: RootState) => state.user.userInfo);
 
-  const [userTokens, setUserTokens] = useState({
-    amountTokens: '0',
-    currentAmountTokens: '0',
-  });
-
-  useEffect(() => {
-    setUserId(`${localStorage.getItem('sub')}`);
-    setName(`${localStorage.getItem('first')} ${localStorage.getItem('last')}`);
-    setEmail(`${localStorage.getItem('email')}`);
-    setProfileSrc(`${localStorage.getItem('pic')}`);
-  }, []);
-
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        if (userId !== '') {
-          const userTokensData = await fetchUserCurrentTokens(userId);
-          setUserTokens(userTokensData);
-        }
-      } catch (e) {
-        console.error(e);
-      }
-    };
-    fetchData();
-  }, [userId]);
-
-  if (userId === '') return <Awaiting />;
+  if (!user) return <NotWelcome />;
   return (
-    <div>
-      <UserProfile
-        name={name}
-        email={email}
-        profileSrc={profileSrc}
-        areas="Software Engineer"
-        currentWizecoins={userTokens.currentAmountTokens}
-        monthlyWizecoins={userTokens.amountTokens}
-      />
-    </div>
+    <UserProfile
+      name={`${user.firstName} ${user.lastName}`}
+      email={user.email}
+      profileSrc={user.picture}
+      areas="Software Engineer"
+      currentWizecoins={`${user.tokens.currentAmountTokens}`}
+      monthlyWizecoins={`${user.tokens.totalAmountTokens}`}
+    />
   );
-  return <NotWelcome />;
 }

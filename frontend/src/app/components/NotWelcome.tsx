@@ -3,6 +3,7 @@ import {
   Typography, Stack, Button,
 } from '@mui/material';
 import Image from 'next/image';
+import Link from 'next/link';
 import styles from './iswelcome.module.css';
 
 export default function NotWelcome() {
@@ -44,21 +45,22 @@ export default function NotWelcome() {
         {' '}
         employees.
       </Typography>
-      <Button
-        href="/"
-        variant="contained"
-        sx={{
-          borderRadius: '20px',
-          textTransform: 'none',
-          bgcolor: '#E93D44',
-          fontWeight: 'bold',
-          '&:hover': {
-            bgcolor: 'red',
-          },
-        }}
-      >
-        Return to Sign In
-      </Button>
+      <Link href="/">
+        <Button
+          variant="contained"
+          sx={{
+            borderRadius: '20px',
+            textTransform: 'none',
+            bgcolor: '#E93D44',
+            fontWeight: 'bold',
+            '&:hover': {
+              bgcolor: 'red',
+            },
+          }}
+        >
+          Return to Sign In
+        </Button>
+      </Link>
     </Stack>
   );
 }

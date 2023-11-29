@@ -3,13 +3,7 @@ import { fetchUserCurrentTokens } from '@/services/tokenService';
 
 export const fetchUsers = async () => {
   try {
-    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/users`, {
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${localStorage.getItem('token')}`,
-      },
-    });
+    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/users`);
 
     if (!response.ok) {
       throw new Error('Network response was not ok');
@@ -32,7 +26,7 @@ export const fetchUsers = async () => {
         updatedAt: user.updatedAt,
         isAdmin: user.roleId === 1,
         currentTokens: tokens.currentAmountTokens,
-        amountTokens: tokens.amountTokens,
+        amountTokens: tokens.totalAmountTokens,
       };
     }));
     return usersWithTokens;
@@ -44,13 +38,7 @@ export const fetchUsers = async () => {
 
 export async function fetchUser(userId:string) {
   try {
-    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/users/${userId}`, {
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${localStorage.getItem('token')}`,
-      },
-    });
+    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/users/${userId}`);
 
     if (!response.ok) {
       throw new Error('Network response was not ok');
@@ -82,10 +70,6 @@ export async function updateUserAdminStatus(userId:string, isAdmin:boolean) {
   try {
     const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/users/admin`, {
       method: 'PATCH',
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${localStorage.getItem('token')}`,
-      },
       body: JSON.stringify({
         userId,
         isAdmin,
@@ -122,10 +106,6 @@ export const fetchUserGroups = async (userId:string) => {
   try {
     const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/users/${userId}/groups`, {
       method: 'GET',
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${localStorage.getItem('token')}`,
-      },
     });
 
     if (!response.ok) {

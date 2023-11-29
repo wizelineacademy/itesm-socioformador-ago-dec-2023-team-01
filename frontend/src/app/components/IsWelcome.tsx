@@ -6,13 +6,16 @@ import Link from 'next/link';
 import Grid from '@mui/material/Unstable_Grid2'; // Grid version 2
 import Stack from '@mui/material/Stack';
 import Image from 'next/image';
+import { useDispatch } from 'react-redux';
 import styles from './iswelcome.module.css';
 import { WelcomeProps } from './types';
+import { AppDispatch } from '../redux/store';
+import { setUserInfo } from '../redux/features/userSlice';
 
 const numeral = require('numeral');
 
 export default function IsWelcome({
-  admin,
+  isAdmin,
   name,
   wizecoins,
   picSource,
@@ -20,6 +23,8 @@ export default function IsWelcome({
   const nameParts = name.split(' ');
   const firstName = nameParts[0];
   const lastName = nameParts.splice(1).join(' ');
+  const dispatch = useDispatch<AppDispatch>();
+
   return (
     <Box sx={{
       display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '100vh',
@@ -37,7 +42,7 @@ export default function IsWelcome({
             >
               Welcome
               {' '}
-              {admin ? 'Administrator' : 'Wizeliner'}
+              {isAdmin ? 'Administrator' : 'Wizeliner'}
               .
             </Typography>
             <Stack direction="row" justifyContent="space-between">
@@ -72,7 +77,7 @@ export default function IsWelcome({
           </Grid>
         </Grid>
         <Grid spacing={4} container display="flex" justifyContent="center" alignItems="center">
-          <Grid>
+          {/* <Grid>
             <Typography
               variant="h6"
               sx={{ color: 'white' }}
@@ -83,32 +88,33 @@ export default function IsWelcome({
                 href="/api/auth/logout"
                 className={styles.return}
                 onClick={() => {
-                  localStorage.clear();
+                  dispatch(setUserInfo(null));
                 }}
               >
                 Return to Sign-in
               </Link>
             </Typography>
-          </Grid>
+          </Grid> */}
           <Grid>
-            {admin
+            {isAdmin
               && (
-              <Button
-                variant="contained"
-                href="/admin"
-                sx={{
-                  borderRadius: '20px',
-                  textTransform: 'none',
-                  bgcolor: '#E93D44',
-                  fontWeight: 'bold',
-                  '&:hover': {
-                    bgcolor: 'red',
-                  },
-                }}
-              >
-                {' '}
-                Go to Dashboard
-              </Button>
+                <Link href="/admin">
+                  <Button
+                    variant="contained"
+                    sx={{
+                      borderRadius: '20px',
+                      textTransform: 'none',
+                      bgcolor: '#E93D44',
+                      fontWeight: 'bold',
+                      '&:hover': {
+                        bgcolor: 'red',
+                      },
+                    }}
+                  >
+                    {' '}
+                    Go to Dashboard
+                  </Button>
+                </Link>
               )}
           </Grid>
         </Grid>

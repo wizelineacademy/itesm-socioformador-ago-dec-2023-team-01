@@ -1,10 +1,10 @@
-export const fetchGroups = async () => {
+export const fetchGroups = async (jwtToken: string) => {
   try {
     const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/group`, {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
-        Authorization: `Bearer ${localStorage.getItem('token')}`,
+        Authorization: `Bearer ${jwtToken}`,
       },
     });
 
@@ -44,10 +44,6 @@ export const fetchGroups = async () => {
   }
 };
 
-export const fetchGroup = () => {
-  console.log('fetchGroup');
-};
-
 export const fetchUserCurrentTokens = async (userId:string) => {
   try {
     const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/users/${userId}/tokens`);
@@ -66,13 +62,13 @@ export const fetchUserCurrentTokens = async (userId:string) => {
   }
 };
 
-export const fetchWizelinersInGroup = async (groupId:string) => {
+export const fetchWizelinersInGroup = async (groupId:string, jwtToken: string) => {
   try {
     const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/group/${groupId}/users`, {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
-        Authorization: `Bearer ${localStorage.getItem('token')}`,
+        Authorization: `Bearer ${jwtToken}`,
       },
     });
 
@@ -95,7 +91,7 @@ export const fetchWizelinersInGroup = async (groupId:string) => {
   }
 };
 
-export const createGroup = async (groupName:string) => {
+export const createGroup = async (groupName:string, jwtToken: string) => {
   try {
     const data = {
       name: groupName,
@@ -105,7 +101,7 @@ export const createGroup = async (groupName:string) => {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        Authorization: `Bearer ${localStorage.getItem('token')}`,
+        Authorization: `Bearer ${jwtToken}`,
       },
       body: JSON.stringify(data),
     });
@@ -119,13 +115,13 @@ export const createGroup = async (groupName:string) => {
   }
 };
 
-export const deleteGroup = async (groupID:number) => {
+export const deleteGroup = async (groupID:number, jwtToken: string) => {
   try {
     const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/group/${groupID}`, {
       method: 'DELETE',
       headers: {
         'Content-Type': 'application/json',
-        Authorization: `Bearer ${localStorage.getItem('token')}`,
+        Authorization: `Bearer ${jwtToken}`,
       },
     });
 
@@ -138,7 +134,7 @@ export const deleteGroup = async (groupID:number) => {
   }
 };
 
-export const addUserToGroup = async (groupId:number, userId:number) => {
+export const addUserToGroup = async (groupId:number, userId:number, jwtToken: string) => {
   try {
     const data = {
       userId,
@@ -147,7 +143,7 @@ export const addUserToGroup = async (groupId:number, userId:number) => {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        Authorization: `Bearer ${localStorage.getItem('token')}`,
+        Authorization: `Bearer ${jwtToken}`,
       },
       body: JSON.stringify(data),
     });
@@ -160,14 +156,14 @@ export const addUserToGroup = async (groupId:number, userId:number) => {
   }
 };
 
-export const removeUserToGroup = async (groupId:string, userId:string) => {
+export const removeUserToGroup = async (groupId:string, userId:string, jwtToken: string) => {
   try {
     console.log(`About to remove ${userId} from group ${groupId}`);
     const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/group/${groupId}/user/${userId}`, {
       method: 'DELETE',
       headers: {
         'Content-Type': 'application/json',
-        Authorization: `Bearer ${localStorage.getItem('token')}`,
+        Authorization: `Bearer ${jwtToken}`,
       },
     });
 

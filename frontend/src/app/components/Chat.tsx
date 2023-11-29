@@ -16,11 +16,12 @@ import CheckIcon from '@mui/icons-material/Check';
 import { useChat, Message } from 'ai/react';
 import Markdown from 'react-markdown';
 import CircularProgress from '@mui/material/CircularProgress';
-import { ChatRequestOptions } from 'ai';
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
 import { nord } from 'react-syntax-highlighter/dist/esm/styles/prism';
 import { Button, Stack } from '@mui/material';
 import CopyToClipboard from 'react-copy-to-clipboard';
+import { ChatRequestOptions } from 'ai';
+import { useSelector } from 'react-redux';
 import {
   numTokensFromMessage,
   createConversation,
@@ -28,6 +29,8 @@ import {
   getConversationFullChat,
 } from '../../services/chatService';
 import Awaiting from './awaiting';
+import { RootState } from '../redux/store';
+import NotWelcome from './NotWelcome';
 
 interface ChatProps {
   input: string;
@@ -67,8 +70,7 @@ async function getMessages(conversationId: number) {
 export default function Chat({
   setConversationId, conversationId, getChatHistory, input, setInput, handleInputChange, handleSubmit, isLoading, messages, setMessages,
 }: ChatProps) {
-  const [userId, setUserId] = useState('');
-  const [profileSrc, setProfileSrc] = useState('');
+  const user = useSelector((state: RootState) => state.user.userInfo);
   const [isCopied, setCopied] = useState(false);
   const scrollRef = useRef(null);
   const formRef = useRef<HTMLFormElement>(null);
@@ -82,11 +84,6 @@ export default function Chat({
   useEffect(() => {
     scrollToBottom();
   }, [messages]);
-
-  useEffect(() => {
-    setUserId(`${localStorage.getItem('sub')}`);
-    setProfileSrc(`${localStorage.getItem('pic')}`);
-  }, []);
 
   // actualizar el conversationId cuando cambie el id
   useEffect(() => {
@@ -106,9 +103,10 @@ export default function Chat({
 
   // crear una conversacion si no hay ninguna
   useEffect(() => {
+    if (!user) return;
     if (conversationId === 0 && messages.length === 1) {
       const title = messages[0].content.slice(0, 30).trimEnd();
-      createConversation(userId ?? '', title).then((conversation) => {
+      createConversation(user.id, title).then((conversation) => {
         setConversationId(conversation.id);
         getChatHistory();
       });
@@ -124,7 +122,8 @@ export default function Chat({
     }, 1000);
   };
 
-  if (userId === '') return <Awaiting />;
+  if (!user) return <NotWelcome />;
+
   return (
     <Box
       height={{
@@ -259,7 +258,7 @@ export default function Chat({
             {message.role !== 'assistant' && (
               <Avatar
                 alt="User Picture"
-                src={profileSrc || 'https://img.freepik.com/premium-vector/user-profile-icon-flat-style-member-avatar-vector-illustration-isolated-background-human-permission-sign-business-concept_157943-15752.jpg?size=338&ext=jpg&ga=GA1.1.1880011253.1700438400&semt=ais'}
+                src={user.picture}
                 sx={{
                   width: 40,
                   height: 40,
