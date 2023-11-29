@@ -12,10 +12,10 @@ body {
   padding: 0;
 }
 
-html, body {
+/* html, body {
   max-height: 100vh;
   overflow-y: hidden;
- }
+ } */
 
 span {
   color: #e93d44;
