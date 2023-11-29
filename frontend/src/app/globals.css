@@ -12,6 +12,11 @@ body {
   padding: 0;
 }
 
+html, body {
+  max-height: 100vh;
+  overflow-y: hidden;
+ }
+
 span {
   color: #e93d44;
 }
@@ -29,7 +34,7 @@ span {
 }
 
 ::-webkit-scrollbar {
-  width: 10px; /* Width of the scrollbar */
+  width: 5px; /*Width of the scrollbar */
 }
 
 ::-webkit-scrollbar-track {
@@ -37,6 +42,6 @@ span {
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #888; /* Thumb color */
-  border-radius: 5px; /* Border radius of the thumb */
+  background: #595858; /* Thumb color */
+  border-radius: 2px; /* Border radius of the thumb */
 }

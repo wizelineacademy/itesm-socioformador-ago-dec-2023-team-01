@@ -141,14 +141,11 @@ export default function Chat({
 
   return (
     <Box
-      height={{
-        xs: '91vh',
-      }}
       sx={{
-        width: 'calc(100vw - 315px)',
+        height: '100%',
+        width: '100%',
         display: 'flex',
         flexDirection: 'column',
-        borderRadius: '20px',
       }}
     >
       <Box

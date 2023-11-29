@@ -3,17 +3,17 @@
 import React, { useEffect, useState } from 'react';
 import { Message } from 'ai';
 import { useChat } from 'ai/react';
-import { Hidden } from '@mui/material';
+import { Box, Grid, Stack } from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
 import Chat from '@/app/components/Chat';
-import ChatHistory from '@/app/components/ChatHistory';
-import Navbar from '@/app/components/Navbar';
 import { getHistory } from '@/services/usersService';
 import { postToConversation } from '@/services/chatService';
 import { AppDispatch, RootState } from '../redux/store';
 import NotWelcome from '../components/NotWelcome';
 import { susbtractTokensToUser } from '@/services/tokenService';
 import { subtractTokens, updateCurrentTokens } from '../redux/features/userSlice';
+import TopNavbar from './components/topNavbar';
+import SideNavbar from './components/sideNavbar';
 
 export default function Mainpage() {
   // const [showChatHistory, setShowChatHistory] = useState(false);
@@ -117,11 +117,10 @@ export default function Mainpage() {
   if (!user) return <NotWelcome />;
 
   return (
-    <Stack>
+    <Stack overflow="hidden">
       <Box
         sx={{
           height: '75px',
-          position: 'sticky',
           top: '0',
           background: 'rgba(17, 24, 35, 0.4)',
           boxShadow: '0 4px 30px rgba(0, 0, 0, 0.1)',
@@ -137,22 +136,16 @@ export default function Mainpage() {
           picSource={user.picture}
         />
       </Box>
-      <Stack direction="row">
-        <Box
-          sx={{
-            height: 'calc(100vh - 76px)',
-            position: 'fixed',
-            top: '76px',
-          }}
-        >
+      <Grid container style={{ height: 'calc(100vh - 75px)' }}>
+        <Grid item lg={2}>
           <SideNavbar
             chatHistory={chatsHistory}
             handleChatItemClick={handleChatItemClick}
             getChatHistory={getChatHistory}
             conversationId={conversationId}
           />
-        </Box>
-        <Stack sx={{ paddingLeft: '300px' }}>
+        </Grid>
+        <Grid item lg={10}>
           <Chat
             setConversationId={setConversationId}
             conversationId={conversationId}
@@ -166,8 +159,8 @@ export default function Mainpage() {
             setMessages={setMessages}
             stopChat={stop}
           />
-        </Stack>
-      </Stack>
+        </Grid>
+      </Grid>
     </Stack>
   );
 }
