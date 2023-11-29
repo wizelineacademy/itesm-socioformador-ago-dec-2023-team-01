@@ -15,7 +15,7 @@ import { useDispatch } from 'react-redux';
 import { WelcomeProps } from '@/app/components/types';
 import styles from './sidenav.module.css';
 import LogoutPopup from './logoutPopup';
-import { setUserInfo } from '../../redux/features/userSlice';
+import { resetUser } from '../../redux/features/userSlice';
 import { AppDispatch } from '@/app/redux/store';
 
 const numeral = require('numeral');
@@ -38,7 +38,7 @@ export function ProfileInfo({
   };
 
   const handleLogOut = () => {
-    dispatch(setUserInfo(null));
+    dispatch(resetUser());
     setOpen(false);
   };
 
