@@ -62,6 +62,24 @@ export const fetchUserCurrentTokens = async (userId:string) => {
   }
 };
 
+export const fetchUserTotalTokens = async (userId:string) => {
+  try {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/users/${userId}/tokens`);
+
+    if (!response.ok) {
+      throw new Error('Network response was not ok');
+    }
+
+    const data = await response.json();
+    const tokensAmount = data.length > 0 ? data[0].amount : 0;
+
+    return tokensAmount;
+  } catch (error) {
+    console.log(error);
+    return 0;
+  }
+};
+
 export const fetchWizelinersInGroup = async (groupId:string, jwtToken: string) => {
   try {
     const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/group/${groupId}/users`, {
@@ -82,6 +100,7 @@ export const fetchWizelinersInGroup = async (groupId:string, jwtToken: string) =
       username: `${user.firstName} ${user.lastName}`,
       idAdmin: user.roleId === 1,
       wizecoins: await fetchUserCurrentTokens(user.id),
+      totalWizecoins: await fetchUserTotalTokens(user.id),
     })));
     console.log(usersInGroup);
     return usersInGroup;

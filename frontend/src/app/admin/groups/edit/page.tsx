@@ -24,7 +24,7 @@ export default function EditGroups() {
   const id = params.get('id');
   const [groupName, setGroupName] = useState('Software Engineers');
   const [isEditing, setIsEditing] = useState(false);
-  const [wizeCount, setWizeCount] = useState({ totalWizeCoins: 0, totalUsers: 0 });
+  const [wizeCount, setWizeCount] = useState({ totalFinalWizeCoins: 0, totalWizeCoins: 0, totalUsers: 0 });
   const [isPopupOpen, setPopupOpen] = useState(false);
   const [triggerFetch, setTriggerFetch] = useState(false);
   const router = useRouter();
@@ -41,7 +41,7 @@ export default function EditGroups() {
     router.back();
   };
 
-  const handleWizeCount = (wizeCountData:{ totalWizeCoins:number, totalUsers:number }) => {
+  const handleWizeCount = (wizeCountData:{ totalFinalWizeCoins: number, totalWizeCoins:number, totalUsers:number }) => {
     console.log(wizeCountData);
     setWizeCount(wizeCountData);
   };
@@ -260,10 +260,63 @@ export default function EditGroups() {
                     variant="h6"
                     sx={{
                       fontWeight: 'bold',
-                      color: '#4BE93D',
+                      color: '#f5f264',
                     }}
                   >
                     {wizeCount.totalWizeCoins}
+                  </Typography>
+                </Box>
+              </Tooltip>
+              <Typography
+                variant="body1"
+                sx={{
+                  color: 'white',
+                }}
+              >
+                Current Wizecoins
+              </Typography>
+            </Box>
+            <Box
+              display="flex"
+              alignItems="center"
+              justifyContent="space-between"
+              marginRight={1}
+              marginTop={1}
+            >
+              {/* Total Wizecoins */}
+              <Tooltip title="Total ammount of wizecoins">
+                <Box
+                  sx={{
+                    width: '50%',
+                    height: '40px',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    border: '3px solid #4D545D',
+                    borderRadius: '10px',
+                  }}
+                >
+                  <Box
+                    sx={{
+                      marginRight: '5px',
+                    }}
+                  >
+                    <Image
+                      src="/wizecoin.svg"
+                      alt="Wizecoin Icon"
+                      width={12}
+                      height={12}
+                      layout="fixed"
+                    />
+                  </Box>
+                  <Typography
+                    variant="h6"
+                    sx={{
+                      fontWeight: 'bold',
+                      color: '#4BE93D',
+                    }}
+                  >
+                    {wizeCount.totalFinalWizeCoins}
                   </Typography>
                 </Box>
               </Tooltip>
