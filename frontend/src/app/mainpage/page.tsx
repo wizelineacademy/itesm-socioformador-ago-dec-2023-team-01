@@ -6,31 +6,16 @@ import React, { useEffect, useState } from 'react';
 import { Message } from 'ai';
 import { useChat } from 'ai/react';
 import { Hidden } from '@mui/material';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import Chat from '@/app/components/Chat';
 import ChatHistory from '@/app/components/ChatHistory';
 import Navbar from '@/app/components/Navbar';
 import { getHistory } from '@/services/usersService';
-import { numTokensFromMessage, postToConversation } from '@/services/chatService';
-import { RootState } from '../redux/store';
+import { postToConversation } from '@/services/chatService';
+import { AppDispatch, RootState } from '../redux/store';
 import NotWelcome from '../components/NotWelcome';
-
-const postMessagesToConversation = async (conversationId: number, messages: Message[]) => {
-  const last2Messages = messages.slice(-2);
-  const prompt = last2Messages.find((message) => message.role === 'user');
-  const response = last2Messages.find((message) => message.role === 'assistant');
-  if (prompt && response && conversationId) {
-    if (response.id.startsWith('Nic0WzPpt') || prompt.id.startsWith('Nic0WzPpt')) {
-      return;
-    }
-    const tokensFromPrompt = numTokensFromMessage(prompt);
-    const tokensFromResponse = numTokensFromMessage(response);
-    const tokens = tokensFromPrompt + tokensFromResponse;
-
-    await postToConversation(prompt.content, response.content, conversationId, tokens);
-    console.log('posted to conversation', messages);
-  }
-};
+import { susbtractTokensToUser } from '@/services/tokenService';
+import { subtractTokens, updateCurrentTokens } from '../redux/features/userSlice';
 
 function Mainpage() {
   const [showChatHistory, setShowChatHistory] = useState(false);
@@ -44,15 +29,45 @@ function Mainpage() {
     api: '/api/chat',
   });
   const user = useSelector((state: RootState) => state.user.userInfo);
+  const dispatch = useDispatch<AppDispatch>();
+
+  const postMessagesToConversation = async (convId: number, messagess: Message[], userId: string) => {
+    const last2Messages = messagess.slice(-2);
+    const prompt = last2Messages.find((message) => message.role === 'user');
+    const response = last2Messages.find((message) => message.role === 'assistant');
+    if (prompt && response && convId) {
+      if (response.id.startsWith('Nic0WzPpt') || prompt.id.startsWith('Nic0WzPpt')) {
+        return;
+      }
+      // post to conversation
+      let tokensFromPost = 0;
+      try {
+        tokensFromPost = await postToConversation(prompt, response, convId);
+      } catch (error) {
+        console.log(error);
+      }
+      // substract user tokens
+      try {
+        if (tokensFromPost > 0) {
+          const updatedUser = await susbtractTokensToUser(userId, tokensFromPost);
+          dispatch(subtractTokens(tokensFromPost));
+          dispatch(updateCurrentTokens(updatedUser.currentAmount));
+        }
+      } catch (error) {
+        console.log(error);
+      }
+      console.log('posted to conversation', messagess);
+    }
+  };
 
   const executePostMessagesToConversation = async (convId: number) => {
     if (!chatIsLoading && isChatStopped) {
       setIsChatStopped(false);
       setPrevConversationId(0);
       // console.log('finishing posting messages to conversation with id', convId);
-      postMessagesToConversation(convId, messages);
+      postMessagesToConversation(convId, messages, user?.id ?? '');
     } else if (!chatIsLoading) {
-      postMessagesToConversation(convId, messages);
+      postMessagesToConversation(convId, messages, user?.id ?? '');
     } else {
       // console.log('loading');
     }

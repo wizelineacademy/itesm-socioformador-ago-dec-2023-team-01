@@ -1,3 +1,4 @@
+import { Message } from 'ai';
 import {
   encodingForModel,
   getEncoding,
@@ -22,27 +23,31 @@ export function numTokensFromMessage(message: { content: string }, model: string
       See https://github.com/openai/openai-python/blob/main/chatml.md for information on how messages are converted to tokens.`);
 }
 
-export const postToConversation = async (prompt: any, content: any, conversationId: number, tokenCost: number) => {
+export const postToConversation = async (prompt: Message, content: Message, conversationId: number) => {
+  const tokensFromPrompt = numTokensFromMessage(prompt);
+  const tokensFromResponse = numTokensFromMessage(content);
+  const tokens = tokensFromPrompt + tokensFromResponse;
+  // post to conversation
   try {
     const body = {
-      content,
-      prompt,
+      content: content.content,
+      prompt: prompt.content,
       conversationId,
-      tokenCost,
+      tokenCost: tokens,
     };
-    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/posts/`, {
+    await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/posts/`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify(body),
     });
-    const postId = await response.json();
-    return postId;
+    return tokens;
   } catch (error) {
     console.error(`error posting to a conversation: ${error}`);
-    return 0;
+    return -1;
   }
+  // update user's tokens
 };
 
 export const createConversation = async (userId: string, title: string) => {
