@@ -336,7 +336,7 @@ export default function Chat({
             fullWidth
             value={input}
             multiline
-            disabled={user.tokens.currentAmountTokens === 0}
+            disabled={user.tokens.currentAmountTokens === 0 || isLoading}
             onKeyDown={(e) => {
               if (e.key === 'Enter' && !e.shiftKey) {
                 e.preventDefault();
