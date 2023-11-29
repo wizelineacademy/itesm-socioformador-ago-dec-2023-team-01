@@ -7,6 +7,7 @@ import Typography from '@mui/material/Typography';
 // import Button from '@mui/material/Button';
 import SettingsIcons from '@mui/icons-material/Settings';
 import IconButton from '@mui/material/IconButton';
+import Link from 'next/link';
 // import WizecoinIcon from "./wizecoin.svg";
 import Image from 'next/image';
 import MenuIcon from '@mui/icons-material/Menu';
@@ -35,10 +36,13 @@ export default function Navbar({
       justifyContent="space-between"
       alignItems="center"
       padding="10px"
+      height={{
+        xs: '6vh', sm: '6vh', md: '6vh', lg: '5vh',
+      }}
     >
       {/* display on larger screens, hidden on small screens */}
       <Box sx={{ display: { xs: 'none', sm: 'block' } }}>
-        <WTitle1 text="Wize" redText="Prompt" />
+        <WTitle1 text="Wize" redText="Prompt" variantBig={false} paddings={false} />
       </Box>
 
       {/* burger icon - display only on small screens */}
@@ -54,7 +58,7 @@ export default function Navbar({
 
       <Box display="flex" alignItems="center">
         <Box marginRight="10px" display="flex" flexDirection="column">
-          <Typography variant="h6" fontWeight="bold" color="white">
+          <Typography variant="body1" fontWeight="bold" color="white">
             {firstName}
             {' '}
             {lastName}
@@ -69,12 +73,12 @@ export default function Navbar({
               <Image
                 src="wizecoin.svg"
                 alt="Wizecoin Icon"
-                width={20}
-                height={20}
+                width={18}
+                height={18}
                 layout="fixed"
               />
             </Box>
-            <Typography color="#4BE93D">{number}</Typography>
+            <Typography variant="body2" color="#4BE93D">{number}</Typography>
           </Box>
         </Box>
 
@@ -82,21 +86,24 @@ export default function Navbar({
           <Avatar
             alt={`${firstName} ${lastName}`}
             src={profileSrc}
-            sx={{ width: 56, height: 56 }}
+            sx={{ width: 45, height: 45 }}
           />
-          <IconButton
-            href="/profile"
-            size="small"
-            sx={{
-              position: 'absolute',
-              left: 30,
-              bottom: -10,
-              backgroundColor: 'white',
-              color: 'black',
-            }}
-          >
-            <SettingsIcons />
-          </IconButton>
+          <Link href="/profile">
+            <IconButton
+              size="small"
+              sx={{
+                position: 'absolute',
+                left: 30,
+                bottom: -5,
+                backgroundColor: 'white',
+                color: 'black',
+                width: 20,
+                height: 20,
+              }}
+            >
+              <SettingsIcons />
+            </IconButton>
+          </Link>
         </Box>
       </Box>
     </Box>

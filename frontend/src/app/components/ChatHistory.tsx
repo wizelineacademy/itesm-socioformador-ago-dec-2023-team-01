@@ -2,44 +2,34 @@
 
 import Button from '@mui/material/Button';
 import IconButton from '@mui/material/IconButton';
-import List from '@mui/material/List';
-import ListItem from '@mui/material/ListItem';
 import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
 import AddIcon from '@mui/icons-material/Add';
-import DeleteIcon from '@mui/icons-material/Delete';
 import LogoutIcon from '@mui/icons-material/Logout';
 import CloseIcon from '@mui/icons-material/Close';
 import React from 'react';
+import {
+  Grid,
+} from '@mui/material';
+import Link from 'next/link';
+import ChatHistoryItem from './ChatHistoryItem';
 
-interface ChatHistoryProps {
-  closeChatHistory?: () => void;
-}
-
-export default function ChatHistory({ closeChatHistory }: ChatHistoryProps) {
-  const chats = [
-    'NextJS breakdown',
-    'Responsive element',
-    'Inner join explanation',
-    'Prisma setup',
-    'PostgresSQL shell',
-    'Nvm in windows',
-    'User response',
-    'Best artist of 2023',
-    'Best DB for next js',
-    'Best framework',
-    'OpenAI API',
-  ];
-
-  // const [openChatHistory, setOpenChatHistory] = useState(false);
-
+export default function ChatHistory({
+  closeChatHistory,
+  handleChatItemClick,
+  chatHistory,
+  getChatHistory,
+  conversationId,
+}:
+{ closeChatHistory: () => void; handleChatItemClick: (id: number) => void; chatHistory: { title: string, id: number }[]; getChatHistory: () => Promise<void>; conversationId: number; }) {
   return (
     <Box
+      height={{
+        xs: '88vh',
+      }}
       sx={{
         backgroundColor: '#111823',
         padding: '10px',
-        height: '70vh',
-        // overflowY: "auto",
         borderRadius: '20px',
         display: 'flex',
         flexDirection: 'column',
@@ -47,14 +37,26 @@ export default function ChatHistory({ closeChatHistory }: ChatHistoryProps) {
     >
       <Box
         display="flex"
+        justifyContent="flex-end"
+        sx={{ display: { xs: 'block', sm: 'none' } }}
+      >
+        <IconButton color="inherit" onClick={closeChatHistory}>
+          <CloseIcon sx={{ color: 'white' }} />
+        </IconButton>
+      </Box>
+      <Grid
+        container
         justifyContent="space-between"
-        alignItems="center"
+        spacing={1}
         marginBottom="10px"
       >
-        <Box display="flex" alignItems="center">
+        <Grid item xs={12} lg={6}>
           <Button
             variant="outlined"
             startIcon={<AddIcon sx={{ color: 'white' }} />}
+            onClick={() => {
+              handleChatItemClick(0);
+            }}
             sx={{
               textTransform: 'none',
               borderRadius: '20px',
@@ -69,33 +71,33 @@ export default function ChatHistory({ closeChatHistory }: ChatHistoryProps) {
               '& .MuiTouchRipple-root span': {
                 backgroundColor: 'white',
               },
+              width: '100%',
             }}
           >
             New Chat
           </Button>
-        </Box>
-        <Box
-          display="flex"
-          justifyContent="flex-end"
-          sx={{ display: { xs: 'block', sm: 'none' } }}
+        </Grid>
+        <Grid
+          xs={12}
+          lg={6}
+          item
         >
-          <IconButton color="inherit" onClick={closeChatHistory}>
-            <CloseIcon sx={{ color: 'white' }} />
-          </IconButton>
-        </Box>
-
-        <Button
-          variant="outlined"
-          color="error"
-          startIcon={<LogoutIcon />}
-          sx={{
-            textTransform: 'none',
-            borderRadius: '20px',
-          }}
-        >
-          Logout
-        </Button>
-      </Box>
+          <Link href="/api/auth/logout">
+            <Button
+              variant="outlined"
+              color="error"
+              startIcon={<LogoutIcon />}
+              sx={{
+                textTransform: 'none',
+                borderRadius: '20px',
+                width: '100%',
+              }}
+            >
+              Logout
+            </Button>
+          </Link>
+        </Grid>
+      </Grid>
 
       <Typography
         variant="h5"
@@ -127,56 +129,30 @@ export default function ChatHistory({ closeChatHistory }: ChatHistoryProps) {
         }}
       >
         <Box sx={{ padding: '0 15px' }}>
-          <List>
-            {chats.map((chat, index) => (
-              <ListItem
-                button
-                key={index}
-                sx={{
-                  justifyContent: 'space-between',
-                  marginBottom: '10px',
-                  border: '1.5px solid #4D545D',
-                  borderRadius: '10px',
-                  // padding: "5px 10px",
-                  overflow: 'hidden',
-                  whiteSpace: 'nowrap',
-                  textOverflow: 'ellipsis',
-                }}
-              >
-                <Typography
-                  variant="body1"
-                  sx={{
-                    color: 'white',
-                    flexGrow: 1,
-                    fontWeight: 'bold',
-                    marginRight: '10px',
-                    textOverflow: 'ellipsis',
-                    overflow: 'hidden',
-                  }}
-                >
-                  {chat}
-                </Typography>
-                <IconButton size="small" sx={{ color: '#4D545D' }}>
-                  <DeleteIcon />
-                </IconButton>
-              </ListItem>
-            ))}
-          </List>
+          {chatHistory.map((chatInfo) => (
+            <ChatHistoryItem
+              chatInfo={chatInfo}
+              handleChatItemClick={handleChatItemClick}
+              getChatHistory={getChatHistory}
+              conversationId={conversationId}
+            />
+          ))}
         </Box>
       </Box>
 
       <Box display="flex" justifyContent="center" marginTop="20px">
-        <Button
-          href="/welcome"
-          variant="contained"
-          color="error"
-          sx={{
-            borderRadius: '5px',
-            textTransform: 'none',
-          }}
-        >
-          Return Home
-        </Button>
+        <Link href="/welcome">
+          <Button
+            variant="contained"
+            color="error"
+            sx={{
+              borderRadius: '5px',
+              textTransform: 'none',
+            }}
+          >
+            Return Home
+          </Button>
+        </Link>
       </Box>
     </Box>
   );

@@ -1,51 +1,24 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
-import { useUser } from '@auth0/nextjs-auth0/client';
-import { fetchUserCurrentTokens } from '@/services/tokenService';
+import React, { useEffect } from 'react';
+import { useSelector } from 'react-redux';
 import UserProfile from '../components/ProfileInformationPage';
 import Awaiting from '../components/awaiting';
 import NotWelcome from '../components/NotWelcome';
+import { RootState } from '../redux/store';
 
 export default function ShowProfileInformation() {
-  const { user, error, isLoading } = useUser();
+  const user = useSelector((state: RootState) => state.user.userInfo);
 
-  const [userTokens, setUserTokens] = useState({
-    amountTokens: '0',
-    currentAmountTokens: '0',
-  });
-
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        if (user && user.sub) {
-          const userTokensData = await fetchUserCurrentTokens(user.sub);
-          setUserTokens(userTokensData);
-        }
-      } catch (e) {
-        console.error(e);
-      }
-    };
-    fetchData();
-  }, [user]);
-
-  if (isLoading) return <Awaiting />;
-  if (error) return <div>{error.message}</div>;
-  console.log('outside', user);
-  if (user) {
-    console.log('inside', user);
-    return (
-      <div>
-        <UserProfile
-          name={user.name ?? ''}
-          email={user.email ?? ''}
-          profileSrc={user.picture ?? ''}
-          areas="Software Engineer"
-          currentWizecoins={userTokens.currentAmountTokens}
-          monthlyWizecoins={userTokens.amountTokens}
-        />
-      </div>
-    );
-  }
-  return <NotWelcome />;
+  if (!user) return <NotWelcome />;
+  return (
+    <UserProfile
+      name={`${user.firstName} ${user.lastName}`}
+      email={user.email}
+      profileSrc={user.picture}
+      areas="Software Engineer"
+      currentWizecoins={`${user.tokens.currentAmountTokens}`}
+      monthlyWizecoins={`${user.tokens.totalAmountTokens}`}
+    />
+  );
 }

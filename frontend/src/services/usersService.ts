@@ -1,33 +1,35 @@
 // eslint-disable-next-line import/prefer-default-export
+import { fetchUserCurrentTokens } from '@/services/tokenService';
+
 export const fetchUsers = async () => {
   try {
-    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/users`, {
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${localStorage.getItem('token')}`,
-      },
-    });
+    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/users`);
 
     if (!response.ok) {
       throw new Error('Network response was not ok');
     }
 
-    let users = await response.json();
+    const users = await response.json();
     console.log(users);
-    users = users.map((user:any) => ({
-      id: user.id,
-      firstName: user.firstName,
-      lastName: user.lastName,
-      fullName: `${user.firstName} ${user.lastName}`,
-      imageUrl: user.imageUrl,
-      email: user.email,
-      roleId: user.role,
-      createdAt: user.createdAt,
-      updatedAt: user.updatedAt,
-      isAdmin: user.roleId === 1,
+
+    const usersWithTokens = await Promise.all(users.map(async (user: any) => {
+      const tokens = await fetchUserCurrentTokens(user.id);
+      return {
+        id: user.id,
+        firstName: user.firstName,
+        lastName: user.lastName,
+        fullName: `${user.firstName} ${user.lastName}`,
+        imageUrl: user.imageUrl,
+        email: user.email,
+        roleId: user.role,
+        createdAt: user.createdAt,
+        updatedAt: user.updatedAt,
+        isAdmin: user.roleId === 1,
+        currentTokens: tokens.currentAmountTokens,
+        amountTokens: tokens.totalAmountTokens,
+      };
     }));
-    return users;
+    return usersWithTokens;
   } catch (error) {
     console.error(error);
     throw error;
@@ -36,13 +38,7 @@ export const fetchUsers = async () => {
 
 export async function fetchUser(userId:string) {
   try {
-    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/users/${userId}`, {
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${localStorage.getItem('token')}`,
-      },
-    });
+    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/users/${userId}`);
 
     if (!response.ok) {
       throw new Error('Network response was not ok');
@@ -74,10 +70,6 @@ export async function updateUserAdminStatus(userId:string, isAdmin:boolean) {
   try {
     const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/users/admin`, {
       method: 'PATCH',
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${localStorage.getItem('token')}`,
-      },
       body: JSON.stringify({
         userId,
         isAdmin,
@@ -114,10 +106,6 @@ export const fetchUserGroups = async (userId:string) => {
   try {
     const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/users/${userId}/groups`, {
       method: 'GET',
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${localStorage.getItem('token')}`,
-      },
     });
 
     if (!response.ok) {
@@ -135,5 +123,16 @@ export const fetchUserGroups = async (userId:string) => {
   } catch (error) {
     console.error(error);
     throw error;
+  }
+};
+
+export const getHistory = async (userId: string) => {
+  try {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/users/${userId}/conversations`);
+    const history = await response.json();
+    return history;
+  } catch (error) {
+    console.error(`error getting history: ${error}`);
+    return [];
   }
 };

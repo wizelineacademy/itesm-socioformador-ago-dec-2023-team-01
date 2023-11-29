@@ -305,7 +305,7 @@ groupRouter.patch('/:groupId/area', async (req: Request, res) => {
 });
 /**
  * @openapi
- * '/api/group/{id}/tokens':
+ * '/api/group/tokens':
  *   patch:
  *     tags:
  *       - Groups
@@ -327,7 +327,7 @@ groupRouter.patch('/:groupId/area', async (req: Request, res) => {
  *       500:
  *         description: Internal server error
  */
-groupRouter.patch('/:id/tokens', async (req, res) => {
+groupRouter.patch('/tokens', async (req, res) => {
   try {
     await groupService.setTokensToUsersFromGroup(
       req.body.groupId,

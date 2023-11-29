@@ -10,11 +10,13 @@ import { DataGrid, GridColDef } from '@mui/x-data-grid';
 import Button from '@mui/material/Button';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
+import { useSelector } from 'react-redux';
 import { fetchWizelinersInGroup, removeUserToGroup } from '@/services/groupService';
 import Popup from '@/app/components/Popup';
 import Styles from './DataGrid.module.css';
+import { RootState } from '@/app/redux/store';
 
-export default function DataTable({ groupId, wizeCount }:{ groupId: string, wizeCount:Function }) {
+export default function DataTable({ groupId, wizeCount, triggerFetch }:{ groupId: string, wizeCount:Function, triggerFetch:Boolean }) {
   const [usersGroup, setUsersGroup] = useState([]);
   const [totals, setTotals] = useState({ totalWizeCoins: 0, totalUsers: 0 });
   const [change, setChange] = useState(true);
@@ -22,20 +24,21 @@ export default function DataTable({ groupId, wizeCount }:{ groupId: string, wize
   const [popupText, setPopupText] = useState<string[]>([]);
   const [currUser, setCurrUser] = useState('');
   const [currName, setCurrName] = useState('');
+  const userRedux = useSelector((state: RootState) => state.user.userInfo);
 
   const router = useRouter();
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const usersInGroup = await fetchWizelinersInGroup(groupId);
+        const usersInGroup = await fetchWizelinersInGroup(groupId, userRedux?.jwtToken ?? '');
         setUsersGroup(usersInGroup);
       } catch (error) {
         console.log(error);
       }
     };
     fetchData();
-  }, [groupId, change]);
+  }, [groupId, change, triggerFetch]);
 
   useEffect(() => {
     const { totalWizeCoins, totalUsers } = usersGroup.reduce(
@@ -64,7 +67,7 @@ export default function DataTable({ groupId, wizeCount }:{ groupId: string, wize
   };
 
   const handleGoodButtonClick = () => {
-    removeUserToGroup(groupId, currUser);
+    removeUserToGroup(groupId, currUser, userRedux?.jwtToken ?? '');
     setChange(!change);
     handleClosePopup();
     showNotification('error', currName, 'Removed');

@@ -1,41 +1,34 @@
 'use client';
 
-import React, { useEffect, useState } from 'react';
+import React, { } from 'react';
 import { Box, Stack } from '@mui/material';
+import { useSelector } from 'react-redux';
+import { fetchUserCurrentTokens } from '@/services/tokenService';
 import SideNav from './components/side-nav';
 import ProfileInfo from './components/profile-info';
 import { WelcomeProps } from '../components/types';
-import Awaiting from '../components/awaiting';
+import NotAuthorized from './components/notAuthorized';
+import { RootState } from '../redux/store';
+import NotWelcome from '../components/NotWelcome';
 
 export default function AdminLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
-  const [wizeliner, setWizeliner] = useState<WelcomeProps>({
-    admin: false,
-    firstName: '',
-    lastName: '',
-    wizecoins: '',
-    IsWizeliner: false,
-    name: '',
-    picSource: '',
-  });
+  const user = useSelector((state: RootState) => state.user.userInfo);
+  if (!user) return <NotWelcome />;
 
-  useEffect(() => {
-    console.log(localStorage.getItem('token'));
-    setWizeliner({
-      admin: true,
-      firstName: localStorage.getItem('first') as string,
-      lastName: localStorage.getItem('last') as string,
-      wizecoins: localStorage.getItem('amountTokens') as string,
-      IsWizeliner: true,
-      name: `${localStorage.getItem('first')} ${localStorage.getItem('last')}`,
-      picSource: localStorage.getItem('pic'),
-    });
-  }, []);
-
-  if (wizeliner.firstName === '') return <Awaiting />;
+  const wizeliner: WelcomeProps = {
+    isAdmin: user.role === 'admin',
+    firstName: user.firstName,
+    lastName: user.lastName,
+    wizecoins: String(user.tokens.currentAmountTokens),
+    name: `${user.firstName} ${user.lastName}`,
+    picSource: user.picture,
+  };
+  // if (wizeliner.firstName === '') return <Awaiting />;
+  if (wizeliner.isAdmin === false) return <NotAuthorized />;
 
   return (
     <Stack direction="row">

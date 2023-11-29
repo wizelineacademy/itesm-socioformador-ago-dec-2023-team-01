@@ -2,7 +2,7 @@
 
 'use client';
 
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import Avatar from '@mui/material/Avatar';
 import Image from 'next/image';
 import Typography from '@mui/material/Typography';
@@ -11,103 +11,157 @@ import Box from '@mui/material/Box';
 import SendIcon from '@mui/icons-material/Send';
 import IconButton from '@mui/material/IconButton';
 import InputAdornment from '@mui/material/InputAdornment';
+import ContentCopyIcon from '@mui/icons-material/ContentCopy';
+import CheckIcon from '@mui/icons-material/Check';
 import { useChat, Message } from 'ai/react';
-import { UserProfile } from '@auth0/nextjs-auth0/client';
-import { numTokensFromMessage, createConversation, postToConversation } from '../../services/chatService';
+import Markdown from 'react-markdown';
+import CircularProgress from '@mui/material/CircularProgress';
+import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
+import { nord } from 'react-syntax-highlighter/dist/esm/styles/prism';
+import { Button, Stack } from '@mui/material';
+import CopyToClipboard from 'react-copy-to-clipboard';
+import { ChatRequestOptions } from 'ai';
+import { useSelector } from 'react-redux';
+import {
+  numTokensFromMessage,
+  createConversation,
+  postToConversation,
+  getConversationFullChat,
+} from '../../services/chatService';
+import Awaiting from './awaiting';
+import { RootState } from '../redux/store';
+import NotWelcome from './NotWelcome';
 
-export default function Chat({ user }: { user: UserProfile }) {
-  const [conversationId, setConversationId] = useState(0);
-  const {
-    input, handleInputChange, handleSubmit, isLoading, messages,
-  } = useChat({
-    api: '/api/chat',
+interface ChatProps {
+  input: string;
+  setInput: React.Dispatch<React.SetStateAction<string>>;
+  handleInputChange: (e: React.ChangeEvent<HTMLInputElement> | React.ChangeEvent<HTMLTextAreaElement>) => void;
+  handleSubmit: (e: React.FormEvent<HTMLFormElement>, chatRequestOptions?: ChatRequestOptions) => void;
+  isLoading: boolean;
+  messages: Message[];
+  setMessages: (messages: Message[]) => void;
+  setConversationId: (id: number) => void;
+  conversationId: number;
+  getChatHistory: () => void;
+}
+
+async function getMessages(conversationId: number) {
+  const response = await getConversationFullChat(conversationId);
+  const messages = response.messages;
+  const tempMessages: Message[] = [];
+  messages.forEach((message: any) => {
+    const newUserMessage: Message = {
+      id: `Nic0WzPpt${String(message.id)}a`,
+      content: message.prompt,
+      role: 'user',
+    };
+    const newAssistantMessage: Message = {
+      id: `Nic0WzPpt${String(message.id)}b`,
+      content: message.content,
+      role: 'assistant',
+    };
+    tempMessages.push(newUserMessage);
+    tempMessages.push(newAssistantMessage);
   });
+  console.log('all mesasges gotten');
+  return tempMessages;
+}
 
-  const [tokenCount, setTokenCount] = useState(0);
-  // const calculateTokenCount = () => {
-  //   const model = 'gpt-3.5-turbo-0613';
-  //   const contextMessages = [
-  //     { role: 'system', content: 'You are a helpful assistant expert in programming.' },
-  //     ...messages,
-  //   ];
-
-  //   const tokens = numTokensFromMessage(contextMessages, model);
-
-  //   setTokenCount(tokens);
-  // };
-  // useEffect(() => {
-  // console.log('1', tokenCount);
-  // }, [tokenCount]);
+export default function Chat({
+  setConversationId, conversationId, getChatHistory, input, setInput, handleInputChange, handleSubmit, isLoading, messages, setMessages,
+}: ChatProps) {
+  const user = useSelector((state: RootState) => state.user.userInfo);
+  const [isCopied, setCopied] = useState(false);
+  const scrollRef = useRef(null);
+  const formRef = useRef<HTMLFormElement>(null);
+  const scrollToBottom = () => {
+    if (scrollRef.current) {
+      const scrollElement = scrollRef.current as HTMLDivElement;
+      scrollElement.scrollTop = scrollElement.scrollHeight;
+    }
+  };
 
   useEffect(() => {
-    if (messages.length === 1) {
-      const title = `${messages[0].content.slice(0, 15).trimEnd()}...`;
-      createConversation(user.sub ?? '', title).then((conversation) => {
-        setConversationId(conversation.id);
+    scrollToBottom();
+  }, [messages]);
+
+  // actualizar el conversationId cuando cambie el id
+  useEffect(() => {
+    if (conversationId === 0) {
+      setMessages([]);
+    } else {
+      getMessages(conversationId).then((mesg) => {
+        if (mesg.length > 0) {
+          setMessages(mesg);
+        } else {
+          setMessages([...messages]);
+        }
       });
     }
-  }, [messages, user]);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [conversationId]);
 
+  // crear una conversacion si no hay ninguna
   useEffect(() => {
-    console.log('conversationId:', conversationId);
-    console.log('cantidad de mensajes', messages.length);
-    if (!isLoading) {
-      const last2Messages = messages.slice(-2);
-      const prompt = last2Messages.filter((message) => message.role === 'user')[0];
-      const response = last2Messages.filter((message) => message.role === 'assistant')[0];
-      if (!prompt || !response) return;
-      if (last2Messages.length === 2 && conversationId !== 0) {
-        console.log('last 2 messages', last2Messages);
-        console.log('prompt', prompt);
-        const tokensFromPrompt = numTokensFromMessage(prompt);
-        console.log('tokens from prompt', tokensFromPrompt);
-        console.log('response', response);
-        const tokensFromResponse = numTokensFromMessage(response);
-        console.log('tokens from response', tokensFromResponse);
-        const tokens = tokensFromPrompt + tokensFromResponse;
-        console.log('tokens', tokens);
-        postToConversation(prompt.content, response.content, conversationId, tokens).then((conversation) => {
-          console.log('conversation', conversation);
-          console.log('posted to conversation');
-        });
-      }
-    } else {
-      console.log('loading');
+    if (!user) return;
+    if (conversationId === 0 && messages.length === 1) {
+      const title = messages[0].content.slice(0, 30).trimEnd();
+      createConversation(user.id, title).then((conversation) => {
+        setConversationId(conversation.id);
+        getChatHistory();
+      });
     }
-  }, [conversationId, isLoading, messages, user]);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [messages]);
+
+  const handleCopy = () => {
+    setCopied(true);
+    console.log(isCopied);
+    setTimeout(() => {
+      setCopied(false);
+    }, 1000);
+  };
+
+  if (!user) return <NotWelcome />;
 
   return (
     <Box
+      height={{
+        xs: '91vh',
+      }}
       sx={{
         display: 'flex',
         flexDirection: 'column',
-        height: '71.5vh',
         background: 'linear-gradient(to bottom, #4D545D, #4F565F, transparent)',
         borderRadius: '20px',
       }}
     >
-      {/* Chat Header */}
-      <Box sx={{ display: 'flex', alignItems: 'center', padding: '10px' }}>
-        <Typography variant="h6" sx={{ color: 'white', fontWeight: 'bold' }}>
+      <Box sx={{ display: 'flex', alignItems: 'center', padding: '5px' }}>
+        <Typography variant="body1" sx={{ color: 'white', fontWeight: 'bold' }}>
           ChatGPT 4.0
         </Typography>
       </Box>
-      {/* Chat */}
       <Box
+        ref={scrollRef}
         sx={{
           flexGrow: 1,
           overflowY: 'scroll',
           padding: '10px',
           backgroundColor: 'transparent',
+          ...conversationId === 0 && messages.length === 0 ? { display: 'flex', alignItems: 'center', justifyContent: 'center' } : {},
         }}
       >
+        {conversationId === 0 && messages.length === 0 && (
+        <Typography variant="h5" sx={{ color: '#b3b1b1', userSelect: 'none' }}>
+          How can I help you?
+        </Typography>
+        )}
         {messages.map((message, index) => (
           <Box
             key={index}
             sx={{
               display: 'flex',
-              justifyContent:
-                message.role === 'assistant' ? 'flex-start' : 'flex-end',
+              justifyContent: message.role === 'assistant' ? 'flex-start' : 'flex-end',
               marginBottom: '10px',
             }}
           >
@@ -123,32 +177,88 @@ export default function Chat({ user }: { user: UserProfile }) {
               />
             )}
             <Typography
-              variant="body1"
+              variant="body2"
               style={{
-                padding: '10px',
+                paddingInline: '10px',
                 borderRadius: '20px',
                 background: message.role !== 'assistant' ? '#0E8265' : '#111823',
                 color: 'white',
               }}
             >
-              {message.content.split('\n').map((currentTextBlock: string, idx: number) => {
-                if (currentTextBlock === '') {
-                  return <p key={message.id + idx}>&nbsp;</p>;
-                }
-                return (
-                  <React.Fragment key={message.id + idx}>
-                    {idx > 0 && <br />}
-                    {' '}
-                    {/* Add a line break for multiline messages */}
-                    {currentTextBlock}
-                  </React.Fragment>
-                );
-              })}
+              <Markdown
+                  // eslint-disable-next-line react/no-children-prop
+                children={message.content}
+                components={{
+                  // eslint-disable-next-line react/no-unstable-nested-components
+                  code(props) {
+                    const {
+                      // eslint-disable-next-line react/prop-types
+                      children, className, node, ...rest
+                    } = props;
+                    const match = /language-(\w+)/.exec(className || '');
+                    return match ? (
+                      <Box
+                        sx={{
+                          width: '90%',
+                          margin: 'auto',
+                          paddingBottom: '0.70rem',
+                        }}
+                      >
+                        <Stack
+                          direction="row"
+                          alignItems="center"
+                          justifyContent="flex-end"
+                          sx={{
+                            borderRadius: '10px 10px 0 0',
+                            backgroundColor: 'black',
+                            height: '30px',
+                            position: 'relative',
+                            top: '10px',
+                            color: 'white',
+                          }}
+                        >
+                          <CopyToClipboard text={String(children)}>
+                            <Button sx={{ textTransform: 'none', color: 'white' }} onClick={handleCopy}>
+                              {isCopied ? (
+                                <Stack direction="row">
+                                  <CheckIcon sx={{ fontSize: '15px' }} />
+                                  <Box sx={{ padding: '2px' }} />
+                                  <Typography sx={{ color: 'white', fontSize: '11px' }}>Copied!</Typography>
+                                </Stack>
+                              ) : (
+                                <Stack direction="row">
+                                  <ContentCopyIcon sx={{ fontSize: '15px' }} />
+                                  <Box sx={{ padding: '2px' }} />
+                                  <Typography sx={{ color: 'white', fontSize: '11px' }}>Copy Code</Typography>
+                                </Stack>
+                              )}
+                            </Button>
+                          </CopyToClipboard>
+                        </Stack>
+                        {// @ts-ignore}
+                          <SyntaxHighlighter
+                            {...rest}
+                            PreTag="div"
+                              // eslint-disable-next-line react/no-children-prop
+                            children={String(children).replace(/\n$/, '')}
+                            language={match[1]}
+                            style={nord}
+                          />
+                          }
+                      </Box>
+                    ) : (
+                      <code {...rest} className={className}>
+                        {children}
+                      </code>
+                    );
+                  },
+                }}
+              />
             </Typography>
             {message.role !== 'assistant' && (
               <Avatar
                 alt="User Picture"
-                src={user?.picture || 'https://img.freepik.com/premium-vector/user-profile-icon-flat-style-member-avatar-vector-illustration-isolated-background-human-permission-sign-business-concept_157943-15752.jpg?size=338&ext=jpg&ga=GA1.1.1880011253.1700438400&semt=ais'}
+                src={user.picture}
                 sx={{
                   width: 40,
                   height: 40,
@@ -160,11 +270,8 @@ export default function Chat({ user }: { user: UserProfile }) {
         ))}
       </Box>
       <Box
-        style={{
-          display: 'flex',
-          alignItems: 'center',
+        sx={{
           padding: '10px',
-          position: 'sticky',
           bottom: 0,
         }}
       >
@@ -173,57 +280,74 @@ export default function Chat({ user }: { user: UserProfile }) {
             e.preventDefault();
             handleSubmit(e);
           }}
+          ref={formRef}
           style={{ width: '100%' }}
         >
-          <div style={{ display: 'flex', alignItems: 'center' }}>
-            <TextField
-              fullWidth
-              value={input}
-              onChange={handleInputChange}
-              variant="outlined"
-              placeholder="Type a message..."
-              sx={{
-                '& .MuiOutlinedInput-root': {
-                  '& fieldset': {
-                    borderColor: '#4E555E', // sin enfoque
-                  },
-                  '&:hover fieldset': {
-                    borderColor: 'white', // por encima
-                  },
-                  '&.Mui-focused fieldset': {
-                    borderColor: 'white', // enfocado
-                  },
-                },
-              }}
-              InputProps={{
-                style: {
-                  borderRadius: '20px',
+          <TextField
+            fullWidth
+            value={input}
+            multiline
+            onKeyDown={(e) => {
+              if (e.key === 'Enter' && !e.shiftKey) {
+                e.preventDefault();
+                if (formRef.current !== undefined) {
+                  formRef.current?.dispatchEvent(new Event('submit', { cancelable: true, bubbles: true }));
+                }
+              } else if (e.key === 'Enter' && e.shiftKey) {
+                setInput(`${input}\n`);
+              }
+            }}
+            autoComplete="off"
+            onChange={handleInputChange}
+            placeholder="Type a message..."
+            maxRows={5}
+            sx={{
+
+              overflowY: 'auto',
+              maxHeight: '200px',
+              '& .MuiOutlinedInput-root': {
+                '& fieldset': {
                   borderColor: '#4E555E',
-                  background: 'transparent',
-                  color: 'white',
                 },
-                endAdornment: (
-                  <InputAdornment position="end">
-                    <IconButton type="submit">
-                      <SendIcon sx={{ color: 'white' }} />
-                    </IconButton>
-                    <Box sx={{ transform: 'rotate(180deg)' }}>
-                      <Image
-                        src="wizecoin.svg"
-                        alt="Wizecoin Icon"
-                        width={20}
-                        height={20}
-                        layout="fixed"
-                      />
-                    </Box>
-                    <Typography variant="body1" style={{ color: 'red' }}>
-                      17
-                    </Typography>
-                  </InputAdornment>
-                ),
-              }}
-            />
-          </div>
+                '&:hover fieldset': {
+                  borderColor: 'white',
+                },
+                '&.Mui-focused fieldset': {
+                  borderColor: 'white',
+                },
+              },
+            }}
+            InputProps={{
+              style: {
+                borderRadius: '20px',
+                borderColor: '#4E555E',
+                background: 'transparent',
+                color: 'white',
+              },
+              endAdornment: (
+                <InputAdornment position="end" sx={{ position: 'inherit' }}>
+                  {isLoading ? <CircularProgress size={35} thickness={4} sx={{ color: 'white', marginRight: '10px' }} />
+                    : (
+                      <IconButton type="submit">
+                        <SendIcon sx={{ color: 'white' }} />
+                      </IconButton>
+                    )}
+                  <Box sx={{ transform: 'rotate(180deg)' }}>
+                    <Image
+                      src="wizecoin.svg"
+                      alt="Wizecoin Icon"
+                      width={20}
+                      height={20}
+                      layout="fixed"
+                    />
+                  </Box>
+                  <Typography variant="body1" style={{ color: 'red' }}>
+                    17
+                  </Typography>
+                </InputAdornment>
+              ),
+            }}
+          />
         </form>
       </Box>
     </Box>

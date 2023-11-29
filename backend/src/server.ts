@@ -10,6 +10,8 @@ import swaggerDocs from './utils/swagger';
 import errorMiddleware from './middlewares/errorMiddleware';
 import tokenJob from './utils/taskScheduler';
 
+const helmet = require('helmet');
+
 const schedule = require('node-schedule');
 
 schedule.scheduleJob('0 0 * * *', tokenJob);
@@ -23,6 +25,15 @@ app.use(authOpenId(Auth0Config));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static('public'));
+app.use(
+  helmet.contentSecurityPolicy({
+    directives: {
+      defaultSrc: ["'self'"],
+      frameAncestors: ["'none'"],
+    },
+  }),
+);
+app.disable('x-powered-by');
 
 app.set('views', './src/views');
 app.set('view engine', 'ejs');

@@ -1,12 +1,14 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import {
-  Typography, Stack, Button,
+  Typography, Stack, Button, Avatar,
 } from '@mui/material';
-import Image from 'next/image';
+import { useSelector } from 'react-redux';
 import Link from 'next/link';
-import styles from './iswelcome.module.css';
+import styles from '../../components/iswelcome.module.css';
+import { RootState } from '@/app/redux/store';
 
-export default function NotWelcome() {
+export default function NotAuthorized() {
+  const user = useSelector((state: RootState) => state.user.userInfo);
   return (
     <Stack
       gap={0}
@@ -16,7 +18,7 @@ export default function NotWelcome() {
       minHeight="100vh"
       minWidth="50px"
     >
-      <Image width="200" height="200" src="/notWizeliner.jpg" className={styles.image} alt="" />
+      <Avatar sx={{ height: '175px', width: '175px' }} alt="Wizeliner" src={user?.picture} />
       <Typography
         sx={{
           fontWeight: 'bold',
@@ -25,7 +27,7 @@ export default function NotWelcome() {
         }}
         className={styles.notwizelinertext}
       >
-        Not a Wizeliner...
+        Not an administrator...
       </Typography>
       <Typography
         variant="body2"
@@ -39,13 +41,11 @@ export default function NotWelcome() {
         }}
         className={styles.apologytext}
       >
-        We are sorry. This tool can only be used by
+        We are sorry. This section of the application can only be used by
         {' '}
-        <span>Wizeline</span>
-        {' '}
-        employees.
+        <span>administrators.</span>
       </Typography>
-      <Link href="/">
+      <Link href="/welcome">
         <Button
           variant="contained"
           sx={{
@@ -58,7 +58,7 @@ export default function NotWelcome() {
             },
           }}
         >
-          Return to Sign In
+          Return to welcome
         </Button>
       </Link>
     </Stack>

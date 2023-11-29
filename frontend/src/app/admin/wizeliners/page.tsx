@@ -19,13 +19,29 @@ import AddIcon from '@mui/icons-material/Add';
 import CheckBoxOutlinedIcon from '@mui/icons-material/CheckBoxOutlined';
 import CropSquareIcon from '@mui/icons-material/CropSquare';
 import SearchIcon from '@mui/icons-material/Search';
+import Image from 'next/image';
 import { fetchUsers } from '@/services/usersService';
 import Title from '../components/Title';
 
+interface User {
+  id: string;
+  firstName: string;
+  lastName: string;
+  fullName: string;
+  imageUrl: string;
+  email: string;
+  roleId: string;
+  createdAt: string;
+  updatedAt: string;
+  isAdmin: boolean;
+  currentTokens: number;
+  amountTokens: number;
+}
+
 export default function Wizeliners() {
-  const [wizeliners, setWizeliners] = useState([]);
+  const [wizeliners, setWizeliners] = useState<User[]>([]);
   const [search, setSearch] = useState('');
-  const [filteredWizeliners, setFilteredWizeliners] = useState([]);
+  const [filteredWizeliners, setFilteredWizeliners] = useState<User[]>([]);
 
   const router = useRouter();
 
@@ -120,9 +136,8 @@ export default function Wizeliners() {
             <TableHead>
               <TableRow sx={{ backgroundColor: '#111823' }}>
                 <TableCell align="center" sx={{ color: '#FFF' }}>Full Name</TableCell>
-                <TableCell align="center" sx={{ color: '#FFF' }}>Area(s)</TableCell>
                 <TableCell align="center" sx={{ color: '#FFF' }}>Is Administrator</TableCell>
-                <TableCell align="center" sx={{ color: '#FFF' }}>Monthly Wizecoins</TableCell>
+                <TableCell align="center" sx={{ color: '#FFF' }}>Wizecoins</TableCell>
                 <TableCell align="center" sx={{ color: '#FFF' }}>Profile Information</TableCell>
               </TableRow>
             </TableHead>
@@ -139,7 +154,6 @@ export default function Wizeliners() {
                   }}
                 >
                   <TableCell sx={{ color: '#FFF' }}>{capitalizeEachWord(user.fullName)}</TableCell>
-                  <TableCell sx={{ color: '#FFF' }}>{user.areas}</TableCell>
                   <TableCell align="center" sx={{ color: '#FFF' }}>
                     {user.isAdmin
                       ? (
@@ -149,7 +163,34 @@ export default function Wizeliners() {
                         <CropSquareIcon fontSize="large" sx={{ color: '#4BE93D' }} />
                       )}
                   </TableCell>
-                  <TableCell align="center" sx={{ color: '#FFF' }}>{user.monthlyWizecoins}</TableCell>
+                  <TableCell align="center" sx={{ color: '#FFF' }}>
+                    <Box
+                      display="flex"
+                      alignItems="center"
+                      justifyContent="center"
+                      height="100%"
+                      width="100%"
+                      color="#4BE93D"
+                    >
+                      <Box
+                        sx={{ marginRight: '5px' }}
+                      >
+                        <Image
+                          src="/wizecoin.svg"
+                          alt="Wizecoin Icon"
+                          width={10}
+                          height={10}
+                          layout="fixed"
+                        />
+                      </Box>
+                      <Box sx={{ color: '#f5f264', marginRight: '4px' }}>
+                        {user.currentTokens}
+                      </Box>
+                      /
+                      {' '}
+                      {user.amountTokens}
+                    </Box>
+                  </TableCell>
                   <TableCell align="center">
                     <Button
                       onClick={() => router.push(`wizeliners/edit?userId=${user.id}`)}

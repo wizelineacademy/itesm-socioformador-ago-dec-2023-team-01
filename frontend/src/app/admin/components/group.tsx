@@ -18,8 +18,10 @@ import MoreVertIcon from '@mui/icons-material/MoreVert';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 import { deleteGroup } from '@/services/groupService';
+import { useSelector } from 'react-redux';
 import Popup from '@/app/components/Popup';
 import { GroupProps } from './types';
+import { RootState } from '@/app/redux/store';
 
 Chart.register(ArcElement);
 
@@ -33,6 +35,7 @@ export default function Group({
 }: GroupProps) {
   const [isOpen, setOpen] = useState(false);
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
+  const user = useSelector((state: RootState) => state.user.userInfo);
 
   const router = useRouter();
 
@@ -65,7 +68,7 @@ export default function Group({
 
   const handleDeleteGroup = async () => {
     try {
-      await deleteGroup(id);
+      await deleteGroup(id, user?.jwtToken ?? '');
       handleClosePopup();
       handleClose();
       toggle();

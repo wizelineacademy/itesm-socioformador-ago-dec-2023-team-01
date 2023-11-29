@@ -1,4 +1,7 @@
-import React, { useState } from 'react';
+'use client';
+
+/* eslint-disable import/no-extraneous-dependencies */
+import React, { useEffect, useState } from 'react';
 import {
   Typography, Box, Button, Paper, Stack, Grid, IconButton, Avatar,
 } from '@mui/material';
@@ -7,13 +10,17 @@ import CheckBoxOutlinedIcon from '@mui/icons-material/CheckBoxOutlined';
 import CropSquareIcon from '@mui/icons-material/CropSquare';
 import { useRouter } from 'next/navigation';
 import { VariantType, enqueueSnackbar } from 'notistack';
+import Link from 'next/link';
 import Popup from '@/app/components/Popup';
 import EditWizecoinsUserPopup from '@/app/components/EditWizecoinsUserPopup';
+import CreateTokenDialog from '@/app/admin/components/tokens/CreateTokenDialog';
 import { updateUserAdminStatus } from '@/services/usersService';
+import { createTokenForUser } from '@/services/tokenService';
 import LineChart from './LineChart';
 import styles from './individualDashboard.module.css';
 
 const inter = Inter({ subsets: ['latin'] });
+const numeral = require('numeral');
 
 interface IndividualDashboardProps {
   id: string;
@@ -135,7 +142,11 @@ export default function UserProfileDashboard({
 
   const [isAdminPopupOpen, setAdminPopupOpen] = useState(false);
   const [isWizecoinsPopupOpen, setWizecoinsPopupOpen] = useState(false);
-
+  const [isCreateTokensPopupOpen, setCreateTokensPopupOpen] = useState(false);
+  const [wizecoins, setWizecoins] = useState('');
+  useEffect(() => {
+    setWizecoins(currentWizecoins);
+  }, [currentWizecoins]);
   const showNotification = (variant: VariantType, user:string, action:string) => {
     enqueueSnackbar(`${action} ${user}`, { variant });
   };
@@ -209,6 +220,14 @@ export default function UserProfileDashboard({
     router.back();
   };
 
+  const handleOpenCreateTokensPopUp = () => {
+    setCreateTokensPopupOpen(true);
+  };
+
+  const handleCloseCreateTokensPopUp = () => {
+    setCreateTokensPopupOpen(false);
+  };
+
   return (
     <Box sx={{
       display: 'flex', justifyContent: 'center', alignItems: 'left', Height: '100vh', width: '100hh', paddingTop: '1.5rem',
@@ -244,7 +263,7 @@ export default function UserProfileDashboard({
                       className={styles.microimage}
                       title="wizecoin"
                     />
-                    <Typography variant="h6" sx={{ color: '#4BE93D' }} className={`${inter.className}`}>{currentWizecoins}</Typography>
+                    <Typography variant="h6" sx={{ color: '#4BE93D' }} className={`${inter.className}`}>{Number(wizecoins) > 1000 ? numeral(wizecoins).format('0.0a') : wizecoins}</Typography>
                   </Stack>
                 </Stack>
               </Paper>
@@ -325,15 +344,32 @@ export default function UserProfileDashboard({
               </Paper>
             </Stack>
             <Stack direction="row" justifyContent="space-between">
-              <Typography
-                variant="body1"
-                sx={{ color: 'gray', textDecoration: 'underline' }}
-                className={`${inter.className}`}
+              <Box sx={{
+                display: 'flex', justifyContent: 'center', alignItems: 'center',
+              }}
               >
-                Monthly payout:
-                {' '}
-                {monthlyWizecoins}
-              </Typography>
+                <Button
+                  onClick={handleOpenCreateTokensPopUp}
+                  style={{
+                    color: 'white',
+                    backgroundColor: '#E93D44',
+                    borderRadius: '8px', // Add the border radius to the button
+                    textTransform: 'none', // Set textTransform to 'none' to prevent all caps
+                    padding: '0px 12px',
+                  }}
+                >
+                  <Typography variant="body1" sx={{ color: 'white' }} className={`${inter.className}`}>Create Token</Typography>
+                </Button>
+                <CreateTokenDialog
+                  title={['Create ', 'New Token']}
+                  content={['You are creating a ', 'New Token, CAUTION! ', 'this will ', 'overwrite ', 'any existing token.']}
+                  open={isCreateTokensPopupOpen}
+                  handleClose={handleCloseCreateTokensPopUp}
+                  handleCreate={createTokenForUser}
+                  userId={id}
+                  setWizecoins={setWizecoins}
+                />
+              </Box>
               <Box sx={{
                 display: 'flex', justifyContent: 'center', alignItems: 'center',
               }}
@@ -541,40 +577,41 @@ export default function UserProfileDashboard({
                   <Grid sx={{ flexGrow: 1 }} container spacing={1}>
                     {stats.map((area, index) => (
                       <Grid item key={index}>
-                        <Button
-                          key={index}
-                          href="/mainpage"
-                          style={{
-                            backgroundColor: '#1D293A',
-                            width: '200px',
-                            borderRadius: '15px', // Add the border radius to the button
-                            textTransform: 'none', // Set textTransform to 'none' to prevent all caps
-                            padding: '6px',
-                          }}
-                        >
-                          <Stack direction="row" display="flex" justifyContent="space-between" alignItems="left" spacing="1rem">
-                            <Typography
-                              variant="caption"
-                              sx={{
-                                color: 'white', fontWeight: 'bold',
-                              }}
-                              className={`${inter.className}`}
-                            >
-                              {area[0]}
-                            </Typography>
-                            <Typography
-                              variant="caption"
-                              sx={{
-                                color: 'white', fontWeight: 'bold',
-                              }}
-                              className={`${inter.className}`}
-                            >
-                              {area[1]}
-                              { ' ' }
-                              hrs
-                            </Typography>
-                          </Stack>
-                        </Button>
+                        <Link href="/mainpage">
+                          <Button
+                            key={index}
+                            style={{
+                              backgroundColor: '#1D293A',
+                              width: '200px',
+                              borderRadius: '15px', // Add the border radius to the button
+                              textTransform: 'none', // Set textTransform to 'none' to prevent all caps
+                              padding: '6px',
+                            }}
+                          >
+                            <Stack direction="row" display="flex" justifyContent="space-between" alignItems="left" spacing="1rem">
+                              <Typography
+                                variant="caption"
+                                sx={{
+                                  color: 'white', fontWeight: 'bold',
+                                }}
+                                className={`${inter.className}`}
+                              >
+                                {area[0]}
+                              </Typography>
+                              <Typography
+                                variant="caption"
+                                sx={{
+                                  color: 'white', fontWeight: 'bold',
+                                }}
+                                className={`${inter.className}`}
+                              >
+                                {area[1]}
+                                { ' ' }
+                                hrs
+                              </Typography>
+                            </Stack>
+                          </Button>
+                        </Link>
                       </Grid>
                     ))}
                   </Grid>

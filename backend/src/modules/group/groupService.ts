@@ -20,7 +20,8 @@ export const groupService = {
           0,
         );
         const groupUsedTokens = tokensOfGroup.reduce(
-          (total, token) => total + token.currentAmount,
+          (total, token) =>
+            total + (token.amount - (token.amount - token.currentAmount)),
           0,
         );
         const numberOfUsersInGroup = await groupRepository.findUsersInGroupById(
@@ -37,10 +38,13 @@ export const groupService = {
     return result;
   },
   async setTokensToUsersFromGroup(
-    groupId: number,
+    groupId: string,
     amount: number,
   ): Promise<void> {
-    const users = await groupRepository.findUsersInGroupById(groupId);
+    if (Number.isNaN(Number(groupId))) {
+      throw new CustomError(400, 'Invalid group id');
+    }
+    const users = await groupRepository.findUsersInGroupById(Number(groupId));
     if (!users) {
       throw new CustomError(404, `Group with id/name:${groupId}, not found`);
     }

@@ -15,7 +15,7 @@ export function numTokensFromMessage(message: any, model: string = 'gpt-3.5-turb
   }
   if (model === 'gpt-3.5-turbo-0613') {
     let tokensOfMessage = 0;
-    console.log('calculating for mesage:', message);
+    // console.log('calculating for mesage:', message);
     tokensOfMessage += 4; // every message follows <im_start>{role/name}\n{content}<im_end>\n
     tokensOfMessage += (encoding.encode(String(message.content))).length;
     return tokensOfMessage;
@@ -24,7 +24,6 @@ export function numTokensFromMessage(message: any, model: string = 'gpt-3.5-turb
       See https://github.com/openai/openai-python/blob/main/chatml.md for information on how messages are converted to tokens.`);
 }
 
-// eslint-disable-next-line max-len
 export const postToConversation = async (prompt: any, content: any, conversationId: number, tokenCost: number) => {
   try {
     const body = {
@@ -40,7 +39,6 @@ export const postToConversation = async (prompt: any, content: any, conversation
       },
       body: JSON.stringify(body),
     });
-    console.log('response from postToConversation:', response);
     const postId = await response.json();
     return postId;
   } catch (error) {
@@ -63,11 +61,53 @@ export const createConversation = async (userId: string, title: string) => {
       },
       body: JSON.stringify(body),
     });
-    console.log('response from postToConversation:', response);
     const conversationId = await response.json();
     return conversationId;
   } catch (error) {
     console.error(`error posting conversation: ${error}`);
     return 0;
+  }
+};
+
+export const getConversationFullChat = async (conversationId: number) => {
+  try {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/conversations/${conversationId}/full-chat`);
+    const conversation = await response.json();
+    return conversation;
+  } catch (error) {
+    console.error(`error getting conversation: ${error}`);
+    return {
+      conversation: {},
+      posts: [],
+    };
+  }
+};
+
+export const editConversationTitle = async (conversationId: number, title: string) => {
+  try {
+    const body = {
+      title,
+    };
+    await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/conversations/${conversationId}/title`, {
+      method: 'PATCH',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(body),
+    });
+  } catch (error) {
+    console.log(`error editing conversation title: ${error}`);
+  }
+};
+
+export const deleteConversation = async (conversationId: number) => {
+  try {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/conversations/${conversationId}`, {
+      method: 'DELETE',
+    });
+    return response;
+  } catch (error) {
+    console.log(`error deleting conversation: ${error}`);
+    return { status: 500 };
   }
 };
