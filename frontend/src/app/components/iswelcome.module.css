@@ -26,8 +26,15 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  position: relative;
   bottom: 5px;
+}
+
+.container {
+  height: 30vh;
+  max-height: 210px;
+  width: 30vh;
+  max-width: 210px;
+  position: relative;
 }
 
 .roundedimage {
@@ -36,6 +43,29 @@
   width: 30vh;
   max-width: 210px;
   border-radius: 10%;
+}
+
+.blockedImage {
+  height: 30vh;
+  max-height: 210px;
+  width: 30vh;
+  max-width: 210px;
+  border-radius: 10%;
+}
+
+.overlay {
+  height: 30vh;
+  max-height: 210px;
+  width: 30vh;
+  max-width: 210px;
+  border-radius: 10%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  background-color: rgba(17, 24, 35, 0.6);
+  box-shadow: '0 4px 30px rgba(0, 0, 0, 0.1)';
+  backdrop-filter: blur(4px);
+  border-bottom: '1px solid rgba(255, 255, 255, 0.1)';
 }
 
 .underline {

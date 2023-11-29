@@ -1,9 +1,9 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useState } from 'react';
 import {
   Typography, Button, IconButton, MenuItem, TextField, Menu, Box, Dialog, DialogTitle, DialogContent, DialogActions,
 } from '@mui/material';
 import CheckIcon from '@mui/icons-material/Check';
-import EditIcon from '@mui/icons-material/Edit';
+import MoreVertIcon from '@mui/icons-material/MoreVert';
 import { editConversationTitle, deleteConversation } from '../../services/chatService';
 
 export default function ChatHistoryItem({
@@ -85,8 +85,7 @@ export default function ChatHistoryItem({
             marginBottom: '10px',
             border: '1.5px solid #4D545D',
             borderRadius: '10px',
-            paddingY: '8px',
-            // padding: '5px 10px',
+            paddingY: '1px',
             overflow: 'hidden',
             whiteSpace: 'nowrap',
             textOverflow: 'ellipsis',
@@ -150,7 +149,7 @@ export default function ChatHistoryItem({
               handleClick(event);
             }}
           >
-            {isEditing ? <CheckIcon /> : <EditIcon />}
+            {isEditing ? <CheckIcon /> : <MoreVertIcon />}
           </IconButton>
           <Menu
             id="basic-menu"

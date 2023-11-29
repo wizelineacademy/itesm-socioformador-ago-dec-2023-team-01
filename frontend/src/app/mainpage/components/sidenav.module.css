@@ -1,0 +1,15 @@
+.images {
+    width: 55px;
+    height: 55px;
+    border-radius: 50%;
+    object-fit: cover;
+    object-position: 0 30%;
+}
+
+.smallimage {
+    width: 15px;
+    height: 15px;
+    padding-right: 5px;
+    position: relative;
+    bottom: 1px;
+}

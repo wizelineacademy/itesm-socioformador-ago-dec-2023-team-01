@@ -1,20 +1,20 @@
 'use client';
 
-import Container from '@mui/material/Container';
-import Grid from '@mui/material/Grid';
 import React, { useEffect, useState } from 'react';
 import { Message } from 'ai';
 import { useChat } from 'ai/react';
-import { Hidden } from '@mui/material';
-import Chat from '@/app/components/Chat';
-import ChatHistory from '@/app/components/ChatHistory';
-import Navbar from '@/app/components/Navbar';
+import {
+  Box, Stack,
+} from '@mui/material';
+import { useSelector } from 'react-redux';
+import { RootState } from '../redux/store';
+import TopNavbar from './components/topNavbar';
 import { getHistory } from '@/services/usersService';
 import { numTokensFromMessage, postToConversation } from '@/services/chatService';
-import { RootState } from '../redux/store';
-import { useSelector } from 'react-redux';
-import Awaiting from '../components/awaiting';
 import NotWelcome from '../components/NotWelcome';
+// import ChatHistory from '../components/ChatHistory';
+import SideNavbar from './components/sideNavbar';
+import Chat from '../components/Chat';
 
 const postMessagesToConversation = async (conversationId: number, messages: Message[]) => {
   const last2Messages = messages.slice(-2);
@@ -41,8 +41,8 @@ const postMessagesToConversation = async (conversationId: number, messages: Mess
   }
 };
 
-function Mainpage() {
-  const [showChatHistory, setShowChatHistory] = useState(false);
+export default function Mainpage() {
+  // const [showChatHistory, setShowChatHistory] = useState(false);
   const [conversationId, setConversationId] = useState(0);
   const [chatsHistory, setChatsHistory] = useState([{ title: '', id: 0 }]);
   const [isChatStopped, setIsChatStopped] = useState(false);
@@ -80,6 +80,7 @@ function Mainpage() {
   // post new messages to conversation
   useEffect(() => {
     executePostMessagesToConversation(prevConversationId === 0 ? conversationId : prevConversationId);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [chatIsLoading, messages]);
 
   const getChatHistory = async () => {
@@ -111,29 +112,45 @@ function Mainpage() {
     });
   }, [user]);
 
-  // useEffect(() => {
-  //   if (user) setUserId(user.sub ?? '');
-  // }, [user]);
-
   if (!user) return <NotWelcome />;
 
   return (
-    <Container maxWidth={false}>
-      <Navbar
-        profileSrc={user.picture}
-        name={`${user.firstName} ${user.lastName}`}
-        number={`${user.tokens.currentAmountTokens}`}
-        onBurgerClick={() => setShowChatHistory((prev) => !prev)}
-      />
-      <Grid container spacing={1} columns={10}>
-        {/* ChatHistory for larger screens (displayed by default) */}
-        <Hidden only={['xs']}>
-          <Grid item sm={2}>
-            <ChatHistory closeChatHistory={() => setShowChatHistory(false)} chatHistory={chatsHistory} handleChatItemClick={handleChatItemClick} getChatHistory={getChatHistory} conversationId={conversationId} />
-          </Grid>
-        </Hidden>
-
-        <Grid item xs={10} sm={8}>
+    <Stack>
+      <Box
+        sx={{
+          height: '75px',
+          position: 'sticky',
+          top: '0',
+          background: 'rgba(17, 24, 35, 0.4)',
+          boxShadow: '0 4px 30px rgba(0, 0, 0, 0.1)',
+          backdropFilter: 'blur(5px)',
+          borderBottom: '1px solid rgba(255, 255, 255, 0.1)',
+          zIndex: '100',
+        }}
+      >
+        <TopNavbar
+          firstName={user.firstName}
+          lastName={user.lastName}
+          wizecoins={user.tokens.currentAmountTokens}
+          picSource={user.picture}
+        />
+      </Box>
+      <Stack direction="row">
+        <Box
+          sx={{
+            height: 'calc(100vh - 76px)',
+            position: 'fixed',
+            top: '76px',
+          }}
+        >
+          <SideNavbar
+            chatHistory={chatsHistory}
+            handleChatItemClick={handleChatItemClick}
+            getChatHistory={getChatHistory}
+            conversationId={conversationId}
+          />
+        </Box>
+        <Stack sx={{ paddingLeft: '300px' }}>
           <Chat
             setConversationId={setConversationId}
             conversationId={conversationId}
@@ -146,48 +163,8 @@ function Mainpage() {
             messages={messages}
             setMessages={setMessages}
           />
-        </Grid>
-
-        <Hidden mdUp>
-          {showChatHistory && (
-            <div
-              style={{
-                position: 'absolute',
-                top: 0,
-                left: 0,
-                right: 0,
-                bottom: 0,
-                zIndex: 10,
-                backgroundColor: 'rgba(0, 0, 0, 0.5)', // semi-transparent backdrop
-              }}
-            >
-              <ChatHistory closeChatHistory={() => setShowChatHistory(false)} chatHistory={chatsHistory} handleChatItemClick={handleChatItemClick} getChatHistory={getChatHistory} conversationId={conversationId} />
-
-            </div>
-          )}
-        </Hidden>
-
-        <Hidden smUp>
-          {showChatHistory && (
-            <div
-              style={{
-                position: 'absolute',
-                top: 0,
-                left: 0,
-                right: 0,
-                bottom: 0,
-                zIndex: 10,
-                backgroundColor: 'rgba(0, 0, 0, 0.5)',
-              }}
-            >
-              <ChatHistory closeChatHistory={() => setShowChatHistory(false)} chatHistory={chatsHistory} handleChatItemClick={handleChatItemClick} getChatHistory={getChatHistory} conversationId={conversationId} />
-            </div>
-          )}
-        </Hidden>
-      </Grid>
-    </Container>
+        </Stack>
+      </Stack>
+    </Stack>
   );
-  return <NotWelcome />;
 }
-
-export default Mainpage;
