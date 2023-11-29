@@ -4,6 +4,7 @@
 
 import React, { useEffect, useState, useRef } from 'react';
 import Avatar from '@mui/material/Avatar';
+import _debounce from 'lodash/debounce';
 import Image from 'next/image';
 import Typography from '@mui/material/Typography';
 import TextField from '@mui/material/TextField';
@@ -13,7 +14,7 @@ import IconButton from '@mui/material/IconButton';
 import InputAdornment from '@mui/material/InputAdornment';
 import ContentCopyIcon from '@mui/icons-material/ContentCopy';
 import CheckIcon from '@mui/icons-material/Check';
-import { useChat, Message } from 'ai/react';
+import { Message } from 'ai/react';
 import Markdown from 'react-markdown';
 import CircularProgress from '@mui/material/CircularProgress';
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
@@ -80,6 +81,7 @@ export default function Chat({
       scrollElement.scrollTop = scrollElement.scrollHeight;
     }
   };
+  const [tokensFromPrompt, setTokensFromPrompt] = useState(0);
 
   useEffect(() => {
     scrollToBottom();
@@ -116,11 +118,17 @@ export default function Chat({
 
   const handleCopy = () => {
     setCopied(true);
-    console.log(isCopied);
     setTimeout(() => {
       setCopied(false);
     }, 1000);
   };
+
+  const debouncedHandleInputChange = _debounce(
+    (e) => {
+      setTokensFromPrompt(numTokensFromMessage({ content: e.target.value }));
+    },
+    300,
+  );
 
   if (!user) return <NotWelcome />;
 
@@ -207,7 +215,7 @@ export default function Chat({
                         <Stack
                           direction="row"
                           alignItems="center"
-                          justifyContent="flex-end"
+                          justifyContent="space-between"
                           sx={{
                             borderRadius: '10px 10px 0 0',
                             backgroundColor: 'black',
@@ -217,6 +225,9 @@ export default function Chat({
                             color: 'white',
                           }}
                         >
+                          <Typography sx={{ color: 'white', fontSize: '11px' }} ml={1}>
+                            {match[1].toUpperCase()}
+                          </Typography>
                           <CopyToClipboard text={String(children)}>
                             <Button sx={{ textTransform: 'none', color: 'white' }} onClick={handleCopy}>
                               {isCopied ? (
@@ -279,6 +290,7 @@ export default function Chat({
           onSubmit={(e) => {
             e.preventDefault();
             handleSubmit(e);
+            setTokensFromPrompt(0);
           }}
           ref={formRef}
           style={{ width: '100%' }}
@@ -298,7 +310,10 @@ export default function Chat({
               }
             }}
             autoComplete="off"
-            onChange={handleInputChange}
+            onChange={(e: React.ChangeEvent<HTMLInputElement> | React.ChangeEvent<HTMLTextAreaElement>) => {
+              handleInputChange(e);
+              debouncedHandleInputChange(e);
+            }}
             placeholder="Type a message..."
             maxRows={5}
             sx={{
@@ -342,7 +357,7 @@ export default function Chat({
                     />
                   </Box>
                   <Typography variant="body1" style={{ color: 'red' }}>
-                    17
+                    {tokensFromPrompt}
                   </Typography>
                 </InputAdornment>
               ),
