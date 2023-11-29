@@ -1,6 +1,11 @@
 'use client';
 
-import React from 'react';
+import React,
+{
+  useState,
+  useEffect,
+  ReactNode,
+} from 'react';
 import {
   Box,
   Container,
@@ -25,16 +30,23 @@ import {
   Legend,
   ArcElement,
   BarElement,
+  ChartData,
+  Filler,
 } from 'chart.js';
 import {
   Line,
   Pie,
   Bar,
 } from 'react-chartjs-2';
-import { fetchDashboard } from '@/services/dashboardService';
+import PersonIcon from '@mui/icons-material/Person';
+import ChatIcon from '@mui/icons-material/Chat';
+import GroupsIcon from '@mui/icons-material/Groups';
+import TokenIcon from '@mui/icons-material/Token';
+import ArrowDropDownCircleIcon from '@mui/icons-material/ArrowDropDownCircle';
+import SendIcon from '@mui/icons-material/Send';
+import CircularProgress from '@mui/material/CircularProgress';
 import WTitle1 from '../components/WTitle1';
-import mockData from './components/data1';
-import Group from './components/group1';
+import { fetchDashboard } from '@/services/dashboardService';
 
 ChartJS.register(
   CategoryScale,
@@ -46,11 +58,35 @@ ChartJS.register(
   Title,
   Tooltip,
   Legend,
+  Filler,
 );
 
 export default function Admin() {
-  const data = fetchDashboard();
-  console.log(data);
+  const [dashboardData, setDashboardData] = useState<DashboardData | null>(null);
+
+  useEffect(() => {
+    fetchDashboard()
+      .then((data) => {
+        setDashboardData(data);
+        console.log(data);
+      })
+      .catch((error) => console.error('Error fetching dashboard data: ', error));
+  }, []);
+
+  if (!dashboardData) {
+    return (
+      <div style={{
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+        height: '100vh',
+      }}
+      >
+        <CircularProgress style={{ color: '#fff' }} />
+      </div>
+    );
+  }
+
   const recentUpdates = [
     {
       id: 1, title: 'Thomas Anderson', description: 'Gave 1,000 tokens to Software Engineers', imageUrl: '/tommy.png',
@@ -80,27 +116,80 @@ export default function Admin() {
     datasets: [
       {
         label: 'Token Usage',
-        data: [0, 200, 800, 300, 750, 200, 500],
+        data: [7678, 5033, 7340, 3455, 2390, 7637, 8378],
         fill: true,
-        backgroundColor: '#E93D44',
         borderColor: '#E93D44',
       },
     ],
   };
 
-  const teamUsageData = {
-    labels: ['Team A', 'Team B', 'Team C', 'Team D', 'Team E', 'Team F'],
+  interface GroupInfo {
+    availableTokens: number;
+    group: {
+      area: string;
+      createdAt: string;
+      id: number;
+      name: string;
+      updatedAt: string;
+    };
+    numberOfUsers: number;
+    totalTokens: number;
+  }
+
+  interface UsersInfo {
+    amount: number;
+    currentAmount: number;
+    user: {
+      createdAt: string;
+      email: string;
+      firstName: string;
+      id: string;
+      imageUrl: string;
+      lastName: string;
+      roleId: number;
+      updatedAt: string;
+    };
+  }
+
+  interface UsersTokenInfo {
+    amount: number;
+    currentAmount: number;
+    user: {
+      createdAt: string;
+      email: string;
+      firstName: string;
+      id: string;
+      imageUrl: string;
+      lastName: string;
+      roleId: number;
+      updatedAt: string;
+    };
+  }
+
+  interface DashboardData {
+    totalUsers: ReactNode;
+    totalConversations: ReactNode;
+    totalGroups: ReactNode;
+    totalActiveTokens: ReactNode;
+    totalUsedTokens: ReactNode;
+    totalPosts: ReactNode;
+    groupsWithMostUsedTokens: GroupInfo[];
+    userWithMostTokens: UsersInfo[];
+    usersWithMostUsedTokens: UsersTokenInfo[];
+  }
+
+  const teamUsageData: ChartData<'bar', number[], string> = dashboardData && Array.isArray(dashboardData.groupsWithMostUsedTokens) && dashboardData.groupsWithMostUsedTokens.length > 0 ? {
+    labels: dashboardData.groupsWithMostUsedTokens.map((group) => group.group.name),
     datasets: [
       {
         label: 'Token Usage per Team',
-        data: [300, 200, 100, 400, 250, 100],
+        data: dashboardData.groupsWithMostUsedTokens.map((group) => group.totalTokens),
         backgroundColor: [
-          '#E93D44',
-          '#AE282C',
-          '#E93D44',
-          '#AE282C',
-          '#E93D44',
-          '#AE282C',
+          '#6622CC',
+          '#FF47DA',
+          '#23C9FF',
+          '#F1C40F',
+          '#FF6542',
         ],
         hoverBackgroundColor: [
           '#E7E9ED',
@@ -111,41 +200,89 @@ export default function Admin() {
         ],
       },
     ],
+  } : {
+    labels: [],
+    datasets: [{
+      label: 'Token Usage per Team',
+      data: [],
+      backgroundColor: [],
+      hoverBackgroundColor: [],
+    }],
   };
 
-  const responseTimeWeeklyData = {
-    labels: ['Week 1', 'Week 2', 'Week 3', 'Week 4'],
+  const userTokenTop: ChartData<'pie', number[], string> = dashboardData && Array.isArray(dashboardData.userWithMostTokens) && dashboardData.userWithMostTokens.length > 0 ? {
+    labels: dashboardData.userWithMostTokens.map((user) => user.user.firstName),
     datasets: [
       {
-        label: 'Average Response Time (ms)',
-        data: [120, 110, 100, 80],
-        backgroundColor: '#E93D44',
-        borderColor: '#fff',
-        borderWidth: 1,
-        // barThickness: 10,
-        // categoryPercentage: 0.9,
-        // barPercentage: 1.1,
+        label: 'Users with Most Tokens',
+        data: dashboardData.userWithMostTokens.map((user) => user.amount),
+        backgroundColor: [
+          '#6622CC',
+          '#FF47DA',
+          '#23C9FF',
+          '#F1C40F',
+          '#FF6542',
+        ],
+        hoverBackgroundColor: [
+          '#E7E9ED',
+          '#E7E9ED',
+          '#E7E9ED',
+          '#E7E9ED',
+          '#E7E9ED',
+        ],
       },
     ],
+  } : {
+    labels: [],
+    datasets: [{
+      label: 'Users with Most Tokens',
+      data: [],
+      backgroundColor: [],
+      hoverBackgroundColor: [],
+    }],
   };
 
-  const options = {
-    indexAxis: 'y' as const,
-    scales: {
-      x: {
-        grid: {
-          display: false,
-        },
-        beginAtZero: true,
+  const userTokenUsage: ChartData<'pie', number[], string> = dashboardData && Array.isArray(dashboardData.usersWithMostUsedTokens) && dashboardData.usersWithMostUsedTokens.length > 0 ? {
+    labels: dashboardData.usersWithMostUsedTokens.map((user) => user.user.firstName),
+    datasets: [
+      {
+        label: 'Users Token Usage',
+        data: dashboardData.usersWithMostUsedTokens.map((user) => user.amount),
+        backgroundColor: [
+          '#6622CC',
+          '#FF47DA',
+          '#23C9FF',
+          '#F1C40F',
+          '#FF6542',
+        ],
+        hoverBackgroundColor: [
+          '#E7E9ED',
+          '#E7E9ED',
+          '#E7E9ED',
+          '#E7E9ED',
+          '#E7E9ED',
+        ],
       },
+    ],
+  } : {
+    labels: [],
+    datasets: [{
+      label: 'Users Token Usage',
+      data: [],
+      backgroundColor: [],
+      hoverBackgroundColor: [],
+    }],
+  };
+
+  // THIS IS TO EDIT CHART DESIGN
+  const lineChartOptions = {
+    animation: {
+      animateScale: true,
+      duration: 5000,
+    },
+    scales: {
       y: {
-        grid: {
-          display: false,
-        },
-        ticks: {
-          autoSkip: false,
-          padding: 2,
-        },
+        beginAtZero: true,
       },
     },
   };
@@ -155,6 +292,11 @@ export default function Admin() {
       legend: {
         // position: 'left' as const,
       },
+    },
+    animation: {
+      animationRotate: true,
+      animateScale: true,
+      duration: 3000,
     },
   };
 
@@ -180,22 +322,186 @@ export default function Admin() {
 
   return (
     <Container maxWidth="xl">
-      <Box marginLeft="100px">
-        <WTitle1 text="Dashboard." redText="" variantBig paddings />
+      <Box marginLeft="50px">
+        <WTitle1 text="Dashboard." redText="" />
       </Box>
       <Grid container spacing={2}>
         <Grid item xs={12} md={9}>
-          {/* dona */}
+          {/* GENERAL INFO CARDS */}
           <Grid container padding="0rem 0 0 3rem" gap={4}>
-            <Grid container padding="0rem 0 3rem 3rem" gap={4}>
-              {mockData
-                .map((group, index) => (
-                  <Group key={index} {...group} />
-                ))}
+            <Grid item xs={12} container gap={4}>
+              <Grid item xs={3.5}>
+                <Card style={{ backgroundColor: 'black', borderRadius: '20px' }}>
+                  <CardContent style={{ display: 'flex', alignItems: 'center' }}>
+                    <div style={{
+                      backgroundColor: '#fff',
+                      padding: '15px',
+                      borderRadius: '10px',
+                      marginRight: '20px',
+                    }}
+                    >
+                      <PersonIcon style={{ color: '#000', fontSize: '5vh' }} />
+                    </div>
+                    <div>
+                      <Typography variant="h3" style={{ color: 'white' }}>{dashboardData.totalUsers}</Typography>
+                      <Typography variant="subtitle1" style={{ color: 'white' }}>Wizeliners</Typography>
+                    </div>
+                  </CardContent>
+                </Card>
+              </Grid>
+              <Grid item xs={3.5}>
+                <Card style={{ backgroundColor: 'black', borderRadius: '20px' }}>
+                  <CardContent style={{ display: 'flex', alignItems: 'center' }}>
+                    <div style={{
+                      backgroundColor: '#fff',
+                      padding: '15px',
+                      borderRadius: '10px',
+                      marginRight: '20px',
+                    }}
+                    >
+                      <ChatIcon style={{ color: '#000', fontSize: '5vh' }} />
+                    </div>
+                    <div>
+                      <Typography variant="h3" style={{ color: 'white' }}>{dashboardData.totalConversations}</Typography>
+                      <Typography variant="subtitle1" style={{ color: 'white' }}>Conversations</Typography>
+                    </div>
+                  </CardContent>
+                </Card>
+              </Grid>
+              <Grid item xs={3.5}>
+                <Card style={{ backgroundColor: 'black', borderRadius: '20px' }}>
+                  <CardContent style={{ display: 'flex', alignItems: 'center' }}>
+                    <div style={{
+                      backgroundColor: '#fff',
+                      padding: '15px',
+                      borderRadius: '10px',
+                      marginRight: '20px',
+                    }}
+                    >
+                      <GroupsIcon style={{ color: '#000', fontSize: '5vh' }} />
+                    </div>
+                    <div>
+                      <Typography variant="h3" style={{ color: 'white' }}>{dashboardData.totalGroups}</Typography>
+                      <Typography variant="subtitle1" style={{ color: 'white' }}>Groups</Typography>
+                    </div>
+                  </CardContent>
+                </Card>
+              </Grid>
+            </Grid>
+            <Grid item xs={12} container gap={4}>
+              <Grid item xs={3.5}>
+                <Card style={{ backgroundColor: 'black', borderRadius: '20px' }}>
+                  <CardContent style={{ display: 'flex', alignItems: 'center' }}>
+                    <div style={{
+                      backgroundColor: '#fff',
+                      padding: '15px',
+                      borderRadius: '10px',
+                      marginRight: '20px',
+                    }}
+                    >
+                      <TokenIcon style={{ color: '#000', fontSize: '5vh' }} />
+                    </div>
+                    <div>
+                      <Typography variant="h3" style={{ color: 'white' }}>{dashboardData.totalActiveTokens}</Typography>
+                      <Typography variant="subtitle1" style={{ color: 'white' }}>Active Tokens</Typography>
+                    </div>
+                  </CardContent>
+                </Card>
+              </Grid>
+              <Grid item xs={3.5}>
+                <Card style={{ backgroundColor: 'black', borderRadius: '20px' }}>
+                  <CardContent style={{ display: 'flex', alignItems: 'center' }}>
+                    <div style={{
+                      backgroundColor: '#fff',
+                      padding: '15px',
+                      borderRadius: '10px',
+                      marginRight: '20px',
+                    }}
+                    >
+                      <ArrowDropDownCircleIcon style={{ color: '#000', fontSize: '5vh' }} />
+                    </div>
+                    <div>
+                      <Typography variant="h3" style={{ color: 'white' }}>{dashboardData.totalUsedTokens}</Typography>
+                      <Typography variant="subtitle1" style={{ color: 'white' }}>Tokens Used</Typography>
+                    </div>
+                  </CardContent>
+                </Card>
+              </Grid>
+              <Grid item xs={3.5}>
+                <Card style={{ backgroundColor: 'black', borderRadius: '20px' }}>
+                  <CardContent style={{ display: 'flex', alignItems: 'center' }}>
+                    <div style={{
+                      backgroundColor: '#fff',
+                      padding: '15px',
+                      borderRadius: '10px',
+                      marginRight: '20px',
+                    }}
+                    >
+                      <SendIcon style={{ color: '#000', fontSize: '5vh' }} />
+                    </div>
+                    <div>
+                      <Typography variant="h3" style={{ color: 'white' }}>{dashboardData.totalPosts}</Typography>
+                      <Typography variant="subtitle1" style={{ color: 'white' }}>Post Requests</Typography>
+                    </div>
+                  </CardContent>
+                </Card>
+              </Grid>
             </Grid>
           </Grid>
-          {/* line chart */}
-          <Grid padding="0rem 3rem 3rem 5rem" gap={4}>
+          {/* USER WITH MOST TOKENS AND USER WITH MOST TOKENS USED */}
+          <Grid container padding="4rem 3rem 3rem 3rem" gap={0}>
+            <Grid item xs={6} md={6}>
+              <Card sx={{
+                margin: '5px',
+                padding: '5px',
+                backgroundColor: '#000',
+                color: '#fff',
+                boxShadow: '0px 4px 8px rgba(0, 0, 0, 1)',
+                borderRadius: '20px',
+              }}
+              >
+                <CardContent>
+                  <Typography variant="h5">Top User With Most Tokens</Typography>
+                  <Pie data={userTokenTop} options={pieChartOptions} />
+                </CardContent>
+              </Card>
+            </Grid>
+            <Grid item xs={6} md={6}>
+              <Card sx={{
+                margin: '5px',
+                padding: '5px',
+                backgroundColor: '#000',
+                color: '#fff',
+                boxShadow: '0px 4px 8px rgba(0, 0, 0, 1)',
+                borderRadius: '20px',
+              }}
+              >
+                <CardContent>
+                  <Typography variant="h5">Top User With Most Token Usage</Typography>
+                  <Pie data={userTokenUsage} options={pieChartOptions} />
+                </CardContent>
+              </Card>
+            </Grid>
+          </Grid>
+          {/* TOKEN USAGE PER TEAM */}
+          <Grid padding="0rem 2rem 3rem 2rem" gap={4}>
+            <Card sx={{
+              margin: '20px',
+              padding: '20px',
+              backgroundColor: '#000',
+              color: '#fff',
+              boxShadow: '0px 4px 8px rgba(0, 0, 0, 1)',
+              borderRadius: '20px',
+            }}
+            >
+              <CardContent>
+                <Typography variant="h5">Top Groups With Token Usage</Typography>
+                <Bar data={teamUsageData} options={pieChartOptions} />
+              </CardContent>
+            </Card>
+          </Grid>
+          {/* LINE CHART */}
+          <Grid padding="0rem 2rem 3rem 2rem" gap={4}>
             <Card sx={{
               margin: '20px',
               padding: '20px',
@@ -206,46 +512,11 @@ export default function Admin() {
             }}
             >
               <Typography variant="h5">Daily Token Usage</Typography>
-              <Line data={tokenUsageData} />
+              <Line data={tokenUsageData} options={lineChartOptions} />
             </Card>
           </Grid>
-          {/* pie chart y bar chart */}
-          <Grid container padding="0rem 4rem 3rem 6rem" gap={0}>
-            <Grid item xs={6} md={6}>
-              <Card sx={{
-                margin: '5px',
-                padding: '5px',
-                backgroundColor: '#000',
-                color: '#fff',
-                boxShadow: '0px 4px 8px rgba(0, 0, 0, 1)',
-                borderRadius: '20px',
-              }}
-              >
-                <CardContent>
-                  <Typography variant="h5">Token Usage Per Team</Typography>
-                  <Pie data={teamUsageData} options={pieChartOptions} />
-                </CardContent>
-              </Card>
-            </Grid>
-            <Grid item xs={6} md={6}>
-              <Card sx={{
-                margin: '5px',
-                padding: '5px',
-                backgroundColor: '#000',
-                color: '#fff',
-                boxShadow: '0px 4px 8px rgba(0, 0, 0, 1)',
-                borderRadius: '20px',
-                // height: '460px',
-              }}
-              >
-                <CardContent>
-                  <Typography variant="h5">Average Response Time</Typography>
-                  <Bar data={responseTimeWeeklyData} options={options} />
-                </CardContent>
-              </Card>
-            </Grid>
-          </Grid>
-          <Grid padding="0rem 3rem 3rem 5rem" gap={4}>
+          {/* ERROR RATE CHART */}
+          <Grid padding="0rem 2rem 3rem 2rem" gap={4}>
             <Card sx={{
               margin: '20px',
               padding: '20px',
@@ -264,7 +535,7 @@ export default function Admin() {
         </Grid>
         {/* menu derecha */}
         <Grid item xs={12} md={3}>
-          <Box sx={{ position: 'sticky', top: 0 }}>
+          <Box sx={{ position: 'sticky', top: '100px' }}>
             <Card sx={{
               marginBottom: 2,
               backgroundColor: '#000',
