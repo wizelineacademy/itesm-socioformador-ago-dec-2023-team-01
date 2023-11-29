@@ -82,18 +82,20 @@ export default function ChatHistory({
           lg={6}
           item
         >
-          <Button
-            variant="outlined"
-            color="error"
-            startIcon={<LogoutIcon />}
-            sx={{
-              textTransform: 'none',
-              borderRadius: '20px',
-              width: '100%',
-            }}
-          >
-            Logout
-          </Button>
+          <Link href="/api/auth/logout">
+            <Button
+              variant="outlined"
+              color="error"
+              startIcon={<LogoutIcon />}
+              sx={{
+                textTransform: 'none',
+                borderRadius: '20px',
+                width: '100%',
+              }}
+            >
+              Logout
+            </Button>
+          </Link>
         </Grid>
       </Grid>
 
