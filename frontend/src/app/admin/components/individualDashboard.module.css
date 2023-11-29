@@ -5,3 +5,33 @@
   position: relative;
   top: 5px;
 }
+
+.container {
+  position: relative;
+}
+
+.overlay {
+  height: 200px;
+  width: 450px;
+  border-radius: 20px;
+  position: absolute;
+  top: 0;
+  left: 0;
+  background-color: rgba(17, 24, 35, 0.4);
+  box-shadow: '0 4px 30px rgba(0, 0, 0, 0.1)';
+  backdrop-filter: blur(4px);
+  border-bottom: '1px solid rgba(255, 255, 255, 0.1)';
+}
+
+.overlay1 {
+  height: 200px;
+  width: 250px;
+  border-radius: 20px;
+  position: absolute;
+  top: 0;
+  left: 0;
+  background-color: rgba(17, 24, 35, 0.4);
+  box-shadow: '0 4px 30px rgba(0, 0, 0, 0.1)';
+  backdrop-filter: blur(4px);
+  border-bottom: '1px solid rgba(255, 255, 255, 0.1)';
+}
