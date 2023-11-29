@@ -13,6 +13,7 @@ import SendIcon from '@mui/icons-material/Send';
 import IconButton from '@mui/material/IconButton';
 import InputAdornment from '@mui/material/InputAdornment';
 import ContentCopyIcon from '@mui/icons-material/ContentCopy';
+import StopCircleIcon from '@mui/icons-material/StopCircle';
 import CheckIcon from '@mui/icons-material/Check';
 import { Message } from 'ai/react';
 import Markdown from 'react-markdown';
@@ -26,10 +27,8 @@ import { useSelector } from 'react-redux';
 import {
   numTokensFromMessage,
   createConversation,
-  postToConversation,
   getConversationFullChat,
 } from '../../services/chatService';
-import Awaiting from './awaiting';
 import { RootState } from '../redux/store';
 import NotWelcome from './NotWelcome';
 
@@ -44,6 +43,7 @@ interface ChatProps {
   setConversationId: (id: number) => void;
   conversationId: number;
   getChatHistory: () => void;
+  stopChat: () => void;
 }
 
 async function getMessages(conversationId: number) {
@@ -69,7 +69,7 @@ async function getMessages(conversationId: number) {
 }
 
 export default function Chat({
-  setConversationId, conversationId, getChatHistory, input, setInput, handleInputChange, handleSubmit, isLoading, messages, setMessages,
+  setConversationId, conversationId, getChatHistory, input, setInput, handleInputChange, handleSubmit, isLoading, messages, setMessages, stopChat,
 }: ChatProps) {
   const user = useSelector((state: RootState) => state.user.userInfo);
   const [isCopied, setCopied] = useState(false);
@@ -121,6 +121,13 @@ export default function Chat({
     setTimeout(() => {
       setCopied(false);
     }, 1000);
+  };
+
+  const lastMessage = () => {
+    if (messages.length > 0) {
+      return messages[messages.length - 1];
+    }
+    return undefined;
   };
 
   const debouncedHandleInputChange = _debounce(
@@ -341,12 +348,23 @@ export default function Chat({
               },
               endAdornment: (
                 <InputAdornment position="end" sx={{ position: 'inherit' }}>
-                  {isLoading ? <CircularProgress size={35} thickness={4} sx={{ color: 'white', marginRight: '10px' }} />
-                    : (
-                      <IconButton type="submit">
-                        <SendIcon sx={{ color: 'white' }} />
-                      </IconButton>
-                    )}
+                  {isLoading && lastMessage()?.role !== 'user' && (
+                  <IconButton onClick={(e) => {
+                    e.preventDefault();
+                    stopChat();
+                  }}
+                  >
+                    <StopCircleIcon fontSize="large" sx={{ color: 'white' }} />
+                  </IconButton>
+                  )}
+                  {isLoading && lastMessage()?.role === 'user' && (
+                  <CircularProgress size={35} thickness={4} sx={{ color: 'white', marginRight: '10px' }} />
+                  )}
+                  {!isLoading && (
+                  <IconButton type="submit">
+                    <SendIcon sx={{ color: 'white' }} />
+                  </IconButton>
+                  )}
                   <Box sx={{ transform: 'rotate(180deg)' }}>
                     <Image
                       src="wizecoin.svg"
@@ -356,7 +374,7 @@ export default function Chat({
                       layout="fixed"
                     />
                   </Box>
-                  <Typography variant="body1" style={{ color: 'red' }}>
+                  <Typography variant="body1" style={{ color: 'red' }} ml={1}>
                     {tokensFromPrompt}
                   </Typography>
                 </InputAdornment>

@@ -149,6 +149,7 @@ function Mainpage() {
             isLoading={chatIsLoading}
             messages={messages}
             setMessages={setMessages}
+            stopChat={stop}
           />
         </Grid>
 
