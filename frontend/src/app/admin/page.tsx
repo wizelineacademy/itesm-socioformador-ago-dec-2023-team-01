@@ -521,7 +521,7 @@ export default function Admin() {
               </Card>
               <Box className={styles.overlaygraph}>
                 <LockClockIcon
-                  sx={{ fontSize: '7rem', padding: '13rem 0 0 28rem', color: 'white' }}
+                  sx={{ fontSize: '7rem', padding: '10rem 0 0 24rem', color: 'white' }}
                 />
               </Box>
             </Box>
@@ -545,7 +545,7 @@ export default function Admin() {
               </Card>
               <Box className={styles.overlaygraph}>
                 <LockClockIcon
-                  sx={{ fontSize: '7rem', padding: '13rem 0 0 28rem', color: 'white' }}
+                  sx={{ fontSize: '7rem', padding: '10rem 0 0 24rem', color: 'white' }}
                 />
               </Box>
             </Box>
@@ -584,7 +584,7 @@ export default function Admin() {
               </Card>
               <Box className={styles.overlayrecent}>
                 <LockClockIcon
-                  sx={{ fontSize: '7rem', padding: '6.5rem 0 0 8rem', color: 'white' }}
+                  sx={{ fontSize: '7rem', padding: '6.5rem 0 0 6rem', color: 'white' }}
                 />
               </Box>
             </Box>
@@ -614,7 +614,7 @@ export default function Admin() {
                 </Card>
                 <Box className={styles.overlayllms}>
                   <LockClockIcon
-                    sx={{ fontSize: '5rem', padding: '0.5rem 0 0 9rem', color: 'white' }}
+                    sx={{ fontSize: '5rem', padding: '0.5rem 0 0 7rem', color: 'white' }}
                   />
                 </Box>
               </Box>
