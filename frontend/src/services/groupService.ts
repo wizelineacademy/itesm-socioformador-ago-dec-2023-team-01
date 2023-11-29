@@ -18,7 +18,7 @@ export const fetchGroups = async (jwtToken: string) => {
       id: group.group.id,
       title: group.group.name,
       members: group.numberOfUsers,
-      moneySpent: 0,
+      moneySpent: ((group.totalTokens - (group.totalTokens - group.availableTokens)) / 1000) * 0.0015,
       data: {
         labels: ['Used'],
         datasets: [

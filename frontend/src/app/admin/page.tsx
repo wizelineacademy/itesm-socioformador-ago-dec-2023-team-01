@@ -48,6 +48,8 @@ import CircularProgress from '@mui/material/CircularProgress';
 import WTitle1 from '../components/WTitle1';
 import { fetchDashboard } from '@/services/dashboardService';
 
+const numeral = require('numeral');
+
 ChartJS.register(
   CategoryScale,
   LinearScale,
@@ -167,12 +169,12 @@ export default function Admin() {
   }
 
   interface DashboardData {
-    totalUsers: ReactNode;
-    totalConversations: ReactNode;
-    totalGroups: ReactNode;
-    totalActiveTokens: ReactNode;
-    totalUsedTokens: ReactNode;
-    totalPosts: ReactNode;
+    totalUsers: number;
+    totalConversations: number;
+    totalGroups: number;
+    totalActiveTokens: number;
+    totalUsedTokens: number;
+    totalPosts: number;
     groupsWithMostUsedTokens: GroupInfo[];
     userWithMostTokens: UsersInfo[];
     usersWithMostUsedTokens: UsersTokenInfo[];
@@ -323,7 +325,7 @@ export default function Admin() {
   return (
     <Container maxWidth="xl">
       <Box marginLeft="50px">
-        <WTitle1 text="Dashboard." redText="" />
+        <WTitle1 text="Dashboard." redText="" variantBig paddings />
       </Box>
       <Grid container spacing={2}>
         <Grid item xs={12} md={9}>
@@ -343,7 +345,7 @@ export default function Admin() {
                       <PersonIcon style={{ color: '#000', fontSize: '5vh' }} />
                     </div>
                     <div>
-                      <Typography variant="h3" style={{ color: 'white' }}>{dashboardData.totalUsers}</Typography>
+                      <Typography variant="h4" style={{ color: 'white' }}>{dashboardData.totalUsers}</Typography>
                       <Typography variant="subtitle1" style={{ color: 'white' }}>Wizeliners</Typography>
                     </div>
                   </CardContent>
@@ -362,7 +364,7 @@ export default function Admin() {
                       <ChatIcon style={{ color: '#000', fontSize: '5vh' }} />
                     </div>
                     <div>
-                      <Typography variant="h3" style={{ color: 'white' }}>{dashboardData.totalConversations}</Typography>
+                      <Typography variant="h4" style={{ color: 'white' }}>{dashboardData.totalConversations}</Typography>
                       <Typography variant="subtitle1" style={{ color: 'white' }}>Conversations</Typography>
                     </div>
                   </CardContent>
@@ -381,7 +383,7 @@ export default function Admin() {
                       <GroupsIcon style={{ color: '#000', fontSize: '5vh' }} />
                     </div>
                     <div>
-                      <Typography variant="h3" style={{ color: 'white' }}>{dashboardData.totalGroups}</Typography>
+                      <Typography variant="h4" style={{ color: 'white' }}>{dashboardData.totalGroups}</Typography>
                       <Typography variant="subtitle1" style={{ color: 'white' }}>Groups</Typography>
                     </div>
                   </CardContent>
@@ -402,7 +404,7 @@ export default function Admin() {
                       <TokenIcon style={{ color: '#000', fontSize: '5vh' }} />
                     </div>
                     <div>
-                      <Typography variant="h3" style={{ color: 'white' }}>{dashboardData.totalActiveTokens}</Typography>
+                      <Typography variant="h4" style={{ color: 'white' }}>{numeral(dashboardData.totalActiveTokens).format('0.0a')}</Typography>
                       <Typography variant="subtitle1" style={{ color: 'white' }}>Active Tokens</Typography>
                     </div>
                   </CardContent>
@@ -421,7 +423,7 @@ export default function Admin() {
                       <ArrowDropDownCircleIcon style={{ color: '#000', fontSize: '5vh' }} />
                     </div>
                     <div>
-                      <Typography variant="h3" style={{ color: 'white' }}>{dashboardData.totalUsedTokens}</Typography>
+                      <Typography variant="h4" style={{ color: 'white' }}>{numeral(dashboardData.totalUsedTokens).format('0.0a')}</Typography>
                       <Typography variant="subtitle1" style={{ color: 'white' }}>Tokens Used</Typography>
                     </div>
                   </CardContent>
@@ -440,8 +442,8 @@ export default function Admin() {
                       <SendIcon style={{ color: '#000', fontSize: '5vh' }} />
                     </div>
                     <div>
-                      <Typography variant="h3" style={{ color: 'white' }}>{dashboardData.totalPosts}</Typography>
-                      <Typography variant="subtitle1" style={{ color: 'white' }}>Post Requests</Typography>
+                      <Typography variant="h4" style={{ color: 'white' }}>{dashboardData.totalPosts > 9999 ? numeral(dashboardData.totalPosts) : dashboardData.totalPosts}</Typography>
+                      <Typography variant="subtitle1" style={{ color: 'white' }}>Prompts</Typography>
                     </div>
                   </CardContent>
                 </Card>
