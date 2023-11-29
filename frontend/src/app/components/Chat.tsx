@@ -106,7 +106,7 @@ export default function Chat({
   // crear una conversacion si no hay ninguna
   useEffect(() => {
     if (!user) return;
-    if (conversationId === 0 && messages.length === 1) {
+    if (conversationId === 0 && messages.length === 2) {
       const title = messages[0].content.slice(0, 30).trimEnd();
       createConversation(user.id, title).then((conversation) => {
         setConversationId(conversation.id);
