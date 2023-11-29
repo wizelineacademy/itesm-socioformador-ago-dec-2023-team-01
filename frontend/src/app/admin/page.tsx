@@ -17,6 +17,7 @@ import {
   ListItemText,
   ListItemAvatar,
   Avatar,
+  Icon,
 } from '@mui/material';
 import {
   Chart as ChartJS,
@@ -37,9 +38,13 @@ import {
   Pie,
   Bar,
 } from 'react-chartjs-2';
+import PersonIcon from '@mui/icons-material/Person';
+import ChatIcon from '@mui/icons-material/Chat';
+import GroupsIcon from '@mui/icons-material/Groups';
+import TokenIcon from '@mui/icons-material/Token';
+import ArrowDropDownCircleIcon from '@mui/icons-material/ArrowDropDownCircle';
+import SendIcon from '@mui/icons-material/Send';
 import WTitle1 from '../components/WTitle1';
-import mockData from './components/data1';
-import Group from './components/group1';
 import { fetchDashboard } from '@/services/dashboardService';
 
 ChartJS.register(
@@ -155,7 +160,7 @@ export default function Admin() {
     usersWithMostUsedTokens: UsersTokenInfo[];
   }
 
-  const teamUsageData: ChartData<'pie', number[], string> = dashboardData && Array.isArray(dashboardData.groupsWithMostUsedTokens) && dashboardData.groupsWithMostUsedTokens.length > 0 ? {
+  const teamUsageData: ChartData<'bar', number[], string> = dashboardData && Array.isArray(dashboardData.groupsWithMostUsedTokens) && dashboardData.groupsWithMostUsedTokens.length > 0 ? {
     labels: dashboardData.groupsWithMostUsedTokens.map((group) => group.group.name),
     datasets: [
       {
@@ -269,7 +274,7 @@ export default function Admin() {
 
   // THIS IS TO EDIT CHART DESIGN
   const options = {
-    indexAxis: 'y' as const,
+    indexAxis: 'x' as const,
     scales: {
       x: {
         grid: {
@@ -338,90 +343,134 @@ export default function Admin() {
   // console.log('Groups Data:', JSON.stringify(teamUsageData, null, 2));
   return (
     <Container maxWidth="xl">
-      <Box marginLeft="100px">
+      <Box marginLeft="50px">
         <WTitle1 text="Dashboard." redText="" />
       </Box>
       <Grid container spacing={2}>
         <Grid item xs={12} md={9}>
-          {/* dona */}
+          {/* GENERAL INFO CARDS */}
           <Grid container padding="0rem 0 0 3rem" gap={4}>
-            <Grid container padding="0rem 0 3rem 3rem" gap={4}>
-              {mockData
-                .map((group, index) => (
-                  <Group key={index} {...group} />
-                ))}
+            <Grid item xs={12} container gap={4}>
+              <Grid item xs={3.5}>
+                <Card style={{ backgroundColor: 'black', borderRadius: '20px' }}>
+                  <CardContent style={{ display: 'flex', alignItems: 'center' }}>
+                    <div style={{
+                      backgroundColor: '#fff',
+                      padding: '15px',
+                      borderRadius: '10px',
+                      marginRight: '20px',
+                    }}
+                    >
+                      <PersonIcon style={{ color: '#000', fontSize: '5vh' }} />
+                    </div>
+                    <div>
+                      <Typography variant="h3" style={{ color: 'white' }}>1,200</Typography>
+                      <Typography variant="subtitle1" style={{ color: 'white' }}>Wizeliners</Typography>
+                    </div>
+                  </CardContent>
+                </Card>
+              </Grid>
+              <Grid item xs={3.5}>
+                <Card style={{ backgroundColor: 'black', borderRadius: '20px' }}>
+                  <CardContent style={{ display: 'flex', alignItems: 'center' }}>
+                    <div style={{
+                      backgroundColor: '#fff',
+                      padding: '15px',
+                      borderRadius: '10px',
+                      marginRight: '20px',
+                    }}
+                    >
+                      <ChatIcon style={{ color: '#000', fontSize: '5vh' }} />
+                    </div>
+                    <div>
+                      <Typography variant="h3" style={{ color: 'white' }}>23,000</Typography>
+                      <Typography variant="subtitle1" style={{ color: 'white' }}>Conversations</Typography>
+                    </div>
+                  </CardContent>
+                </Card>
+              </Grid>
+              <Grid item xs={3.5}>
+                <Card style={{ backgroundColor: 'black', borderRadius: '20px' }}>
+                  <CardContent style={{ display: 'flex', alignItems: 'center' }}>
+                    <div style={{
+                      backgroundColor: '#fff',
+                      padding: '15px',
+                      borderRadius: '10px',
+                      marginRight: '20px',
+                    }}
+                    >
+                      <GroupsIcon style={{ color: '#000', fontSize: '5vh' }} />
+                    </div>
+                    <div>
+                      <Typography variant="h3" style={{ color: 'white' }}>51</Typography>
+                      <Typography variant="subtitle1" style={{ color: 'white' }}>Groups</Typography>
+                    </div>
+                  </CardContent>
+                </Card>
+              </Grid>
             </Grid>
-          </Grid>
-          {/* line chart */}
-          <Grid padding="0rem 3rem 3rem 5rem" gap={4}>
-            <Card sx={{
-              margin: '20px',
-              padding: '20px',
-              backgroundColor: '#000',
-              color: '#fff',
-              boxShadow: '0px 4px 8px rgba(0, 0, 0, 1)',
-              borderRadius: '20px',
-            }}
-            >
-              <Typography variant="h5">Daily Token Usage</Typography>
-              <Line data={tokenUsageData} options={lineChartOptions} />
-            </Card>
-          </Grid>
-          {/* TOKEN USAGE PER TEAM */}
-          <Grid container padding="0rem 4rem 3rem 6rem" gap={0}>
-            <Grid item xs={6} md={6}>
-              <Card sx={{
-                margin: '5px',
-                padding: '5px',
-                backgroundColor: '#000',
-                color: '#fff',
-                boxShadow: '0px 4px 8px rgba(0, 0, 0, 1)',
-                borderRadius: '20px',
-              }}
-              >
-                <CardContent>
-                  <Typography variant="h5">Token Usage Per Team</Typography>
-                  <Pie data={teamUsageData} options={pieChartOptions} />
-                </CardContent>
-              </Card>
+            <Grid item xs={12} container gap={4}>
+              <Grid item xs={3.5}>
+                <Card style={{ backgroundColor: 'black', borderRadius: '20px' }}>
+                  <CardContent style={{ display: 'flex', alignItems: 'center' }}>
+                    <div style={{
+                      backgroundColor: '#fff',
+                      padding: '15px',
+                      borderRadius: '10px',
+                      marginRight: '20px',
+                    }}
+                    >
+                      <TokenIcon style={{ color: '#000', fontSize: '5vh' }} />
+                    </div>
+                    <div>
+                      <Typography variant="h3" style={{ color: 'white' }}>20,000</Typography>
+                      <Typography variant="subtitle1" style={{ color: 'white' }}>Active Tokens</Typography>
+                    </div>
+                  </CardContent>
+                </Card>
+              </Grid>
+              <Grid item xs={3.5}>
+                <Card style={{ backgroundColor: 'black', borderRadius: '20px' }}>
+                  <CardContent style={{ display: 'flex', alignItems: 'center' }}>
+                    <div style={{
+                      backgroundColor: '#fff',
+                      padding: '15px',
+                      borderRadius: '10px',
+                      marginRight: '20px',
+                    }}
+                    >
+                      <ArrowDropDownCircleIcon style={{ color: '#000', fontSize: '5vh' }} />
+                    </div>
+                    <div>
+                      <Typography variant="h3" style={{ color: 'white' }}>12,000</Typography>
+                      <Typography variant="subtitle1" style={{ color: 'white' }}>Tokens Used</Typography>
+                    </div>
+                  </CardContent>
+                </Card>
+              </Grid>
+              <Grid item xs={3.5}>
+                <Card style={{ backgroundColor: 'black', borderRadius: '20px' }}>
+                  <CardContent style={{ display: 'flex', alignItems: 'center' }}>
+                    <div style={{
+                      backgroundColor: '#fff',
+                      padding: '15px',
+                      borderRadius: '10px',
+                      marginRight: '20px',
+                    }}
+                    >
+                      <SendIcon style={{ color: '#000', fontSize: '5vh' }} />
+                    </div>
+                    <div>
+                      <Typography variant="h3" style={{ color: 'white' }}>240</Typography>
+                      <Typography variant="subtitle1" style={{ color: 'white' }}>Post Requests</Typography>
+                    </div>
+                  </CardContent>
+                </Card>
+              </Grid>
             </Grid>
-            <Grid item xs={6} md={6}>
-              <Card sx={{
-                margin: '5px',
-                padding: '5px',
-                backgroundColor: '#000',
-                color: '#fff',
-                boxShadow: '0px 4px 8px rgba(0, 0, 0, 1)',
-                borderRadius: '20px',
-                // height: '460px',
-              }}
-              >
-                <CardContent>
-                  <Typography variant="h5">Average Response Time</Typography>
-                  <Bar data={responseTimeWeeklyData} options={options} />
-                </CardContent>
-              </Card>
-            </Grid>
-          </Grid>
-          {/* BAR CHART */}
-          <Grid padding="0rem 3rem 3rem 5rem" gap={4}>
-            <Card sx={{
-              margin: '20px',
-              padding: '20px',
-              backgroundColor: '#000',
-              color: '#fff',
-              boxShadow: '0px 4px 8px rgba(0, 0, 0, 1)',
-              borderRadius: '20px',
-            }}
-            >
-              <CardContent>
-                <Typography variant="h5">Weekly Error Rate</Typography>
-                <Line data={errorRateData} />
-              </CardContent>
-            </Card>
           </Grid>
           {/* USER WITH MOST TOKENS AND USER WITH MOST TOKENS USED */}
-          <Grid container padding="0rem 4rem 3rem 6rem" gap={0}>
+          <Grid container padding="4rem 3rem 3rem 3rem" gap={0}>
             <Grid item xs={6} md={6}>
               <Card sx={{
                 margin: '5px',
@@ -433,7 +482,7 @@ export default function Admin() {
               }}
               >
                 <CardContent>
-                  <Typography variant="h5">User With Most Tokens</Typography>
+                  <Typography variant="h5">Top User With Most Tokens</Typography>
                   <Pie data={userTokenTop} options={pieChartOptions} />
                 </CardContent>
               </Card>
@@ -449,16 +498,65 @@ export default function Admin() {
               }}
               >
                 <CardContent>
-                  <Typography variant="h5">Users Token Usage</Typography>
+                  <Typography variant="h5">Top User With Most Token Usage</Typography>
                   <Pie data={userTokenUsage} options={pieChartOptions} />
                 </CardContent>
               </Card>
             </Grid>
           </Grid>
+          {/* TOKEN USAGE PER TEAM */}
+          <Grid padding="0rem 2rem 3rem 2rem" gap={4}>
+            <Card sx={{
+              margin: '20px',
+              padding: '20px',
+              backgroundColor: '#000',
+              color: '#fff',
+              boxShadow: '0px 4px 8px rgba(0, 0, 0, 1)',
+              borderRadius: '20px',
+            }}
+            >
+              <CardContent>
+                <Typography variant="h5">Top Groups With Token Usage</Typography>
+                <Bar data={teamUsageData} options={pieChartOptions} />
+              </CardContent>
+            </Card>
+          </Grid>
+          {/* LINE CHART */}
+          <Grid padding="0rem 2rem 3rem 2rem" gap={4}>
+            <Card sx={{
+              margin: '20px',
+              padding: '20px',
+              backgroundColor: '#000',
+              color: '#fff',
+              boxShadow: '0px 4px 8px rgba(0, 0, 0, 1)',
+              borderRadius: '20px',
+            }}
+            >
+              <Typography variant="h5">Daily Token Usage</Typography>
+              <Line data={tokenUsageData} options={lineChartOptions} />
+            </Card>
+          </Grid>
+          {/* ERROR RATE CHART */}
+          <Grid padding="0rem 2rem 3rem 2rem" gap={4}>
+            <Card sx={{
+              margin: '20px',
+              padding: '20px',
+              backgroundColor: '#000',
+              color: '#fff',
+              boxShadow: '0px 4px 8px rgba(0, 0, 0, 1)',
+              borderRadius: '20px',
+            }}
+            >
+              <CardContent>
+                <Typography variant="h5">Weekly Error Rate</Typography>
+                <Line data={errorRateData} />
+              </CardContent>
+            </Card>
+          </Grid>
         </Grid>
         {/* menu derecha */}
         <Grid item xs={12} md={3}>
-          <Box sx={{ position: 'sticky', top: 0 }}>
+          <Box sx={{ position: 'sticky', top: '100px' }}>
             <Card sx={{
               marginBottom: 2,
               backgroundColor: '#000',
