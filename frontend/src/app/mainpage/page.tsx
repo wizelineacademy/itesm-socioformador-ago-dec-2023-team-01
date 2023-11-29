@@ -16,7 +16,6 @@ import TopNavbar from './components/topNavbar';
 import SideNavbar from './components/sideNavbar';
 
 export default function Mainpage() {
-  // const [showChatHistory, setShowChatHistory] = useState(false);
   const [conversationId, setConversationId] = useState(0);
   const [chatsHistory, setChatsHistory] = useState([{ title: '', id: 0 }]);
   const [isChatStopped, setIsChatStopped] = useState(false);
@@ -54,7 +53,6 @@ export default function Mainpage() {
       } catch (error) {
         console.log(error);
       }
-      console.log('posted to conversation', messagess);
     }
   };
 
@@ -62,7 +60,6 @@ export default function Mainpage() {
     if (!chatIsLoading && isChatStopped) {
       setIsChatStopped(false);
       setPrevConversationId(0);
-      // console.log('finishing posting messages to conversation with id', convId);
       postMessagesToConversation(convId, messages, user?.id ?? '');
     } else if (!chatIsLoading) {
       postMessagesToConversation(convId, messages, user?.id ?? '');

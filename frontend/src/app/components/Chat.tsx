@@ -64,7 +64,6 @@ async function getMessages(conversationId: number) {
     tempMessages.push(newUserMessage);
     tempMessages.push(newAssistantMessage);
   });
-  console.log('all mesasges gotten');
   return tempMessages;
 }
 
