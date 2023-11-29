@@ -26,10 +26,21 @@ export const dashboardService = {
         .sort((a: any, b: any) => a.totalTokens - b.totalTokens)
         .slice(0, 5);
       let totalPosts = 0;
-      conversations.forEach(async (conversation: { id: number }) => {
-        totalPosts += (
-          await postRepository.getPostsOfConversation(conversation.id)
-        ).length;
+      const conversationIds = conversations.map(
+        (conversation: { id: number }) => conversation.id,
+      );
+
+      const postPromises = conversationIds.map(async conversationId => {
+        const posts =
+          await postRepository.getPostsOfConversation(conversationId);
+        return posts.length;
+      });
+
+      const postLengths = await Promise.all(postPromises);
+
+      postLengths.forEach(length => {
+        totalPosts += length;
+        console.info(totalPosts);
       });
       const usersWithTokens = await Promise.all(
         users.map(async (user: { id: string }) => {

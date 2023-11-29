@@ -23,6 +23,8 @@ import Popup from '@/app/components/Popup';
 import { GroupProps } from './types';
 import { RootState } from '@/app/redux/store';
 
+const numeral = require('numeral');
+
 Chart.register(ArcElement);
 
 export default function Group({
@@ -188,8 +190,7 @@ export default function Group({
                 fontSize="23px"
               >
                 <span>
-                  $
-                  {moneySpent.toString()}
+                  {numeral(moneySpent.toString()).format('$0.00')}
                   {' USD'}
                 </span>
               </Typography>

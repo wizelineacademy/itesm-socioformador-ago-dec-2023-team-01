@@ -45,13 +45,20 @@ const tokenService = {
   },
   async getTotalTokensActive(): Promise<any> {
     const users = await userRepository.getUsers();
+    const promises = users.map(async user => {
+      const token = await userRepository.getUserCurrentToken(user.id);
+      return token;
+    });
+
+    const tokens = await Promise.all(promises);
+
     let totalTokens = 0;
     let totalTokensUsed = 0;
-    users.forEach(async user => {
-      const token = await userRepository.getUserCurrentToken(user.id);
+
+    tokens.forEach(token => {
       if (token) {
         totalTokens += token.amount;
-        totalTokensUsed += token.amount - (token.amount - token.currentAmount);
+        totalTokensUsed += token.amount - token.currentAmount;
       }
     });
     return {
