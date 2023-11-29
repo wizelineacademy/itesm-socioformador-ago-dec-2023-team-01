@@ -29,19 +29,19 @@ export async function fetchUserCurrentTokens(userId: string) {
 }
 
 // eslint-disable-next-line max-len
-export async function updateUserAmountTokens(userId: string, operation: string, desiredAmount: number) {
+export async function updateUserAmountTokens(userId: string, operation: string, desiredAmount: number, jwtToken: string) {
   try {
     const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/users/${userId}/token-operation`, {
       method: 'PATCH',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${jwtToken}`,
+      },
       body: JSON.stringify({
         operation,
-        desiredAmount,
+        amount: desiredAmount,
       }),
     });
-
-    if (!response.ok) {
-      throw new Error('Network response was not ok');
-    }
 
     const userCurrentTokensData = await response.json();
 
