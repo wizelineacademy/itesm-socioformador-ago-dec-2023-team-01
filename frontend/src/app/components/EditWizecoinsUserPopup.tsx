@@ -3,9 +3,10 @@ import {
   Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Typography, Box,
   Stack, TextField,
 } from '@mui/material';
-
 import { Inter } from 'next/font/google';
 import styles from './iswelcome.module.css';
+import { useSelector } from 'react-redux';
+import { RootState } from '@/app/redux/store';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -14,7 +15,9 @@ interface PopupProps {
   monthlyWizecoins: string;
   open: boolean;
   onClose: () => void;
-  onGoodButtonClick: () => void;
+  onGoodButtonClick: (userId: string, operation: string, amount: number, jwtToken: string) => void;
+  userId: string;
+  setWizecoins: React.Dispatch<React.SetStateAction<string>>;
 }
 
 export default function EditWizecoinsUserPopup({
@@ -23,12 +26,16 @@ export default function EditWizecoinsUserPopup({
   open,
   onClose,
   onGoodButtonClick,
+  userId,
+  setWizecoins,
 }: PopupProps) {
   const [monthlyWizecoinsInput, setMonthlyWizecoinsInput] = useState(monthlyWizecoins);
 
   const handleMonthlyWizecoinsChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setMonthlyWizecoinsInput(event.target.value);
   };
+
+  const user = useSelector((state: RootState) => state.user.userInfo);
 
   return (
     <Dialog
@@ -63,9 +70,9 @@ export default function EditWizecoinsUserPopup({
             >
               You are about to
               {' '}
-              <span>change the amount of wizecoins</span>
+              <span>add wizecoins </span>
               {' '}
-              for
+              to
               {' '}
               <span>{fullName}</span>
               {' '}
@@ -134,7 +141,18 @@ export default function EditWizecoinsUserPopup({
           </Box>
           <Box>
             <Button
-              onClick={onGoodButtonClick}
+              onClick={() => {
+                try {
+                  if (monthlyWizecoinsInput === '' || Number(monthlyWizecoinsInput) <= 0) {
+                    throw new Error('Invalid amount');
+                  }
+                  onGoodButtonClick(userId, 'add', Number(monthlyWizecoinsInput), user?.jwtToken ?? '');
+                  setWizecoins((prev) => String(Number(prev) + Number(monthlyWizecoinsInput)));
+                  onClose();
+                } catch (error) {
+                  console.error(error);
+                }
+              }}
               style={{
                 color: 'white',
                 backgroundColor: '#4BE93D',
@@ -144,7 +162,7 @@ export default function EditWizecoinsUserPopup({
               }}
               className={`${inter.className}`}
             >
-              Change
+              Add
             </Button>
           </Box>
         </DialogActions>

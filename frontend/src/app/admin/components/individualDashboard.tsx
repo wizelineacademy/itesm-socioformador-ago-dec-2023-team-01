@@ -15,7 +15,7 @@ import Popup from '@/app/components/Popup';
 import EditWizecoinsUserPopup from '@/app/components/EditWizecoinsUserPopup';
 import CreateTokenDialog from '@/app/admin/components/tokens/CreateTokenDialog';
 import { updateUserAdminStatus } from '@/services/usersService';
-import { createTokenForUser } from '@/services/tokenService';
+import { createTokenForUser, updateUserAmountTokens } from '@/services/tokenService';
 import LineChart from './LineChart';
 import styles from './individualDashboard.module.css';
 
@@ -205,17 +205,6 @@ export default function UserProfileDashboard({
     setWizecoinsPopupOpen(false);
   };
 
-  // Function to handle the "good" button click for Wizecoins popup
-  const handleEditWizecoinsButtonClick = () => {
-    try {
-      // Your logic for handling "good" button click in the Wizecoins popup
-    } catch (error) {
-      console.error(error);
-    }
-    handleCloseWizecoinsPopup();
-    showNotification('success', capitalizeEachWord(name), 'Wizecoins amount changed for ');
-  };
-
   const handleReturn = () => {
     router.back();
   };
@@ -384,14 +373,16 @@ export default function UserProfileDashboard({
                     padding: '0px 12px',
                   }}
                 >
-                  <Typography variant="body1" sx={{ color: 'white' }} className={`${inter.className}`}>Edit</Typography>
+                  <Typography variant="body1" sx={{ color: 'white' }} className={`${inter.className}`}>Add</Typography>
                 </Button>
                 <EditWizecoinsUserPopup
                   fullName={capitalizeEachWord(name)}
                   monthlyWizecoins={monthlyWizecoins}
                   open={isWizecoinsPopupOpen}
                   onClose={handleCloseWizecoinsPopup}
-                  onGoodButtonClick={handleEditWizecoinsButtonClick}
+                  onGoodButtonClick={updateUserAmountTokens}
+                  userId={id}
+                  setWizecoins={setWizecoins}
                 />
 
               </Box>
