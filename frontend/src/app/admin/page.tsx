@@ -4,6 +4,7 @@ import React,
 {
   useState,
   useEffect,
+  ReactNode,
 } from 'react';
 import {
   Box,
@@ -17,7 +18,6 @@ import {
   ListItemText,
   ListItemAvatar,
   Avatar,
-  Icon,
 } from '@mui/material';
 import {
   Chart as ChartJS,
@@ -111,6 +111,7 @@ export default function Admin() {
       },
     ],
   };
+
   interface GroupInfo {
     availableTokens: number;
     group: {
@@ -155,6 +156,12 @@ export default function Admin() {
   }
 
   interface DashboardData {
+    totalUsers: ReactNode;
+    totalConversations: ReactNode;
+    totalGroups: ReactNode;
+    totalActiveTokens: ReactNode;
+    totalUsedTokens: ReactNode;
+    totalPosts: ReactNode;
     groupsWithMostUsedTokens: GroupInfo[];
     userWithMostTokens: UsersInfo[];
     usersWithMostUsedTokens: UsersTokenInfo[];
@@ -190,22 +197,6 @@ export default function Admin() {
       backgroundColor: [],
       hoverBackgroundColor: [],
     }],
-  };
-
-  const responseTimeWeeklyData = {
-    labels: ['Week 1', 'Week 2', 'Week 3', 'Week 4'],
-    datasets: [
-      {
-        label: 'Average Response Time (ms)',
-        data: [120, 110, 100, 80],
-        backgroundColor: '#E93D44',
-        borderColor: '#fff',
-        borderWidth: 1,
-        // barThickness: 10,
-        // categoryPercentage: 0.9,
-        // barPercentage: 1.1,
-      },
-    ],
   };
 
   const userTokenTop: ChartData<'pie', number[], string> = dashboardData && Array.isArray(dashboardData.userWithMostTokens) && dashboardData.userWithMostTokens.length > 0 ? {
@@ -273,27 +264,6 @@ export default function Admin() {
   };
 
   // THIS IS TO EDIT CHART DESIGN
-  const options = {
-    indexAxis: 'x' as const,
-    scales: {
-      x: {
-        grid: {
-          display: false,
-        },
-        beginAtZero: true,
-      },
-      y: {
-        grid: {
-          display: false,
-        },
-        ticks: {
-          autoSkip: false,
-          padding: 2,
-        },
-      },
-    },
-  };
-
   const lineChartOptions = {
     animation: {
       animateScale: true,
@@ -315,7 +285,7 @@ export default function Admin() {
     animation: {
       animationRotate: true,
       animateScale: true,
-      duration: 5000,
+      duration: 3000,
     },
   };
 
@@ -339,8 +309,6 @@ export default function Admin() {
     ],
   };
 
-  // console.log('Users Data:', JSON.stringify(userTokenUsage, null, 2));
-  // console.log('Groups Data:', JSON.stringify(teamUsageData, null, 2));
   return (
     <Container maxWidth="xl">
       <Box marginLeft="50px">
@@ -364,7 +332,7 @@ export default function Admin() {
                       <PersonIcon style={{ color: '#000', fontSize: '5vh' }} />
                     </div>
                     <div>
-                      <Typography variant="h3" style={{ color: 'white' }}>1,200</Typography>
+                      <Typography variant="h3" style={{ color: 'white' }}>{dashboardData.totalUsers}</Typography>
                       <Typography variant="subtitle1" style={{ color: 'white' }}>Wizeliners</Typography>
                     </div>
                   </CardContent>
@@ -383,7 +351,7 @@ export default function Admin() {
                       <ChatIcon style={{ color: '#000', fontSize: '5vh' }} />
                     </div>
                     <div>
-                      <Typography variant="h3" style={{ color: 'white' }}>23,000</Typography>
+                      <Typography variant="h3" style={{ color: 'white' }}>{dashboardData.totalConversations}</Typography>
                       <Typography variant="subtitle1" style={{ color: 'white' }}>Conversations</Typography>
                     </div>
                   </CardContent>
@@ -402,7 +370,7 @@ export default function Admin() {
                       <GroupsIcon style={{ color: '#000', fontSize: '5vh' }} />
                     </div>
                     <div>
-                      <Typography variant="h3" style={{ color: 'white' }}>51</Typography>
+                      <Typography variant="h3" style={{ color: 'white' }}>{dashboardData.totalGroups}</Typography>
                       <Typography variant="subtitle1" style={{ color: 'white' }}>Groups</Typography>
                     </div>
                   </CardContent>
@@ -423,7 +391,7 @@ export default function Admin() {
                       <TokenIcon style={{ color: '#000', fontSize: '5vh' }} />
                     </div>
                     <div>
-                      <Typography variant="h3" style={{ color: 'white' }}>20,000</Typography>
+                      <Typography variant="h3" style={{ color: 'white' }}>{dashboardData.totalActiveTokens}</Typography>
                       <Typography variant="subtitle1" style={{ color: 'white' }}>Active Tokens</Typography>
                     </div>
                   </CardContent>
@@ -442,7 +410,7 @@ export default function Admin() {
                       <ArrowDropDownCircleIcon style={{ color: '#000', fontSize: '5vh' }} />
                     </div>
                     <div>
-                      <Typography variant="h3" style={{ color: 'white' }}>12,000</Typography>
+                      <Typography variant="h3" style={{ color: 'white' }}>{dashboardData.totalUsedTokens}</Typography>
                       <Typography variant="subtitle1" style={{ color: 'white' }}>Tokens Used</Typography>
                     </div>
                   </CardContent>
@@ -461,7 +429,7 @@ export default function Admin() {
                       <SendIcon style={{ color: '#000', fontSize: '5vh' }} />
                     </div>
                     <div>
-                      <Typography variant="h3" style={{ color: 'white' }}>240</Typography>
+                      <Typography variant="h3" style={{ color: 'white' }}>{dashboardData.totalPosts}</Typography>
                       <Typography variant="subtitle1" style={{ color: 'white' }}>Post Requests</Typography>
                     </div>
                   </CardContent>
