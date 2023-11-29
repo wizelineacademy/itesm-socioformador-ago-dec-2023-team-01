@@ -4,9 +4,10 @@ import {
   Stack, TextField,
 } from '@mui/material';
 import { Inter } from 'next/font/google';
+import { useDispatch, useSelector } from 'react-redux';
 import styles from './iswelcome.module.css';
-import { useSelector } from 'react-redux';
-import { RootState } from '@/app/redux/store';
+import { AppDispatch, RootState } from '@/app/redux/store';
+import { updateCurrentTokens } from '../redux/features/userSlice';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -15,7 +16,7 @@ interface PopupProps {
   monthlyWizecoins: string;
   open: boolean;
   onClose: () => void;
-  onGoodButtonClick: (userId: string, operation: string, amount: number, jwtToken: string) => void;
+  onGoodButtonClick: (userId: string, operation: string, amount: number, jwtToken: string) => any;
   userId: string;
   setWizecoins: React.Dispatch<React.SetStateAction<string>>;
 }
@@ -36,6 +37,12 @@ export default function EditWizecoinsUserPopup({
   };
 
   const user = useSelector((state: RootState) => state.user.userInfo);
+  const dispatch = useDispatch<AppDispatch>();
+
+  const onClick = async () => {
+    const newTokens = await onGoodButtonClick(userId, 'add', Number(monthlyWizecoinsInput), user?.jwtToken ?? '');
+    dispatch(updateCurrentTokens(newTokens.currentAmountTokens));
+  };
 
   return (
     <Dialog
@@ -146,7 +153,7 @@ export default function EditWizecoinsUserPopup({
                   if (monthlyWizecoinsInput === '' || Number(monthlyWizecoinsInput) <= 0) {
                     throw new Error('Invalid amount');
                   }
-                  onGoodButtonClick(userId, 'add', Number(monthlyWizecoinsInput), user?.jwtToken ?? '');
+                  onClick();
                   setWizecoins((prev) => String(Number(prev) + Number(monthlyWizecoinsInput)));
                   onClose();
                 } catch (error) {

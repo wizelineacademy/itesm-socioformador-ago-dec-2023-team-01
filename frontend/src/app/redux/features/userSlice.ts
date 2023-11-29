@@ -52,6 +52,11 @@ export const user = createSlice({
         state.userInfo.tokens.currentAmountTokens = action.payload;
       }
     },
+    updateTokensInfo: (state, action) => {
+      if (state.userInfo) {
+        state.userInfo.tokens = action.payload;
+      }
+    },
     setIsLoading: (state, action) => {
       state.isLoading = action.payload;
     },
@@ -62,6 +67,6 @@ export const user = createSlice({
 });
 
 export const {
-  setUserInfo, addTokens, subtractTokens, setIsLoading, resetUser, updateCurrentTokens,
+  setUserInfo, addTokens, subtractTokens, setIsLoading, resetUser, updateCurrentTokens, updateTokensInfo,
 } = user.actions;
 export default user.reducer;

@@ -3,7 +3,6 @@
 import React, { } from 'react';
 import { Box, Stack } from '@mui/material';
 import { useSelector } from 'react-redux';
-import { fetchUserCurrentTokens } from '@/services/tokenService';
 import SideNav from './components/side-nav';
 import ProfileInfo from './components/profile-info';
 import { WelcomeProps } from '../components/types';
@@ -27,7 +26,7 @@ export default function AdminLayout({
     name: `${user.firstName} ${user.lastName}`,
     picSource: user.picture,
   };
-  // if (wizeliner.firstName === '') return <Awaiting />;
+
   if (wizeliner.isAdmin === false) return <NotAuthorized />;
 
   return (

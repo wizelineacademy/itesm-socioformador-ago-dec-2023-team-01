@@ -6,12 +6,13 @@ import {
   Grid,
   Typography,
   Stack,
+  Avatar,
 } from '@mui/material';
-import Image from 'next/image';
 import LogoutIcon from '@mui/icons-material/Logout';
 import IconButton from '@mui/material/IconButton';
 import Tooltip from '@mui/material/Tooltip';
 import { useDispatch } from 'react-redux';
+import Link from 'next/link';
 import { WelcomeProps } from '@/app/components/types';
 import styles from './sidenav.module.css';
 import LogoutPopup from './logoutPopup';
@@ -89,7 +90,19 @@ export function ProfileInfo({
           </Stack>
         </Grid>
         <Grid paddingLeft="1rem">
-          <Image unoptimized src={picSource} width="200" height="200" className={styles.images} alt="" />
+          <Link href="/profile">
+            <Tooltip title="Settings" arrow>
+              <Box position="relative">
+                <Avatar
+                  alt={`${firstName} ${lastName}`}
+                  src={picSource}
+                  sx={{
+                    width: 45, height: 45, position: 'relative', border: '1.5px solid #e93d44', boxSizing: 'content-box',
+                  }}
+                />
+              </Box>
+            </Tooltip>
+          </Link>
         </Grid>
       </Grid>
     </Box>

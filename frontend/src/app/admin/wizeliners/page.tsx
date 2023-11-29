@@ -13,6 +13,7 @@ import {
   Button,
   Stack,
   TextField,
+  Typography,
 } from '@mui/material';
 import { useRouter } from 'next/navigation';
 import AddIcon from '@mui/icons-material/Add';
@@ -114,25 +115,12 @@ export default function Wizeliners() {
                 },
               }}
             />
-            <Button
-              variant="outlined"
-              sx={{
-                textTransform: 'none',
-                color: 'white',
-                borderColor: '#E93D44',
-                borderRadius: '20px',
-                '&:hover': { borderColor: 'red' },
-              }}
-            >
-              <AddIcon />
-              New Group
-            </Button>
           </Stack>
         </Paper>
       </Stack>
-      <Box sx={{ padding: '1rem 3rem 0 3rem' }}>
+      <Box sx={{ padding: '1rem 3rem 0 3rem', width: '90%' }}>
         <TableContainer component={Paper} sx={{ color: '#FFF', backgroundColor: '#1D293A' }}>
-          <Table sx={{ minWidth: 650, color: '#FFF' }} aria-label="simple table">
+          <Table sx={{ width: '100%', color: '#FFF' }} aria-label="simple table">
             <TableHead>
               <TableRow sx={{ backgroundColor: '#111823' }}>
                 <TableCell align="center" sx={{ color: '#FFF' }}>Full Name</TableCell>
