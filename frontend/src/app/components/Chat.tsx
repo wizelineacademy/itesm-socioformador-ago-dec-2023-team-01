@@ -17,7 +17,7 @@ import { useChat, Message } from 'ai/react';
 import Markdown from 'react-markdown';
 import CircularProgress from '@mui/material/CircularProgress';
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
-import { nord } from 'react-syntax-highlighter/dist/esm/styles/prism';
+import { atomDark } from 'react-syntax-highlighter/dist/esm/styles/prism';
 import { Button, Stack } from '@mui/material';
 import CopyToClipboard from 'react-copy-to-clipboard';
 import { ChatRequestOptions } from 'ai';
@@ -130,17 +130,12 @@ export default function Chat({
         xs: '91vh',
       }}
       sx={{
+        width: 'calc(100vw - 315px)',
         display: 'flex',
         flexDirection: 'column',
-        background: 'linear-gradient(to bottom, #4D545D, #4F565F, transparent)',
         borderRadius: '20px',
       }}
     >
-      <Box sx={{ display: 'flex', alignItems: 'center', padding: '5px' }}>
-        <Typography variant="body1" sx={{ color: 'white', fontWeight: 'bold' }}>
-          ChatGPT 4.0
-        </Typography>
-      </Box>
       <Box
         ref={scrollRef}
         sx={{
@@ -181,8 +176,9 @@ export default function Chat({
               style={{
                 paddingInline: '10px',
                 borderRadius: '20px',
-                background: message.role !== 'assistant' ? '#0E8265' : '#111823',
+                background: message.role !== 'assistant' ? '#111823' : '#0E8265',
                 color: 'white',
+                boxShadow: '0 4px 30px rgba(0, 0, 0, 0.2)',
               }}
             >
               <Markdown
@@ -242,7 +238,7 @@ export default function Chat({
                               // eslint-disable-next-line react/no-children-prop
                             children={String(children).replace(/\n$/, '')}
                             language={match[1]}
-                            style={nord}
+                            style={atomDark}
                           />
                           }
                       </Box>
