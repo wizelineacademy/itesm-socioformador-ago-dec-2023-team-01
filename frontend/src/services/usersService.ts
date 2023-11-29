@@ -72,10 +72,12 @@ export async function updateUserAdminStatus(userId:string, isAdmin:boolean) {
       userId,
       isAdmin,
     });
-    console.log(body);
     const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/users/admin`, {
       method: 'PATCH',
-      
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body,
     });
     console.log(response);
 
