@@ -6,26 +6,27 @@ import { SnackbarProvider } from 'notistack';
 import { fetchUser, fetchUserGroups } from '@/services/usersService';
 import { fetchUserCurrentTokens } from '@/services/tokenService';
 import UserProfileDashboard from '@/app/admin/components/individualDashboard';
+import Awaiting from '@/app/components/awaiting';
 
 interface Group {
   id: number;
   name: string;
   // Add other properties if needed
 }
-
+interface User {
+  id: string;
+  firstName: string;
+  lastName: string;
+  fullName: string;
+  imageUrl: string;
+  email: string;
+  role: string;
+  createdAt: string;
+  updatedAt: string;
+  isAdmin: boolean;
+}
 export default function Wizeliner() {
-  const [user, setUser] = useState({
-    id: '',
-    firstName: '',
-    lastName: '',
-    fullName: '',
-    imageUrl: '',
-    email: '',
-    role: '',
-    createdAt: '',
-    updatedAt: '',
-    isAdmin: false,
-  });
+  const [user, setUser] = useState<User | null>(null);
 
   const [change, setChange] = useState(true);
 
@@ -51,7 +52,18 @@ export default function Wizeliner() {
           const userData = await fetchUser(userId);
           const userTokensData = await fetchUserCurrentTokens(userId);
           const groupsData = await fetchUserGroups(userId);
-          setUser(userData);
+          setUser({
+            id: userData.id,
+            firstName: userData.firstName,
+            lastName: userData.lastName,
+            fullName: `${userData.firstName} ${userData.lastName}`,
+            imageUrl: userData.imageUrl,
+            email: userData.email,
+            role: userData.role,
+            createdAt: userData.createdAt,
+            updatedAt: userData.updatedAt,
+            isAdmin: userData.role === 'admin',
+          });
           setUserTokens(userTokensData);
           setUserGroups(groupsData);
         }
@@ -61,7 +73,7 @@ export default function Wizeliner() {
     };
     fetchData();
   }, [userId, change]);
-
+  if (!user) return <Awaiting />;
   return (
     <div>
       <SnackbarProvider />

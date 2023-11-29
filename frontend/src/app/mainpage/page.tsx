@@ -3,43 +3,17 @@
 import React, { useEffect, useState } from 'react';
 import { Message } from 'ai';
 import { useChat } from 'ai/react';
-import {
-  Box, Stack,
-} from '@mui/material';
-import { useSelector } from 'react-redux';
-import { RootState } from '../redux/store';
-import TopNavbar from './components/topNavbar';
+import { Box, Grid, Stack } from '@mui/material';
+import { useDispatch, useSelector } from 'react-redux';
+import Chat from '@/app/components/Chat';
 import { getHistory } from '@/services/usersService';
-import { numTokensFromMessage, postToConversation } from '@/services/chatService';
+import { postToConversation } from '@/services/chatService';
+import { AppDispatch, RootState } from '../redux/store';
 import NotWelcome from '../components/NotWelcome';
-// import ChatHistory from '../components/ChatHistory';
+import { susbtractTokensToUser } from '@/services/tokenService';
+import { subtractTokens, updateCurrentTokens } from '../redux/features/userSlice';
+import TopNavbar from './components/topNavbar';
 import SideNavbar from './components/sideNavbar';
-import Chat from '../components/Chat';
-
-const postMessagesToConversation = async (conversationId: number, messages: Message[]) => {
-  const last2Messages = messages.slice(-2);
-  const prompt = last2Messages.find((message) => message.role === 'user');
-  const response = last2Messages.find((message) => message.role === 'assistant');
-  // console.log('prompt', prompt);
-  // console.log('response', response);
-  if (prompt && response && conversationId) {
-    // console.log('sliced messages');
-    if (response.id.startsWith('Nic0WzPpt') || prompt.id.startsWith('Nic0WzPpt')) {
-      // console.log('message already in db');
-      return;
-    }
-    const tokensFromPrompt = numTokensFromMessage(prompt);
-    const tokensFromResponse = numTokensFromMessage(response);
-    const tokens = tokensFromPrompt + tokensFromResponse;
-
-    await postToConversation(prompt.content, response.content, conversationId, tokens);
-    console.log('posted to conversation', messages);
-    // console.log('conversation', conversation);
-    // console.log('posted to conversation');
-  } else {
-    // console.log('no prompt or response');
-  }
-};
 
 export default function Mainpage() {
   // const [showChatHistory, setShowChatHistory] = useState(false);
@@ -53,16 +27,45 @@ export default function Mainpage() {
     api: '/api/chat',
   });
   const user = useSelector((state: RootState) => state.user.userInfo);
-  console.log(user);
+  const dispatch = useDispatch<AppDispatch>();
+
+  const postMessagesToConversation = async (convId: number, messagess: Message[], userId: string) => {
+    const last2Messages = messagess.slice(-2);
+    const prompt = last2Messages.find((message) => message.role === 'user');
+    const response = last2Messages.find((message) => message.role === 'assistant');
+    if (prompt && response && convId) {
+      if (response.id.startsWith('Nic0WzPpt') || prompt.id.startsWith('Nic0WzPpt')) {
+        return;
+      }
+      // post to conversation
+      let tokensFromPost = 0;
+      try {
+        tokensFromPost = await postToConversation(prompt, response, convId);
+      } catch (error) {
+        console.log(error);
+      }
+      // substract user tokens
+      try {
+        if (tokensFromPost > 0) {
+          const updatedUser = await susbtractTokensToUser(userId, tokensFromPost);
+          dispatch(subtractTokens(tokensFromPost));
+          dispatch(updateCurrentTokens(updatedUser.currentAmount));
+        }
+      } catch (error) {
+        console.log(error);
+      }
+      console.log('posted to conversation', messagess);
+    }
+  };
 
   const executePostMessagesToConversation = async (convId: number) => {
     if (!chatIsLoading && isChatStopped) {
       setIsChatStopped(false);
       setPrevConversationId(0);
       // console.log('finishing posting messages to conversation with id', convId);
-      postMessagesToConversation(convId, messages);
+      postMessagesToConversation(convId, messages, user?.id ?? '');
     } else if (!chatIsLoading) {
-      postMessagesToConversation(convId, messages);
+      postMessagesToConversation(convId, messages, user?.id ?? '');
     } else {
       // console.log('loading');
     }
@@ -92,7 +95,6 @@ export default function Mainpage() {
         id: conversation.id,
       }));
       setChatsHistory(chatHistory);
-      // console.log('setting chat history', chatHistory);
       return chatHistory;
     } catch (er) {
       console.log(er);
@@ -116,41 +118,27 @@ export default function Mainpage() {
 
   return (
     <Stack>
-      <Box
-        sx={{
-          height: '75px',
-          position: 'sticky',
-          top: '0',
-          background: 'rgba(17, 24, 35, 0.4)',
-          boxShadow: '0 4px 30px rgba(0, 0, 0, 0.1)',
-          backdropFilter: 'blur(5px)',
-          borderBottom: '1px solid rgba(255, 255, 255, 0.1)',
-          zIndex: '100',
+      <TopNavbar
+        firstName={user.firstName}
+        lastName={user.lastName}
+        wizecoins={user.tokens.currentAmountTokens}
+        picSource={user.picture}
+      />
+      <Grid
+        container
+        style={{
+          height: 'calc(100vh - 65px)',
         }}
       >
-        <TopNavbar
-          firstName={user.firstName}
-          lastName={user.lastName}
-          wizecoins={user.tokens.currentAmountTokens}
-          picSource={user.picture}
-        />
-      </Box>
-      <Stack direction="row">
-        <Box
-          sx={{
-            height: 'calc(100vh - 76px)',
-            position: 'fixed',
-            top: '76px',
-          }}
-        >
+        <Grid item lg={2}>
           <SideNavbar
             chatHistory={chatsHistory}
             handleChatItemClick={handleChatItemClick}
             getChatHistory={getChatHistory}
             conversationId={conversationId}
           />
-        </Box>
-        <Stack sx={{ paddingLeft: '300px' }}>
+        </Grid>
+        <Grid item lg={10}>
           <Chat
             setConversationId={setConversationId}
             conversationId={conversationId}
@@ -162,9 +150,10 @@ export default function Mainpage() {
             isLoading={chatIsLoading}
             messages={messages}
             setMessages={setMessages}
+            stopChat={stop}
           />
-        </Stack>
-      </Stack>
+        </Grid>
+      </Grid>
     </Stack>
   );
 }

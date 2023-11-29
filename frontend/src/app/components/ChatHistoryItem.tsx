@@ -75,21 +75,21 @@ export default function ChatHistoryItem({
         onClick={() => {
           handleClickOnItem();
         }}
-        sx={{ width: '100%', padding: 0 }}
+        sx={{ width: '100%', paddingX: 0.5, paddingY: 0 }}
       >
         <Box
           display="flex"
           justifyContent="space-between"
           sx={{
             width: '100%',
-            marginBottom: '10px',
-            border: '1.5px solid #4D545D',
-            borderRadius: '10px',
+            marginBottom: '7px',
+            border: '1px solid #3b4147',
+            borderRadius: '5px',
             paddingY: '1px',
             overflow: 'hidden',
             whiteSpace: 'nowrap',
             textOverflow: 'ellipsis',
-            backgroundColor: conversationId === chatInfo.id ? '#4D545D' : 'transparent',
+            backgroundColor: conversationId === chatInfo.id ? '#323a40' : 'transparent',
           }}
         >
           {isEditing ? (
@@ -123,15 +123,15 @@ export default function ChatHistoryItem({
             />
           ) : (
             <Typography
-              variant="body1"
+              variant="subtitle2"
               noWrap
               sx={{
                 color: 'white',
                 flexGrow: 1,
                 marginRight: '10px',
                 overflow: 'hidden',
-                whiteSpace: 'nowrap', // Add this line for the ellipsis
                 textTransform: 'capitalize',
+                textOverflow: 'ellipsis',
                 textAlign: 'start',
                 paddingLeft: '10px',
                 alignItems: 'center',

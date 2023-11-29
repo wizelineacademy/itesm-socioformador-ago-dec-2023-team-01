@@ -4,10 +4,6 @@ import {
 } from '@mui/material';
 
 import { Inter } from 'next/font/google';
-import { useDispatch } from 'react-redux';
-import Link from 'next/link';
-import { AppDispatch } from '@/app/redux/store';
-import { setUserInfo } from '../../redux/features/userSlice';
 
 const inter = Inter({ subsets: ['latin'] });
 

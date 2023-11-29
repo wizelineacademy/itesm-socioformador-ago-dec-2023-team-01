@@ -68,13 +68,18 @@ export async function fetchUser(userId:string) {
 
 export async function updateUserAdminStatus(userId:string, isAdmin:boolean) {
   try {
+    const body = JSON.stringify({
+      userId,
+      isAdmin,
+    });
     const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/users/admin`, {
       method: 'PATCH',
-      body: JSON.stringify({
-        userId,
-        isAdmin,
-      }),
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body,
     });
+    console.log(response);
 
     if (!response.ok) {
       throw new Error('Network response was not ok');

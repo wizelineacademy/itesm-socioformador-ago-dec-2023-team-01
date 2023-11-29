@@ -142,9 +142,9 @@ export default function Wizeliners() {
               </TableRow>
             </TableHead>
             <TableBody>
-              {filteredWizeliners.map((user:any) => (
+              {filteredWizeliners.map((wizeliner:any) => (
                 <TableRow
-                  key={user.fullName}
+                  key={wizeliner.fullName}
                   sx={{
                     '& td': { border: 2, borderColor: '#111823' },
                     '&:hover': {
@@ -153,9 +153,9 @@ export default function Wizeliners() {
                     color: '#FFF',
                   }}
                 >
-                  <TableCell sx={{ color: '#FFF' }}>{capitalizeEachWord(user.fullName)}</TableCell>
+                  <TableCell sx={{ color: '#FFF' }}>{capitalizeEachWord(wizeliner.fullName)}</TableCell>
                   <TableCell align="center" sx={{ color: '#FFF' }}>
-                    {user.isAdmin
+                    {wizeliner.isAdmin
                       ? (
                         <CheckBoxOutlinedIcon fontSize="large" sx={{ color: '#4BE93D' }} />
                       )
@@ -184,16 +184,16 @@ export default function Wizeliners() {
                         />
                       </Box>
                       <Box sx={{ color: '#f5f264', marginRight: '4px' }}>
-                        {user.currentTokens}
+                        {wizeliner.currentTokens}
                       </Box>
                       /
                       {' '}
-                      {user.amountTokens}
+                      {wizeliner.amountTokens}
                     </Box>
                   </TableCell>
                   <TableCell align="center">
                     <Button
-                      onClick={() => router.push(`wizeliners/edit?userId=${user.id}`)}
+                      onClick={() => router.push(`wizeliners/edit?userId=${wizeliner.id}`)}
                       variant="contained"
                       color="error"
                       sx={{

@@ -111,3 +111,26 @@ export async function addTokensToUsersInGroup(groupId:string, amount:number, jwt
     throw error;
   }
 }
+
+export async function susbtractTokensToUser(userId: string, amount: number) {
+  try {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/users/${userId}/token-operation`, {
+      method: 'PATCH',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        operation: 'substract',
+        amount,
+      }),
+    });
+
+    if (!response.ok) {
+      throw new Error('Network response was not ok');
+    }
+    return await response.json();
+  } catch (error) {
+    console.error(error);
+    return {};
+  }
+}

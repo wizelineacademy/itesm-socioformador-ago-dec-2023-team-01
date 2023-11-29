@@ -12,7 +12,10 @@ import {
   Grid,
 } from '@mui/material';
 import Link from 'next/link';
+import { useDispatch } from 'react-redux';
 import ChatHistoryItem from './ChatHistoryItem';
+import { AppDispatch } from '../redux/store';
+import { resetUser } from '../redux/features/userSlice';
 
 export default function ChatHistory({
   closeChatHistory,
@@ -22,6 +25,7 @@ export default function ChatHistory({
   conversationId,
 }:
 { closeChatHistory: () => void; handleChatItemClick: (id: number) => void; chatHistory: { title: string, id: number }[]; getChatHistory: () => Promise<void>; conversationId: number; }) {
+  const dispatch = useDispatch<AppDispatch>();
   return (
     <Box
       height={{
@@ -86,6 +90,9 @@ export default function ChatHistory({
             <Button
               variant="outlined"
               color="error"
+              onClick={() => {
+                dispatch(resetUser());
+              }}
               startIcon={<LogoutIcon />}
               sx={{
                 textTransform: 'none',

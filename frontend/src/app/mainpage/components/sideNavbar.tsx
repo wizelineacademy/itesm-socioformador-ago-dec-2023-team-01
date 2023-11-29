@@ -20,7 +20,9 @@ export default function SideNavbar({
 { handleChatItemClick: (id: number) => void; chatHistory: { title: string, id: number }[]; getChatHistory: () => Promise<void>; conversationId: number; }) {
   return (
     <Stack
-      sx={{ backgroundColor: '#111823', width: '18rem', height: '100%' }}
+      sx={{
+        backgroundColor: '#111823', width: '100%', height: '100%',
+      }}
       justifyContent="space-between"
     >
       <Box>
@@ -48,7 +50,7 @@ export default function SideNavbar({
               width: '75%',
             }}
           >
-            <Typography>Create a new chat</Typography>
+            <Typography>New chat</Typography>
             <EditNoteIcon />
           </Button>
           <Typography color="white" variant="h5" fontWeight="bold" paddingTop="15px">
@@ -57,22 +59,15 @@ export default function SideNavbar({
             </span>
           </Typography>
         </Stack>
-        <Stack alignItems="center">
-          <Box
-            overflow="scroll"
-            maxHeight="70vh"
-            maxWidth="230px"
-            padding="0 15px"
-          >
-            {chatHistory.map((chatInfo) => (
-              <ChatHistoryItem
-                chatInfo={chatInfo}
-                handleChatItemClick={handleChatItemClick}
-                getChatHistory={getChatHistory}
-                conversationId={conversationId}
-              />
-            ))}
-          </Box>
+        <Stack alignItems="center" marginX={1.5} sx={{ overflowY: 'auto', maxHeight: 'calc(100vh - 35vh)' }}>
+          {chatHistory.map((chatInfo) => (
+            <ChatHistoryItem
+              chatInfo={chatInfo}
+              handleChatItemClick={handleChatItemClick}
+              getChatHistory={getChatHistory}
+              conversationId={conversationId}
+            />
+          ))}
         </Stack>
       </Box>
       <Box

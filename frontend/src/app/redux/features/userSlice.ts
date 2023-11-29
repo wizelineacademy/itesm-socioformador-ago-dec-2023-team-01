@@ -31,11 +31,6 @@ export const user = createSlice({
   initialState,
   reducers: {
     setUserInfo: (state, action) => {
-      if (action.payload === null) {
-        console.log('User is set to null');
-      } else {
-        console.log('User is set to', action.payload);
-      }
       state.userInfo = action.payload;
     },
     addTokens: (state, action) => {
@@ -45,16 +40,28 @@ export const user = createSlice({
     },
     subtractTokens: (state, action) => {
       if (state.userInfo) {
-        state.userInfo.tokens.currentAmountTokens -= action.payload;
+        if (state.userInfo.tokens.currentAmountTokens - action.payload >= 0) {
+          state.userInfo.tokens.currentAmountTokens -= action.payload;
+        } else {
+          state.userInfo.tokens.currentAmountTokens = 0;
+        }
+      }
+    },
+    updateCurrentTokens: (state, action) => {
+      if (state.userInfo) {
+        state.userInfo.tokens.currentAmountTokens = action.payload;
       }
     },
     setIsLoading: (state, action) => {
       state.isLoading = action.payload;
     },
+    resetUser: (state) => {
+      state.userInfo = null;
+    },
   },
 });
 
 export const {
-  setUserInfo, addTokens, subtractTokens, setIsLoading,
+  setUserInfo, addTokens, subtractTokens, setIsLoading, resetUser, updateCurrentTokens,
 } = user.actions;
 export default user.reducer;

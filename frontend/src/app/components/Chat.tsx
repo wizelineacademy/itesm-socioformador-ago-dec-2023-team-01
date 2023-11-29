@@ -4,6 +4,7 @@
 
 import React, { useEffect, useState, useRef } from 'react';
 import Avatar from '@mui/material/Avatar';
+import _debounce from 'lodash/debounce';
 import Image from 'next/image';
 import Typography from '@mui/material/Typography';
 import TextField from '@mui/material/TextField';
@@ -12,8 +13,9 @@ import SendIcon from '@mui/icons-material/Send';
 import IconButton from '@mui/material/IconButton';
 import InputAdornment from '@mui/material/InputAdornment';
 import ContentCopyIcon from '@mui/icons-material/ContentCopy';
+import StopCircleIcon from '@mui/icons-material/StopCircle';
 import CheckIcon from '@mui/icons-material/Check';
-import { useChat, Message } from 'ai/react';
+import { Message } from 'ai/react';
 import Markdown from 'react-markdown';
 import CircularProgress from '@mui/material/CircularProgress';
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
@@ -25,10 +27,8 @@ import { useSelector } from 'react-redux';
 import {
   numTokensFromMessage,
   createConversation,
-  postToConversation,
   getConversationFullChat,
 } from '../../services/chatService';
-import Awaiting from './awaiting';
 import { RootState } from '../redux/store';
 import NotWelcome from './NotWelcome';
 
@@ -43,6 +43,7 @@ interface ChatProps {
   setConversationId: (id: number) => void;
   conversationId: number;
   getChatHistory: () => void;
+  stopChat: () => void;
 }
 
 async function getMessages(conversationId: number) {
@@ -68,7 +69,7 @@ async function getMessages(conversationId: number) {
 }
 
 export default function Chat({
-  setConversationId, conversationId, getChatHistory, input, setInput, handleInputChange, handleSubmit, isLoading, messages, setMessages,
+  setConversationId, conversationId, getChatHistory, input, setInput, handleInputChange, handleSubmit, isLoading, messages, setMessages, stopChat,
 }: ChatProps) {
   const user = useSelector((state: RootState) => state.user.userInfo);
   const [isCopied, setCopied] = useState(false);
@@ -80,6 +81,7 @@ export default function Chat({
       scrollElement.scrollTop = scrollElement.scrollHeight;
     }
   };
+  const [tokensFromPrompt, setTokensFromPrompt] = useState(0);
 
   useEffect(() => {
     scrollToBottom();
@@ -104,7 +106,7 @@ export default function Chat({
   // crear una conversacion si no hay ninguna
   useEffect(() => {
     if (!user) return;
-    if (conversationId === 0 && messages.length === 1) {
+    if (conversationId === 0 && messages.length === 2) {
       const title = messages[0].content.slice(0, 30).trimEnd();
       createConversation(user.id, title).then((conversation) => {
         setConversationId(conversation.id);
@@ -116,24 +118,34 @@ export default function Chat({
 
   const handleCopy = () => {
     setCopied(true);
-    console.log(isCopied);
     setTimeout(() => {
       setCopied(false);
     }, 1000);
   };
 
+  const lastMessage = () => {
+    if (messages.length > 0) {
+      return messages[messages.length - 1];
+    }
+    return undefined;
+  };
+
+  const debouncedHandleInputChange = _debounce(
+    (e) => {
+      setTokensFromPrompt(numTokensFromMessage({ content: e.target.value }));
+    },
+    300,
+  );
+
   if (!user) return <NotWelcome />;
 
   return (
     <Box
-      height={{
-        xs: '91vh',
-      }}
       sx={{
-        width: 'calc(100vw - 315px)',
+        height: 'calc(100vh - 65px)',
+        width: '100%',
         display: 'flex',
         flexDirection: 'column',
-        borderRadius: '20px',
       }}
     >
       <Box
@@ -156,8 +168,11 @@ export default function Chat({
             key={index}
             sx={{
               display: 'flex',
+              alignItems: 'flex-end',
               justifyContent: message.role === 'assistant' ? 'flex-start' : 'flex-end',
               marginBottom: '10px',
+              marginLeft: message.role === 'assistant' ? '0px' : '20px',
+              marginRight: message.role === 'assistant' ? '20px' : '0px',
             }}
           >
             {message.role === 'assistant' && (
@@ -168,6 +183,7 @@ export default function Chat({
                   width: 40,
                   height: 40,
                   marginRight: '10px',
+                  marginBottom: '4px',
                 }}
               />
             )}
@@ -203,7 +219,7 @@ export default function Chat({
                         <Stack
                           direction="row"
                           alignItems="center"
-                          justifyContent="flex-end"
+                          justifyContent="space-between"
                           sx={{
                             borderRadius: '10px 10px 0 0',
                             backgroundColor: 'black',
@@ -213,6 +229,9 @@ export default function Chat({
                             color: 'white',
                           }}
                         >
+                          <Typography sx={{ color: 'white', fontSize: '11px' }} ml={1}>
+                            {match[1].toUpperCase()}
+                          </Typography>
                           <CopyToClipboard text={String(children)}>
                             <Button sx={{ textTransform: 'none', color: 'white' }} onClick={handleCopy}>
                               {isCopied ? (
@@ -259,6 +278,7 @@ export default function Chat({
                   width: 40,
                   height: 40,
                   marginLeft: '10px',
+                  marginBottom: '4px',
                 }}
               />
             )}
@@ -275,6 +295,7 @@ export default function Chat({
           onSubmit={(e) => {
             e.preventDefault();
             handleSubmit(e);
+            setTokensFromPrompt(0);
           }}
           ref={formRef}
           style={{ width: '100%' }}
@@ -294,7 +315,10 @@ export default function Chat({
               }
             }}
             autoComplete="off"
-            onChange={handleInputChange}
+            onChange={(e: React.ChangeEvent<HTMLInputElement> | React.ChangeEvent<HTMLTextAreaElement>) => {
+              handleInputChange(e);
+              debouncedHandleInputChange(e);
+            }}
             placeholder="Type a message..."
             maxRows={5}
             sx={{
@@ -322,12 +346,23 @@ export default function Chat({
               },
               endAdornment: (
                 <InputAdornment position="end" sx={{ position: 'inherit' }}>
-                  {isLoading ? <CircularProgress size={35} thickness={4} sx={{ color: 'white', marginRight: '10px' }} />
-                    : (
-                      <IconButton type="submit">
-                        <SendIcon sx={{ color: 'white' }} />
-                      </IconButton>
-                    )}
+                  {isLoading && lastMessage()?.role !== 'user' && (
+                  <IconButton onClick={(e) => {
+                    e.preventDefault();
+                    stopChat();
+                  }}
+                  >
+                    <StopCircleIcon fontSize="large" sx={{ color: 'white' }} />
+                  </IconButton>
+                  )}
+                  {isLoading && lastMessage()?.role === 'user' && (
+                  <CircularProgress size={35} thickness={4} sx={{ color: 'white', marginRight: '10px' }} />
+                  )}
+                  {!isLoading && (
+                  <IconButton type="submit">
+                    <SendIcon sx={{ color: 'white' }} />
+                  </IconButton>
+                  )}
                   <Box sx={{ transform: 'rotate(180deg)' }}>
                     <Image
                       src="wizecoin.svg"
@@ -337,8 +372,8 @@ export default function Chat({
                       layout="fixed"
                     />
                   </Box>
-                  <Typography variant="body1" style={{ color: 'red' }}>
-                    17
+                  <Typography variant="body1" style={{ color: 'red' }} ml={1}>
+                    {tokensFromPrompt}
                   </Typography>
                 </InputAdornment>
               ),

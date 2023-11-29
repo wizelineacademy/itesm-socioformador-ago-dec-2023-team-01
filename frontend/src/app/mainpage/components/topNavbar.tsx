@@ -12,7 +12,11 @@ import SettingsIcons from '@mui/icons-material/Settings';
 import LogoutIcon from '@mui/icons-material/Logout';
 import IconButton from '@mui/material/IconButton';
 import Tooltip from '@mui/material/Tooltip';
+import { useDispatch } from 'react-redux';
+import Link from 'next/link';
 import LogoutPopup from '@/app/admin/components/logoutPopup';
+import { AppDispatch } from '@/app/redux/store';
+import { resetUser } from '@/app/redux/features/userSlice';
 
 const numeral = require('numeral');
 
@@ -28,6 +32,7 @@ export function TopNavbar({
   picSource:string,
 }) {
   const [isOpen, setOpen] = useState(false);
+  const dispatch = useDispatch<AppDispatch>();
   const handleOpenPopup = () => {
     setOpen(true);
   };
@@ -37,14 +42,14 @@ export function TopNavbar({
   };
 
   const handleLogOut = () => {
-    localStorage.clear();
+    dispatch(resetUser());
     setOpen(false);
   };
 
   return (
     <Box
       sx={{
-        padding: '0.5rem 3rem 0.5rem 0',
+        padding: '0.5rem 3rem 0.5rem 0', backgroundColor: 'rgba(17, 24, 35, 0.4)', height: '50px',
       }}
     >
       <LogoutPopup
@@ -62,15 +67,15 @@ export function TopNavbar({
           {/* Wizeprompt logo */}
           <Box sx={{ paddingLeft: '2rem' }}>
             <Image
-              width={70}
-              height={50}
+              width={42}
+              height={30}
               unoptimized
               src="/wizeline.png"
               alt="wizeline logo"
             />
           </Box>
           {/* Wizeprompt typography */}
-          <Typography color="white" fontWeight="bold" fontSize="30px">
+          <Typography color="white" fontWeight="bold" fontSize="25px">
             WIZE
             <span>
               PROMPT
@@ -83,7 +88,7 @@ export function TopNavbar({
           <Stack>
             {/* UserName */}
             <Typography
-              sx={{ fontStyle: 'bold', color: 'white', fontSize: '1.2em' }}
+              sx={{ fontStyle: 'bold', color: 'white', fontSize: '1em' }}
             >
               {`${firstName} ${lastName}`}
             </Typography>
@@ -92,51 +97,40 @@ export function TopNavbar({
               {/* Logout */}
               <Tooltip title="Logout">
                 <IconButton sx={{ padding: '0', color: '#e93d44' }} onClick={handleOpenPopup}>
-                  <LogoutIcon />
+                  <LogoutIcon fontSize="small" />
                 </IconButton>
               </Tooltip>
               {/* Wizecoin logo and amount */}
               <Stack gap={1} direction="row">
-                <Box sx={{ position: 'relative', top: '3px' }}>
+                <Box sx={{ position: 'relative', top: '4px' }}>
                   <Image
                     src="wizecoin.svg"
                     alt="Wizecoin Icon"
-                    width={18}
-                    height={18}
+                    width={15}
+                    height={15}
                     layout="fixed"
                   />
                 </Box>
-                <Typography sx={{ color: '#4BE93D', fontSize: '1.2rem' }}>
+                <Typography sx={{ color: '#4BE931', fontSize: '1rem' }}>
                   {Number(wizecoins) > 1000 ? numeral(wizecoins).format('0.0a') : wizecoins}
                 </Typography>
               </Stack>
             </Stack>
           </Stack>
           {/* User Profile Picture */}
-          <Box position="relative">
-            <Avatar
-              alt={`${firstName} ${lastName}`}
-              src={picSource}
-              sx={{
-                width: 50, height: 50, position: 'relative', top: '5px',
-              }}
-            />
-            <IconButton
-              href="/profile"
-              size="small"
-              sx={{
-                position: 'absolute',
-                left: 35,
-                bottom: 0,
-                backgroundColor: 'white',
-                color: 'black',
-                width: 20,
-                height: 20,
-              }}
-            >
-              <SettingsIcons />
-            </IconButton>
-          </Box>
+          <Link href="/profile">
+            <Tooltip title="Settings" arrow>
+              <Box position="relative">
+                <Avatar
+                  alt={`${firstName} ${lastName}`}
+                  src={picSource}
+                  sx={{
+                    width: 45, height: 45, position: 'relative', border: '1.5px solid #e93d44', boxSizing: 'content-box',
+                  }}
+                />
+              </Box>
+            </Tooltip>
+          </Link>
         </Stack>
       </Stack>
     </Box>
