@@ -2,8 +2,10 @@
 
 import React from 'react';
 import { Provider } from 'react-redux';
+import persistStore from 'redux-persist/es/persistStore';
 import { store } from './store';
 
+persistStore(store);
 function ReduxProvider({ children }: { children: React.ReactNode }) {
   return <Provider store={store}>{children}</Provider>;
 }
