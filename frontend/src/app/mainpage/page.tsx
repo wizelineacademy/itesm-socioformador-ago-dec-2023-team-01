@@ -5,6 +5,7 @@ import { Message } from 'ai';
 import { useChat } from 'ai/react';
 import { Box, Grid, Stack } from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
+import { SnackbarProvider } from 'notistack';
 import Chat from '@/app/components/Chat';
 import { getHistory } from '@/services/usersService';
 import { postToConversation } from '@/services/chatService';
@@ -14,6 +15,25 @@ import { susbtractTokensToUser } from '@/services/tokenService';
 import { subtractTokens, updateCurrentTokens } from '../redux/features/userSlice';
 import TopNavbar from './components/topNavbar';
 import SideNavbar from './components/sideNavbar';
+
+async function postMessagesToConversation(convId: number, messagess: Message[]) {
+  const last2Messages = messagess.slice(-2);
+  const prompt = last2Messages.find((message) => message.role === 'user');
+  const response = last2Messages.find((message) => message.role === 'assistant');
+  let tokensFromPost = 0;
+  if (prompt && response && convId) {
+    if (response.id.startsWith('Nic0WzPpt') || prompt.id.startsWith('Nic0WzPpt')) {
+      return tokensFromPost;
+    }
+    // post to conversation
+    try {
+      tokensFromPost = await postToConversation(prompt, response, convId);
+    } catch (error) {
+      console.log(error);
+    }
+  }
+  return tokensFromPost;
+}
 
 export default function Mainpage() {
   const [conversationId, setConversationId] = useState(0);
@@ -28,31 +48,15 @@ export default function Mainpage() {
   const user = useSelector((state: RootState) => state.user.userInfo);
   const dispatch = useDispatch<AppDispatch>();
 
-  const postMessagesToConversation = async (convId: number, messagess: Message[], userId: string) => {
-    const last2Messages = messagess.slice(-2);
-    const prompt = last2Messages.find((message) => message.role === 'user');
-    const response = last2Messages.find((message) => message.role === 'assistant');
-    if (prompt && response && convId) {
-      if (response.id.startsWith('Nic0WzPpt') || prompt.id.startsWith('Nic0WzPpt')) {
-        return;
+  const removeTokenFromUser = async (tokensFromPost: number) => {
+    try {
+      if (tokensFromPost > 0) {
+        const updatedUser = await susbtractTokensToUser(user?.id ?? '', tokensFromPost);
+        dispatch(subtractTokens(tokensFromPost));
+        dispatch(updateCurrentTokens(updatedUser.currentAmount));
       }
-      // post to conversation
-      let tokensFromPost = 0;
-      try {
-        tokensFromPost = await postToConversation(prompt, response, convId);
-      } catch (error) {
-        console.log(error);
-      }
-      // substract user tokens
-      try {
-        if (tokensFromPost > 0) {
-          const updatedUser = await susbtractTokensToUser(userId, tokensFromPost);
-          dispatch(subtractTokens(tokensFromPost));
-          dispatch(updateCurrentTokens(updatedUser.currentAmount));
-        }
-      } catch (error) {
-        console.log(error);
-      }
+    } catch (error) {
+      console.log(error);
     }
   };
 
@@ -60,9 +64,13 @@ export default function Mainpage() {
     if (!chatIsLoading && isChatStopped) {
       setIsChatStopped(false);
       setPrevConversationId(0);
-      postMessagesToConversation(convId, messages, user?.id ?? '');
+      postMessagesToConversation(convId, messages).then((tokensFromPost) => {
+        removeTokenFromUser(tokensFromPost);
+      });
     } else if (!chatIsLoading) {
-      postMessagesToConversation(convId, messages, user?.id ?? '');
+      postMessagesToConversation(convId, messages).then((tokensFromPost) => {
+        removeTokenFromUser(tokensFromPost);
+      });
     } else {
       // console.log('loading');
     }
@@ -115,6 +123,7 @@ export default function Mainpage() {
 
   return (
     <Stack>
+      <SnackbarProvider />
       <TopNavbar
         firstName={user.firstName}
         lastName={user.lastName}

@@ -11,6 +11,7 @@ import TextField from '@mui/material/TextField';
 import Box from '@mui/material/Box';
 import SendIcon from '@mui/icons-material/Send';
 import IconButton from '@mui/material/IconButton';
+import BlockIcon from '@mui/icons-material/Block';
 import InputAdornment from '@mui/material/InputAdornment';
 import ContentCopyIcon from '@mui/icons-material/ContentCopy';
 import StopCircleIcon from '@mui/icons-material/StopCircle';
@@ -23,14 +24,16 @@ import { atomDark } from 'react-syntax-highlighter/dist/esm/styles/prism';
 import { Button, Stack } from '@mui/material';
 import CopyToClipboard from 'react-copy-to-clipboard';
 import { ChatRequestOptions } from 'ai';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
+import { VariantType, enqueueSnackbar } from 'notistack';
 import {
   numTokensFromMessage,
   createConversation,
   getConversationFullChat,
 } from '../../services/chatService';
-import { RootState } from '../redux/store';
+import { AppDispatch, RootState } from '../redux/store';
 import NotWelcome from './NotWelcome';
+import { subtractTokens } from '../redux/features/userSlice';
 
 interface ChatProps {
   input: string;
@@ -81,10 +84,33 @@ export default function Chat({
     }
   };
   const [tokensFromPrompt, setTokensFromPrompt] = useState(0);
+  const dispatch = useDispatch<AppDispatch>();
+
+  const showNotification = (variant: VariantType, text:string, action:string) => {
+    enqueueSnackbar(`${action} ${text}`, { variant });
+  };
 
   useEffect(() => {
     scrollToBottom();
   }, [messages]);
+
+  useEffect(() => {
+    const lastMessage = messages[messages.length - 1];
+    if (lastMessage && lastMessage.role === 'assistant' && isLoading) {
+      const tokensFromResponse = numTokensFromMessage(lastMessage);
+      if (tokensFromResponse > 0) {
+        dispatch(subtractTokens(tokensFromResponse));
+      }
+    }
+  }, [dispatch, isLoading, messages]);
+
+  useEffect(() => {
+    if (!user) return;
+    if (user.tokens.currentAmountTokens === 0) {
+      stopChat();
+      showNotification('error', 'to chat', 'No more tokens ');
+    }
+  }, [stopChat, user]);
 
   // actualizar el conversationId cuando cambie el id
   useEffect(() => {
@@ -105,11 +131,10 @@ export default function Chat({
   // crear una conversacion si no hay ninguna
   useEffect(() => {
     if (!user) return;
-    if (conversationId === 0 && messages.length === 2) {
+    if (conversationId === 0 && messages.length === 1) {
       const title = messages[0].content.slice(0, 30).trimEnd();
       createConversation(user.id, title).then((conversation) => {
         setConversationId(conversation.id);
-        getChatHistory();
       });
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -303,6 +328,7 @@ export default function Chat({
             fullWidth
             value={input}
             multiline
+            disabled={user.tokens.currentAmountTokens === 0}
             onKeyDown={(e) => {
               if (e.key === 'Enter' && !e.shiftKey) {
                 e.preventDefault();
@@ -356,6 +382,9 @@ export default function Chat({
                   )}
                   {isLoading && lastMessage()?.role === 'user' && (
                   <CircularProgress size={35} thickness={4} sx={{ color: 'white', marginRight: '10px' }} />
+                  )}
+                  {user.tokens.currentAmountTokens === 0 && (
+                    <BlockIcon fontSize="large" sx={{ color: 'white' }} />
                   )}
                   {!isLoading && (
                   <IconButton type="submit">
