@@ -44,6 +44,7 @@ import GroupsIcon from '@mui/icons-material/Groups';
 import TokenIcon from '@mui/icons-material/Token';
 import ArrowDropDownCircleIcon from '@mui/icons-material/ArrowDropDownCircle';
 import SendIcon from '@mui/icons-material/Send';
+import CircularProgress from '@mui/material/CircularProgress';
 import WTitle1 from '../components/WTitle1';
 import { fetchDashboard } from '@/services/dashboardService';
 
@@ -73,7 +74,17 @@ export default function Admin() {
   }, []);
 
   if (!dashboardData) {
-    return <div>LOADING...</div>;
+    return (
+      <div style={{
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+        height: '100vh',
+      }}
+      >
+        <CircularProgress style={{ color: '#fff' }} />
+      </div>
+    );
   }
 
   const recentUpdates = [
