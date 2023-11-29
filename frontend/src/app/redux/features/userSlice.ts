@@ -31,11 +31,6 @@ export const user = createSlice({
   initialState,
   reducers: {
     setUserInfo: (state, action) => {
-      if (action.payload === null) {
-        console.log('User is set to null');
-      } else {
-        console.log('User is set to', action.payload);
-      }
       state.userInfo = action.payload;
     },
     addTokens: (state, action) => {

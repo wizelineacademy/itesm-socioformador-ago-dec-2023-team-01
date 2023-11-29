@@ -6,26 +6,21 @@ import React, { useEffect, useState } from 'react';
 import { Message } from 'ai';
 import { useChat } from 'ai/react';
 import { Hidden } from '@mui/material';
+import { useSelector } from 'react-redux';
 import Chat from '@/app/components/Chat';
 import ChatHistory from '@/app/components/ChatHistory';
 import Navbar from '@/app/components/Navbar';
 import { getHistory } from '@/services/usersService';
 import { numTokensFromMessage, postToConversation } from '@/services/chatService';
 import { RootState } from '../redux/store';
-import { useSelector } from 'react-redux';
-import Awaiting from '../components/awaiting';
 import NotWelcome from '../components/NotWelcome';
 
 const postMessagesToConversation = async (conversationId: number, messages: Message[]) => {
   const last2Messages = messages.slice(-2);
   const prompt = last2Messages.find((message) => message.role === 'user');
   const response = last2Messages.find((message) => message.role === 'assistant');
-  // console.log('prompt', prompt);
-  // console.log('response', response);
   if (prompt && response && conversationId) {
-    // console.log('sliced messages');
     if (response.id.startsWith('Nic0WzPpt') || prompt.id.startsWith('Nic0WzPpt')) {
-      // console.log('message already in db');
       return;
     }
     const tokensFromPrompt = numTokensFromMessage(prompt);
@@ -34,10 +29,6 @@ const postMessagesToConversation = async (conversationId: number, messages: Mess
 
     await postToConversation(prompt.content, response.content, conversationId, tokens);
     console.log('posted to conversation', messages);
-    // console.log('conversation', conversation);
-    // console.log('posted to conversation');
-  } else {
-    // console.log('no prompt or response');
   }
 };
 
@@ -53,7 +44,6 @@ function Mainpage() {
     api: '/api/chat',
   });
   const user = useSelector((state: RootState) => state.user.userInfo);
-  console.log(user);
 
   const executePostMessagesToConversation = async (convId: number) => {
     if (!chatIsLoading && isChatStopped) {
@@ -91,7 +81,6 @@ function Mainpage() {
         id: conversation.id,
       }));
       setChatsHistory(chatHistory);
-      // console.log('setting chat history', chatHistory);
       return chatHistory;
     } catch (er) {
       console.log(er);
