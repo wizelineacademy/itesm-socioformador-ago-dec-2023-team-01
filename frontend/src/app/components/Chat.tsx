@@ -142,7 +142,7 @@ export default function Chat({
   return (
     <Box
       sx={{
-        height: '100%',
+        height: 'calc(100vh - 65px)',
         width: '100%',
         display: 'flex',
         flexDirection: 'column',
@@ -168,8 +168,11 @@ export default function Chat({
             key={index}
             sx={{
               display: 'flex',
+              alignItems: 'flex-end',
               justifyContent: message.role === 'assistant' ? 'flex-start' : 'flex-end',
               marginBottom: '10px',
+              marginLeft: message.role === 'assistant' ? '0px' : '20px',
+              marginRight: message.role === 'assistant' ? '20px' : '0px',
             }}
           >
             {message.role === 'assistant' && (
@@ -180,6 +183,7 @@ export default function Chat({
                   width: 40,
                   height: 40,
                   marginRight: '10px',
+                  marginBottom: '4px',
                 }}
               />
             )}
@@ -274,6 +278,7 @@ export default function Chat({
                   width: 40,
                   height: 40,
                   marginLeft: '10px',
+                  marginBottom: '4px',
                 }}
               />
             )}

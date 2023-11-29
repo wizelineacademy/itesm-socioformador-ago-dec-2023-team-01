@@ -21,7 +21,7 @@ export default function SideNavbar({
   return (
     <Stack
       sx={{
-        backgroundColor: '#111823', width: '100%', height: 'calc(100vh - 75px)', overflowY: 'hidden',
+        backgroundColor: '#111823', width: '100%', height: '100%',
       }}
       justifyContent="space-between"
     >

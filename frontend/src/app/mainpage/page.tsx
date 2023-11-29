@@ -117,26 +117,19 @@ export default function Mainpage() {
   if (!user) return <NotWelcome />;
 
   return (
-    <Stack overflow="hidden">
-      <Box
-        sx={{
-          height: '75px',
-          top: '0',
-          background: 'rgba(17, 24, 35, 0.4)',
-          boxShadow: '0 4px 30px rgba(0, 0, 0, 0.1)',
-          backdropFilter: 'blur(5px)',
-          borderBottom: '1px solid rgba(255, 255, 255, 0.1)',
-          zIndex: '100',
+    <Stack>
+      <TopNavbar
+        firstName={user.firstName}
+        lastName={user.lastName}
+        wizecoins={user.tokens.currentAmountTokens}
+        picSource={user.picture}
+      />
+      <Grid
+        container
+        style={{
+          height: 'calc(100vh - 65px)',
         }}
       >
-        <TopNavbar
-          firstName={user.firstName}
-          lastName={user.lastName}
-          wizecoins={user.tokens.currentAmountTokens}
-          picSource={user.picture}
-        />
-      </Box>
-      <Grid container style={{ height: 'calc(100vh - 75px)' }}>
         <Grid item lg={2}>
           <SideNavbar
             chatHistory={chatsHistory}
