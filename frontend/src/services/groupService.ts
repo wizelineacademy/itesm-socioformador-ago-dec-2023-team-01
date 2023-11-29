@@ -30,7 +30,7 @@ export const fetchGroups = async (jwtToken: string) => {
               100 - Math.round(((group.totalTokens - group.availableTokens) / (group.totalTokens + 1)) * 100)],
             backgroundColor: ['#E93D44', 'rgba(0,0,0,0)'],
             borderColor: ['rgba(0,0,0,0)', 'rgba(0,0,0,0)'],
-            cutout: '37',
+            cutout: '25',
             borderRadius: 30,
           },
         ],
