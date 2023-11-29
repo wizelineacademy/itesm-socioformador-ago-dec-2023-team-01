@@ -3,11 +3,12 @@
 /* eslint-disable import/no-extraneous-dependencies */
 import React, { useEffect, useState } from 'react';
 import {
-  Typography, Box, Button, Paper, Stack, Grid, IconButton, Avatar,
+  Typography, Box, Button, Paper, Stack, Grid, IconButton, Avatar, Tooltip,
 } from '@mui/material';
 import { Inter } from 'next/font/google';
 import CheckBoxOutlinedIcon from '@mui/icons-material/CheckBoxOutlined';
 import CropSquareIcon from '@mui/icons-material/CropSquare';
+import LockClockIcon from '@mui/icons-material/LockClock';
 import { useRouter } from 'next/navigation';
 import { VariantType, enqueueSnackbar } from 'notistack';
 import Link from 'next/link';
@@ -462,153 +463,183 @@ export default function UserProfileDashboard({
           </Stack>
         </Stack>
         <Stack direction="row" paddingBottom="1rem" paddingTop="1.5rem" spacing="1.5rem">
-          <Paper
-            elevation={16}
-            style={{
-              height: '200px', width: '450px', borderRadius: '20px', background: '#102A43',
-            }}
-          >
-            <LineChart data={userData} options={options} />
-          </Paper>
-          <Stack direction="column" alignItems="center" justifyContent="center">
-            <Paper
-              elevation={16}
-              style={{
-                borderRadius: '20px', background: '#4F565F', height: '200px', width: '250px',
-              }}
-            >
-              <Typography
-                variant="body1"
-                sx={{
-                  fontWeight: 'bold', color: 'white', paddingLeft: '4rem', paddingTop: '0.25rem', paddingBottom: '0.25rem', borderTopLeftRadius: '20px', borderTopRightRadius: '20px', background: '#111823',
+          {/* CHARTS (LOCKED) */}
+          <Tooltip title="Total Tokens Per Year (Comming Soon)">
+            <Box className={styles.container}>
+              <Paper
+                elevation={16}
+                style={{
+                  height: '200px', width: '450px', borderRadius: '20px', background: '#102A43',
                 }}
-                className={`${inter.className}`}
               >
-                LLMs utilizados
-              </Typography>
-              <Stack direction="column" justifyContent="left" alignItems="center" padding="1rem" spacing="1rem">
-                <Typography
-                  variant="body2"
-                  align="center"
-                  sx={{
-                    color: 'white', fontWeight: 'bold', backgroundColor: '#1D293A', width: '200px', borderRadius: '15px', textTransform: 'none', padding: '6px', align: 'center',
+                <LineChart data={userData} options={options} />
+              </Paper>
+              <Box className={styles.overlay}>
+                <LockClockIcon
+                  sx={{ fontSize: '7rem', padding: '2.7rem 0 0 11rem', color: 'white' }}
+                />
+              </Box>
+            </Box>
+          </Tooltip>
+          <Stack direction="column" alignItems="center" justifyContent="center">
+            {/* LLMS UTILIZADOS */}
+            <Tooltip title="LLMs utilizados (Comming Soon)">
+              <Box className={styles.container}>
+                <Paper
+                  elevation={16}
+                  style={{
+                    borderRadius: '20px', background: '#4F565F', height: '200px', width: '250px',
                   }}
-                  className={`${inter.className}`}
                 >
-                  Chat-GPT |
-                  { ' ' }
-                  { ' ' }
-                  {ChatGPTPrompts}
-                  { ' ' }
-                  prompts
-                </Typography>
+                  <Typography
+                    variant="body1"
+                    sx={{
+                      fontWeight: 'bold', color: 'white', paddingLeft: '4rem', paddingTop: '0.25rem', paddingBottom: '0.25rem', borderTopLeftRadius: '20px', borderTopRightRadius: '20px', background: '#111823',
+                    }}
+                    className={`${inter.className}`}
+                  >
+                    LLMs utilizados
+                  </Typography>
+                  <Stack direction="column" justifyContent="left" alignItems="center" padding="1rem" spacing="1rem">
+                    <Typography
+                      variant="body2"
+                      align="center"
+                      sx={{
+                        color: 'white', fontWeight: 'bold', backgroundColor: '#1D293A', width: '200px', borderRadius: '15px', textTransform: 'none', padding: '6px', align: 'center',
+                      }}
+                      className={`${inter.className}`}
+                    >
+                      Chat-GPT |
+                      { ' ' }
+                      { ' ' }
+                      {ChatGPTPrompts}
+                      { ' ' }
+                      prompts
+                    </Typography>
 
-                <Typography
-                  variant="body2"
-                  align="center"
-                  sx={{
-                    color: 'white', fontWeight: 'bold', backgroundColor: '#1D293A', width: '200px', borderRadius: '15px', textTransform: 'none', padding: '6px', align: 'center',
-                  }}
-                  className={`${inter.className}`}
-                >
-                  Google Bard |
-                  { ' ' }
-                  { ' ' }
-                  {GoogleBardPrompts}
-                  { ' ' }
-                  prompts
-                </Typography>
-                <Typography
-                  variant="body2"
-                  align="center"
-                  sx={{
-                    color: 'white', fontWeight: 'bold', backgroundColor: '#1D293A', width: '200px', borderRadius: '15px', textTransform: 'none', padding: '6px', align: 'center',
-                  }}
-                  className={`${inter.className}`}
-                >
-                  Llama 2 |
-                  { ' ' }
-                  { ' ' }
-                  {Llama2Prompts}
-                  { ' ' }
-                  prompts
-                </Typography>
-              </Stack>
-            </Paper>
+                    <Typography
+                      variant="body2"
+                      align="center"
+                      sx={{
+                        color: 'white', fontWeight: 'bold', backgroundColor: '#1D293A', width: '200px', borderRadius: '15px', textTransform: 'none', padding: '6px', align: 'center',
+                      }}
+                      className={`${inter.className}`}
+                    >
+                      Google Bard |
+                      { ' ' }
+                      { ' ' }
+                      {GoogleBardPrompts}
+                      { ' ' }
+                      prompts
+                    </Typography>
+                    <Typography
+                      variant="body2"
+                      align="center"
+                      sx={{
+                        color: 'white', fontWeight: 'bold', backgroundColor: '#1D293A', width: '200px', borderRadius: '15px', textTransform: 'none', padding: '6px', align: 'center',
+                      }}
+                      className={`${inter.className}`}
+                    >
+                      Llama 2 |
+                      { ' ' }
+                      { ' ' }
+                      {Llama2Prompts}
+                      { ' ' }
+                      prompts
+                    </Typography>
+                  </Stack>
+                </Paper>
+                <Box className={styles.overlay1}>
+                  <LockClockIcon
+                    sx={{ fontSize: '7rem', padding: '2.7rem 0 0 5rem', color: 'white' }}
+                  />
+                </Box>
+              </Box>
+            </Tooltip>
           </Stack>
           <Stack direction="column" alignItems="center" justifyContent="center">
-            <Paper
-              elevation={16}
-              style={{
-                borderRadius: '20px', background: '#4F565F', height: '200px', width: '250px',
-              }}
-            >
-              <Typography
-                variant="body1"
-                sx={{
-                  fontWeight: 'bold', color: 'white', paddingLeft: '2.25rem', paddingTop: '0.25rem', paddingBottom: '0.25rem', borderTopLeftRadius: '20px', borderTopRightRadius: '20px', background: '#111823',
-                }}
-                className={`${inter.className}`}
-              >
-                Average time per page
-              </Typography>
-              <Stack
-                direction="column"
-                justifyContent="left"
-                alignItems="center"
-                padding="1rem"
-                spacing="0.5rem"
-              >
-                <div
+            {/* Average time  */}
+            <Tooltip title="Average time per page (Comming Soon)">
+              <Box className={styles.container}>
+                <Paper
+                  elevation={16}
                   style={{
-                    maxHeight: '140px',
-                    overflow: 'auto',
+                    borderRadius: '20px', background: '#4F565F', height: '200px', width: '250px',
                   }}
                 >
-                  <Grid sx={{ flexGrow: 1 }} container spacing={1}>
-                    {stats.map((area, index) => (
-                      <Grid item key={index}>
-                        <Link href="/mainpage">
-                          <Button
-                            key={index}
-                            style={{
-                              backgroundColor: '#1D293A',
-                              width: '200px',
-                              borderRadius: '15px', // Add the border radius to the button
-                              textTransform: 'none', // Set textTransform to 'none' to prevent all caps
-                              padding: '6px',
-                            }}
-                          >
-                            <Stack direction="row" display="flex" justifyContent="space-between" alignItems="left" spacing="1rem">
-                              <Typography
-                                variant="caption"
-                                sx={{
-                                  color: 'white', fontWeight: 'bold',
+                  <Typography
+                    variant="body1"
+                    sx={{
+                      fontWeight: 'bold', color: 'white', paddingLeft: '2.25rem', paddingTop: '0.25rem', paddingBottom: '0.25rem', borderTopLeftRadius: '20px', borderTopRightRadius: '20px', background: '#111823',
+                    }}
+                    className={`${inter.className}`}
+                  >
+                    Average time per page
+                  </Typography>
+                  <Stack
+                    direction="column"
+                    justifyContent="left"
+                    alignItems="center"
+                    padding="1rem"
+                    spacing="0.5rem"
+                  >
+                    <div
+                      style={{
+                        maxHeight: '140px',
+                        overflow: 'auto',
+                      }}
+                    >
+                      <Grid sx={{ flexGrow: 1 }} container spacing={1}>
+                        {stats.map((area, index) => (
+                          <Grid item key={index}>
+                            <Link href="/mainpage">
+                              <Button
+                                key={index}
+                                style={{
+                                  backgroundColor: '#1D293A',
+                                  width: '200px',
+                                  borderRadius: '15px', // Add the border radius to the button
+                                  textTransform: 'none', // Set textTransform to 'none' to prevent all caps
+                                  padding: '6px',
                                 }}
-                                className={`${inter.className}`}
                               >
-                                {area[0]}
-                              </Typography>
-                              <Typography
-                                variant="caption"
-                                sx={{
-                                  color: 'white', fontWeight: 'bold',
-                                }}
-                                className={`${inter.className}`}
-                              >
-                                {area[1]}
-                                { ' ' }
-                                hrs
-                              </Typography>
-                            </Stack>
-                          </Button>
-                        </Link>
+                                <Stack direction="row" display="flex" justifyContent="space-between" alignItems="left" spacing="1rem">
+                                  <Typography
+                                    variant="caption"
+                                    sx={{
+                                      color: 'white', fontWeight: 'bold',
+                                    }}
+                                    className={`${inter.className}`}
+                                  >
+                                    {area[0]}
+                                  </Typography>
+                                  <Typography
+                                    variant="caption"
+                                    sx={{
+                                      color: 'white', fontWeight: 'bold',
+                                    }}
+                                    className={`${inter.className}`}
+                                  >
+                                    {area[1]}
+                                    { ' ' }
+                                    hrs
+                                  </Typography>
+                                </Stack>
+                              </Button>
+                            </Link>
+                          </Grid>
+                        ))}
                       </Grid>
-                    ))}
-                  </Grid>
-                </div>
-              </Stack>
-            </Paper>
+                    </div>
+                  </Stack>
+                </Paper>
+                <Box className={styles.overlay1}>
+                  <LockClockIcon
+                    sx={{ fontSize: '7rem', padding: '2.7rem 0 0 5rem', color: 'white' }}
+                  />
+                </Box>
+              </Box>
+            </Tooltip>
           </Stack>
         </Stack>
         <Stack direction="row" justifyContent="space-between" paddingBottom="1rem" paddingTop="1rem" width="100%">

@@ -44,9 +44,11 @@ import GroupsIcon from '@mui/icons-material/Groups';
 import TokenIcon from '@mui/icons-material/Token';
 import ArrowDropDownCircleIcon from '@mui/icons-material/ArrowDropDownCircle';
 import SendIcon from '@mui/icons-material/Send';
+import LockClockIcon from '@mui/icons-material/LockClock';
 import CircularProgress from '@mui/material/CircularProgress';
 import WTitle1 from '../components/WTitle1';
 import { fetchDashboard } from '@/services/dashboardService';
+import styles from './components/individualDashboard.module.css';
 
 const numeral = require('numeral');
 
@@ -504,90 +506,118 @@ export default function Admin() {
           </Grid>
           {/* LINE CHART */}
           <Grid padding="0rem 2rem 3rem 2rem" gap={4}>
-            <Card sx={{
-              margin: '20px',
-              padding: '20px',
-              backgroundColor: '#000',
-              color: '#fff',
-              boxShadow: '0px 4px 8px rgba(0, 0, 0, 1)',
-              borderRadius: '20px',
-            }}
-            >
-              <Typography variant="h5">Daily Token Usage</Typography>
-              <Line data={tokenUsageData} options={lineChartOptions} />
-            </Card>
+            <Box className={styles.container}>
+              <Card sx={{
+                margin: '20px',
+                padding: '20px',
+                backgroundColor: '#000',
+                color: '#fff',
+                boxShadow: '0px 4px 8px rgba(0, 0, 0, 1)',
+                borderRadius: '20px',
+              }}
+              >
+                <Typography variant="h5">Daily Token Usage</Typography>
+                <Line data={tokenUsageData} options={lineChartOptions} />
+              </Card>
+              <Box className={styles.overlaygraph}>
+                <LockClockIcon
+                  sx={{ fontSize: '7rem', padding: '13rem 0 0 28rem', color: 'white' }}
+                />
+              </Box>
+            </Box>
           </Grid>
           {/* ERROR RATE CHART */}
           <Grid padding="0rem 2rem 3rem 2rem" gap={4}>
-            <Card sx={{
-              margin: '20px',
-              padding: '20px',
-              backgroundColor: '#000',
-              color: '#fff',
-              boxShadow: '0px 4px 8px rgba(0, 0, 0, 1)',
-              borderRadius: '20px',
-            }}
-            >
-              <CardContent>
-                <Typography variant="h5">Weekly Error Rate</Typography>
-                <Line data={errorRateData} />
-              </CardContent>
-            </Card>
+            <Box className={styles.container}>
+              <Card sx={{
+                margin: '20px',
+                padding: '20px',
+                backgroundColor: '#000',
+                color: '#fff',
+                boxShadow: '0px 4px 8px rgba(0, 0, 0, 1)',
+                borderRadius: '20px',
+              }}
+              >
+                <CardContent>
+                  <Typography variant="h5">Weekly Error Rate</Typography>
+                  <Line data={errorRateData} />
+                </CardContent>
+              </Card>
+              <Box className={styles.overlaygraph}>
+                <LockClockIcon
+                  sx={{ fontSize: '7rem', padding: '13rem 0 0 28rem', color: 'white' }}
+                />
+              </Box>
+            </Box>
           </Grid>
         </Grid>
         {/* menu derecha */}
         <Grid item xs={12} md={3}>
           <Box sx={{ position: 'sticky', top: '100px' }}>
-            <Card sx={{
-              marginBottom: 2,
-              backgroundColor: '#000',
-              color: '#fff',
-              boxShadow: '0px 4px 8px rgba(0, 0, 0, 1)',
-              borderRadius: '20px',
-            }}
-            >
-              <CardContent>
-                <Typography variant="h6" style={{ color: '#fff' }}>Recent Updates</Typography>
-                <List>
-                  {recentUpdates.map((update) => (
-                    <ListItem key={update.id}>
-                      <ListItemAvatar>
-                        <Avatar src={update.imageUrl} alt={update.title} />
-                      </ListItemAvatar>
-                      <ListItemText
-                        primary={update.title}
-                        secondary={update.description}
-                        primaryTypographyProps={{ style: { color: '#fff' } }}
-                        secondaryTypographyProps={{ style: { color: '#fff' } }}
-                      />
-                    </ListItem>
-                  ))}
-                </List>
-              </CardContent>
-            </Card>
-            {tokenAnalytics.map((token) => (
-              <Card
-                key={token.id}
-                sx={{
-                  marginBottom: 2,
-                  backgroundColor: '#000',
-                  color: '#fff',
-                  boxShadow: '0px 4px 8px rgba(0, 0, 0, 1)',
-                  borderRadius: '20px',
-                }}
+            <Box className={styles.container}>
+              <Card sx={{
+                marginBottom: 2,
+                backgroundColor: '#000',
+                color: '#fff',
+                boxShadow: '0px 4px 8px rgba(0, 0, 0, 1)',
+                borderRadius: '20px',
+              }}
               >
-                <CardContent sx={{ display: 'flex', alignItems: 'center' }}>
-                  <ListItemAvatar>
-                    <Avatar src={token.imageUrl} />
-                  </ListItemAvatar>
-                  <ListItemText
-                    primary={token.title}
-                    secondary={`Amount: ${token.amount}`}
-                    primaryTypographyProps={{ style: { color: '#fff' } }}
-                    secondaryTypographyProps={{ style: { color: '#fff' } }}
-                  />
+                <CardContent>
+                  <Typography variant="h6" style={{ color: '#fff' }}>Recent Updates</Typography>
+                  <List>
+                    {recentUpdates.map((update) => (
+                      <ListItem key={update.id}>
+                        <ListItemAvatar>
+                          <Avatar src={update.imageUrl} alt={update.title} />
+                        </ListItemAvatar>
+                        <ListItemText
+                          primary={update.title}
+                          secondary={update.description}
+                          primaryTypographyProps={{ style: { color: '#fff' } }}
+                          secondaryTypographyProps={{ style: { color: '#fff' } }}
+                        />
+                      </ListItem>
+                    ))}
+                  </List>
                 </CardContent>
               </Card>
+              <Box className={styles.overlayrecent}>
+                <LockClockIcon
+                  sx={{ fontSize: '7rem', padding: '6.5rem 0 0 8rem', color: 'white' }}
+                />
+              </Box>
+            </Box>
+            {tokenAnalytics.map((token) => (
+              <Box className={styles.container}>
+                <Card
+                  key={token.id}
+                  sx={{
+                    marginBottom: 2,
+                    backgroundColor: '#000',
+                    color: '#fff',
+                    boxShadow: '0px 4px 8px rgba(0, 0, 0, 1)',
+                    borderRadius: '20px',
+                  }}
+                >
+                  <CardContent sx={{ display: 'flex', alignItems: 'center' }}>
+                    <ListItemAvatar>
+                      <Avatar src={token.imageUrl} />
+                    </ListItemAvatar>
+                    <ListItemText
+                      primary={token.title}
+                      secondary={`Amount: ${token.amount}`}
+                      primaryTypographyProps={{ style: { color: '#fff' } }}
+                      secondaryTypographyProps={{ style: { color: '#fff' } }}
+                    />
+                  </CardContent>
+                </Card>
+                <Box className={styles.overlayllms}>
+                  <LockClockIcon
+                    sx={{ fontSize: '5rem', padding: '0.5rem 0 0 9rem', color: 'white' }}
+                  />
+                </Box>
+              </Box>
             ))}
           </Box>
         </Grid>
