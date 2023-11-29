@@ -1,6 +1,5 @@
 'use client';
 
-// @react server
 import Container from '@mui/material/Container';
 import Grid from '@mui/material/Grid';
 import React, { useEffect, useState } from 'react';
@@ -12,6 +11,8 @@ import ChatHistory from '@/app/components/ChatHistory';
 import Navbar from '@/app/components/Navbar';
 import { getHistory } from '@/services/usersService';
 import { numTokensFromMessage, postToConversation } from '@/services/chatService';
+import { RootState } from '../redux/store';
+import { useSelector } from 'react-redux';
 import Awaiting from '../components/awaiting';
 import NotWelcome from '../components/NotWelcome';
 
@@ -42,9 +43,6 @@ const postMessagesToConversation = async (conversationId: number, messages: Mess
 
 function Mainpage() {
   const [showChatHistory, setShowChatHistory] = useState(false);
-  const [userId, setUserId] = useState('');
-  const [name, setName] = useState('');
-  const [profileSrc, setProfileSrc] = useState('');
   const [conversationId, setConversationId] = useState(0);
   const [chatsHistory, setChatsHistory] = useState([{ title: '', id: 0 }]);
   const [isChatStopped, setIsChatStopped] = useState(false);
@@ -54,6 +52,8 @@ function Mainpage() {
   } = useChat({
     api: '/api/chat',
   });
+  const user = useSelector((state: RootState) => state.user.userInfo);
+  console.log(user);
 
   const executePostMessagesToConversation = async (convId: number) => {
     if (!chatIsLoading && isChatStopped) {
@@ -70,16 +70,11 @@ function Mainpage() {
 
   const handleChatItemClick = async (id: number) => {
     if (chatIsLoading) {
-      // console.log('chat is loading, stopping response, the new id will be:,', id);
       setIsChatStopped(true);
       setPrevConversationId(conversationId);
       stop();
-      // console.log('finishing posting messages to conversation with id', conversationId);
-      // await postMessagesToConversation(conversationId, messages);
     }
-    // console.log('chat item clicked', id);
     setConversationId(id);
-    // console.log('chat item clicked', id);
   };
 
   // post new messages to conversation
@@ -88,8 +83,9 @@ function Mainpage() {
   }, [chatIsLoading, messages]);
 
   const getChatHistory = async () => {
+    if (!user) return [];
     try {
-      const response = await getHistory(userId);
+      const response = await getHistory(user.id);
       const chatHistory = response.map((conversation: any) => ({
         title: conversation.title,
         id: conversation.id,
@@ -104,14 +100,8 @@ function Mainpage() {
   };
 
   useEffect(() => {
-    setUserId(`${localStorage.getItem('sub')}`);
-    setName(`${localStorage.getItem('first')} ${localStorage.getItem('last')}`);
-    setProfileSrc(`${localStorage.getItem('pic')}`);
-  }, []);
-
-  useEffect(() => {
-    if (userId === '') return;
-    getHistory(userId).then((data) => {
+    if (!user) return;
+    getHistory(user.id).then((data) => {
       const chatInformation = data.map((chat: { title: any; id: any; }) => ({
         title: chat.title,
         id: chat.id,
@@ -119,23 +109,20 @@ function Mainpage() {
       setChatsHistory(chatInformation);
       // console.log(data);
     });
-  }, [userId]);
+  }, [user]);
 
   // useEffect(() => {
   //   if (user) setUserId(user.sub ?? '');
   // }, [user]);
 
-  if (userId === '') return <Awaiting />;
-  console.log({
-    userId,
-    name,
-  });
+  if (!user) return <NotWelcome />;
+
   return (
     <Container maxWidth={false}>
       <Navbar
-        profileSrc={profileSrc}
-        name={name}
-        number={`${localStorage.getItem('amountTokens')}`}
+        profileSrc={user.picture}
+        name={`${user.firstName} ${user.lastName}`}
+        number={`${user.tokens.currentAmountTokens}`}
         onBurgerClick={() => setShowChatHistory((prev) => !prev)}
       />
       <Grid container spacing={1} columns={10}>

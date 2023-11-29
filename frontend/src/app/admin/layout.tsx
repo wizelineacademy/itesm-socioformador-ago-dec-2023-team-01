@@ -1,62 +1,34 @@
 'use client';
 
-import React, { useEffect, useState } from 'react';
+import React, { } from 'react';
 import { Box, Stack } from '@mui/material';
+import { useSelector } from 'react-redux';
 import { fetchUserCurrentTokens } from '@/services/tokenService';
 import SideNav from './components/side-nav';
 import ProfileInfo from './components/profile-info';
 import { WelcomeProps } from '../components/types';
-import Awaiting from '../components/awaiting';
 import NotAuthorized from './components/notAuthorized';
+import { RootState } from '../redux/store';
+import NotWelcome from '../components/NotWelcome';
 
 export default function AdminLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
-  const [wizeliner, setWizeliner] = useState<WelcomeProps>({
-    admin: false,
-    firstName: '',
-    lastName: '',
-    wizecoins: '',
-    IsWizeliner: false,
-    name: '',
-    picSource: '',
-  });
+  const user = useSelector((state: RootState) => state.user.userInfo);
+  if (!user) return <NotWelcome />;
 
-  const [userTokens, setUserTokens] = useState({
-    amountTokens: '0',
-    currentAmountTokens: '0',
-  });
-
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        if (localStorage.getItem('role') !== null) {
-          const userTokensData = await fetchUserCurrentTokens(`${localStorage.getItem('role')}`);
-          setUserTokens(userTokensData);
-        }
-      } catch (e) {
-        console.error(e);
-      }
-    };
-    fetchData();
-  }, []);
-
-  useEffect(() => {
-    setWizeliner({
-      admin: localStorage.getItem('role') === 'admin',
-      firstName: `${localStorage.getItem('first')}`,
-      lastName: `${localStorage.getItem('last')}`,
-      wizecoins: `${userTokens.currentAmountTokens ?? 0}`,
-      IsWizeliner: true,
-      name: `${localStorage.getItem('first')} ${localStorage.getItem('last')}`,
-      picSource: `${localStorage.getItem('pic')}`,
-    });
-  }, [userTokens]);
-
-  if (wizeliner.firstName === '') return <Awaiting />;
-  if (wizeliner.admin === false) return <NotAuthorized />;
+  const wizeliner: WelcomeProps = {
+    isAdmin: user.role === 'admin',
+    firstName: user.firstName,
+    lastName: user.lastName,
+    wizecoins: String(user.tokens.currentAmountTokens),
+    name: `${user.firstName} ${user.lastName}`,
+    picSource: user.picture,
+  };
+  // if (wizeliner.firstName === '') return <Awaiting />;
+  if (wizeliner.isAdmin === false) return <NotAuthorized />;
 
   return (
     <Stack direction="row">

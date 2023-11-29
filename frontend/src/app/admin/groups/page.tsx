@@ -15,9 +15,11 @@ import { Inter } from 'next/font/google';
 import { SnackbarProvider } from 'notistack';
 import SearchIcon from '@mui/icons-material/Search';
 import AddIcon from '@mui/icons-material/Add';
+import { useSelector } from 'react-redux';
 import { fetchGroups } from '@/services/groupService';
 import CreateGroupPopup from '@/app/components/CreateGroupPopup';
 import Group from '../components/group';
+import { RootState } from '@/app/redux/store';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -27,6 +29,7 @@ export default function Groups() {
   const [loading, setLoading] = useState(true);
   const [groups, setGroups] = useState([]);
   const [isCreatePopupOpen, setCreatePopup] = useState(false);
+  const user = useSelector((state: RootState) => state.user.userInfo);
 
   const handleOpenCreatePopup = () => {
     setCreatePopup(true);
@@ -45,7 +48,7 @@ export default function Groups() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const groupsData = await fetchGroups();
+        const groupsData = await fetchGroups(user?.jwtToken ?? '');
         console.log(groupsData);
         setGroups(groupsData);
         setLoading(false);

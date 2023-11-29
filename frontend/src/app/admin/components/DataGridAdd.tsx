@@ -15,11 +15,14 @@ import {
   removeUserToGroup,
   fetchUserCurrentTokens,
 } from '@/services/groupService';
+import { useSelector } from 'react-redux';
 import Styles from './DataGrid.module.css';
+import { RootState } from '@/app/redux/store';
 
 export default function DataTable({ groupId }:{ groupId:string }) {
   const [rows, setWizeliners] = useState<any[]>([]);
   const [change, setChange] = useState(true);
+  const userRedux = useSelector((state: RootState) => state.user.userInfo);
   const handleRefetch = () => {
     setChange((prevValue) => !prevValue);
   };
@@ -27,7 +30,7 @@ export default function DataTable({ groupId }:{ groupId:string }) {
     const fetchData = async () => {
       try {
         const wizelinersData = await fetchUsers();
-        const wizelinersInGroupData = await fetchWizelinersInGroup(groupId);
+        const wizelinersInGroupData = await fetchWizelinersInGroup(groupId, userRedux?.jwtToken ?? '');
         const usersWithWizecoins = await Promise.all(
           wizelinersData.map(async (user: any) => {
             const currentCoins = await fetchUserCurrentTokens(user.id);
@@ -122,7 +125,7 @@ export default function DataTable({ groupId }:{ groupId:string }) {
                 onClick={
                   async () => {
                     console.log(params.value);
-                    await addUserToGroup(params.value.groupId, params.value.userId);
+                    await addUserToGroup(params.value.groupId, params.value.userId, userRedux?.jwtToken ?? '');
                     params.value.refetch();
                     showNotification('success', params.row.username, 'Added');
                   }
@@ -150,7 +153,7 @@ export default function DataTable({ groupId }:{ groupId:string }) {
                 onClick={
                   async () => {
                     console.log(params.value);
-                    await removeUserToGroup(params.value.groupId, params.value.userId);
+                    await removeUserToGroup(params.value.groupId, params.value.userId, userRedux?.jwtToken ?? '');
                     params.value.refetch();
                     showNotification('error', params.row.username, 'Removed');
                   }

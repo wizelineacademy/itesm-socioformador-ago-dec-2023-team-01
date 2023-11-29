@@ -19,7 +19,9 @@ import Tooltip from '@mui/material/Tooltip';
 import 'react-datepicker/dist/react-datepicker.css';
 import { VariantType, enqueueSnackbar } from 'notistack';
 import { Inter } from 'next/font/google';
+import { useSelector } from 'react-redux';
 import { subDays } from 'date-fns';
+import { RootState } from '@/app/redux/store';
 // import styles from '../individualDashboard.module.css';
 
 const inter = Inter({ subsets: ['latin'] });
@@ -29,7 +31,7 @@ interface PopupProps {
   content: string[]
   open: boolean;
   handleClose: () => void;
-  handleCreate: (userId: string, amount: number, monthlyRenew: boolean, expiresAt: Date) => void;
+  handleCreate: (userId: string, amount: number, monthlyRenew: boolean, expiresAt: Date, jwtToken: string) => void;
   userId: string;
   setWizecoins: React.Dispatch<React.SetStateAction<string>>;
 }
@@ -48,6 +50,7 @@ export default function TokenDialog({
   const [expiresAt, setExpiresAt] = React.useState(tomorrow);
   const [amount, setAmount] = React.useState(0);
   const [monthlyRenew, setMonthlyRenew] = React.useState(false);
+  const userRedux = useSelector((state: RootState) => state.user.userInfo);
 
   const showNotification = (variant: VariantType, user:string, action:string) => {
     enqueueSnackbar(`${action} ${user}`, { variant });
@@ -67,7 +70,7 @@ export default function TokenDialog({
         console.error('Invalid data');
         return;
       }
-      handleCreate(userId, amount, monthlyRenew, expiresAt);
+      handleCreate(userId, amount, monthlyRenew, expiresAt, userRedux?.jwtToken ?? '');
       setWizecoins(`${amount}`);
       showNotification('success', userId, 'Tokens added for user with id: ');
       handleClose();

@@ -4,6 +4,10 @@ import {
 } from '@mui/material';
 
 import { Inter } from 'next/font/google';
+import { useDispatch } from 'react-redux';
+import Link from 'next/link';
+import { AppDispatch } from '@/app/redux/store';
+import { setUserInfo } from '../../redux/features/userSlice';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -26,6 +30,7 @@ export default function LogoutPopup({
   onClose,
   onGoodButtonClick,
 }: PopupProps) {
+  const dispatch = useDispatch<AppDispatch>();
   return (
     <Dialog
       maxWidth="xs"
@@ -83,20 +88,24 @@ export default function LogoutPopup({
             </Button>
           </Box>
           <Box>
-            <Button
-              href="/api/auth/logout"
-              onClick={onGoodButtonClick}
-              style={{
-                color: 'white',
-                backgroundColor: '#4BE93D',
-                borderRadius: '8px', // Add the border radius to the button
-                textTransform: 'none', // Set textTransform to 'none' to prevent all caps
-                padding: '0px 12px',
-              }}
-              className={`${inter.className}`}
-            >
-              {goodButtonTitle}
-            </Button>
+            <Link href="/api/auth/logout">
+              <Button
+                onClick={() => {
+                  onGoodButtonClick();
+                  dispatch(setUserInfo(null));
+                }}
+                style={{
+                  color: 'white',
+                  backgroundColor: '#4BE93D',
+                  borderRadius: '8px', // Add the border radius to the button
+                  textTransform: 'none', // Set textTransform to 'none' to prevent all caps
+                  padding: '0px 12px',
+                }}
+                className={`${inter.className}`}
+              >
+                {goodButtonTitle}
+              </Button>
+            </Link>
           </Box>
         </DialogActions>
       </Box>

@@ -7,6 +7,7 @@ import Typography from '@mui/material/Typography';
 // import Button from '@mui/material/Button';
 import SettingsIcons from '@mui/icons-material/Settings';
 import IconButton from '@mui/material/IconButton';
+import Link from 'next/link';
 // import WizecoinIcon from "./wizecoin.svg";
 import Image from 'next/image';
 import MenuIcon from '@mui/icons-material/Menu';
@@ -87,21 +88,22 @@ export default function Navbar({
             src={profileSrc}
             sx={{ width: 45, height: 45 }}
           />
-          <IconButton
-            href="/profile"
-            size="small"
-            sx={{
-              position: 'absolute',
-              left: 30,
-              bottom: -5,
-              backgroundColor: 'white',
-              color: 'black',
-              width: 20,
-              height: 20,
-            }}
-          >
-            <SettingsIcons />
-          </IconButton>
+          <Link href="/profile">
+            <IconButton
+              size="small"
+              sx={{
+                position: 'absolute',
+                left: 30,
+                bottom: -5,
+                backgroundColor: 'white',
+                color: 'black',
+                width: 20,
+                height: 20,
+              }}
+            >
+              <SettingsIcons />
+            </IconButton>
+          </Link>
         </Box>
       </Box>
     </Box>

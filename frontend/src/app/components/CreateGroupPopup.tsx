@@ -5,8 +5,10 @@ import {
 } from '@mui/material';
 import { VariantType, enqueueSnackbar } from 'notistack';
 import { Inter } from 'next/font/google';
+import { useSelector } from 'react-redux';
 import { createGroup } from '@/services/groupService';
 import styles from './iswelcome.module.css';
+import { RootState } from '../redux/store';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -28,6 +30,7 @@ export default function CreateGroupPopup({
   const [groupNameInput, setGroupNameInput] = useState(groupName);
   // eslint-disable-next-line max-len
   const [defaultMonthlyWizecoinsInput, setDefaultMonthlyWizecoinsInput] = useState(defaultMonthlyWizecoins);
+  const user = useSelector((state: RootState) => state.user.userInfo);
 
   const showNotification = (variant: VariantType, groupN:string, action:string) => {
     enqueueSnackbar(`${action} ${groupN}`, { variant });
@@ -43,7 +46,7 @@ export default function CreateGroupPopup({
 
   const handleCreateClick = async () => {
     try {
-      await createGroup(groupNameInput);
+      await createGroup(groupNameInput, user?.jwtToken ?? '');
       onGoodButtonClick();
       showNotification('success', groupNameInput, 'Created group ');
     } catch (err) {

@@ -2,78 +2,70 @@
 
 import React, { useState, useEffect } from 'react';
 import { useUser } from '@auth0/nextjs-auth0/client';
+import { useDispatch, useSelector } from 'react-redux';
+import { AppDispatch, RootState } from '../redux/store';
 import { fetchUserCurrentTokens } from '@/services/tokenService';
 import IsWelcome from '../components/IsWelcome';
 import NotWelcome from '../components/NotWelcome';
 import Awaiting from '../components/awaiting';
+import { setUserInfo, setIsLoading } from '../redux/features/userSlice';
+import type { User } from '../redux/features/userSlice';
+
+const getAuthToken = async () => {
+  const response = await fetch('/api/token');
+  const data = await response.json();
+  return data.foo;
+};
 
 export default function Welcome() {
-  const { user, error, isLoading } = useUser();
-  const [change, setChange] = useState(false);
-  const [first, setFirst] = useState('');
-
-  const [userTokens, setUserTokens] = useState({
-    amountTokens: '0',
-    currentAmountTokens: '0',
-  });
+  const dispatch = useDispatch<AppDispatch>();
+  const { user: auth0User, error, isLoading: auth0Loading } = useUser();
+  const [user, setUserState] = useState<User | null>(null);
+  const isLoading = useSelector((state: RootState) => state.user.isLoading);
 
   useEffect(() => {
     const fetchData = async () => {
-      try {
-        if (localStorage.getItem('role') !== null) {
-          const userTokensData = await fetchUserCurrentTokens(`${localStorage.getItem('role')}`);
-          setUserTokens(userTokensData);
-        }
-      } catch (e) {
-        console.error(e);
+      if (auth0Loading || error || !auth0User || !auth0User.sub) {
+        return;
       }
-    };
-    fetchData();
-  }, []);
 
-  useEffect(() => {
-    if (user) {
-      const tokenResponse = async () => {
-        const response = await fetch('/api/token');
-        const data = await response.json();
-        return data.foo;
+      const fetchedToken = await getAuthToken();
+      const userTokensData = await fetchUserCurrentTokens(auth0User.sub);
+
+      const newUser: User = {
+        id: auth0User.sub,
+        firstName: auth0User.given_name as string,
+        lastName: auth0User.family_name as string,
+        email: auth0User.email as string,
+        picture: auth0User.picture as string,
+        role: auth0User.role as string,
+        jwtToken: fetchedToken,
+        tokens: userTokensData,
       };
-      tokenResponse().then((token) => {
-        localStorage.setItem('token', token);
-        localStorage.setItem('first', `${user.given_name}`);
-        localStorage.setItem('last', `${user.family_name}`);
-        localStorage.setItem('pic', `${user.picture}`);
-        localStorage.setItem('amountTokens', `${userTokens.amountTokens}`);
-        localStorage.setItem('currentAmountTokens', `${userTokens.currentAmountTokens}`);
-        localStorage.setItem('sub', `${user.sub}`);
-        localStorage.setItem('role', `${user.role}`);
-        setChange(!change);
-      }).catch((err) => {
-        console.log(err);
-      });
-      console.log('user', user);
+
+      setUserState(newUser);
+      dispatch(setUserInfo(newUser));
+      dispatch(setIsLoading(false));
+    };
+    try {
+      dispatch(setIsLoading(true));
+      fetchData();
+    } catch (e) {
+      console.error(e);
     }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [user, userTokens.amountTokens, userTokens.currentAmountTokens]);
+  }, [auth0User, error, dispatch, auth0Loading]);
 
-  useEffect(() => {
-    setFirst(`${localStorage.getItem('first')}`);
-  }, [change]);
-
-  if (isLoading || first === '') return <Awaiting />;
+  if (auth0Loading || isLoading) return <Awaiting />;
   if (error) return <div>{error.message}</div>;
-  console.log('outside', user);
-  if (localStorage.getItem('first') === null) {
-    return <NotWelcome />;
-  }
+  if (!user) return <NotWelcome />;
+
   return (
     <div>
       <IsWelcome
-        admin={localStorage.getItem('role') === 'admin'}
-        name={`${localStorage.getItem('first')} ${localStorage.getItem('last')}`}
-        wizecoins={userTokens.amountTokens}
-        IsWizeliner
-        picSource={localStorage.getItem('pic')}
+        isAdmin={user.role === 'admin'}
+        name={`${user.firstName} ${user.lastName}`}
+        wizecoins={`${user.tokens.currentAmountTokens}`}
+        picSource={user.picture}
       />
     </div>
   );

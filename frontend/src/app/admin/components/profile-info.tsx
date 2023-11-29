@@ -11,9 +11,12 @@ import Image from 'next/image';
 import LogoutIcon from '@mui/icons-material/Logout';
 import IconButton from '@mui/material/IconButton';
 import Tooltip from '@mui/material/Tooltip';
+import { useDispatch } from 'react-redux';
 import { WelcomeProps } from '@/app/components/types';
 import styles from './sidenav.module.css';
 import LogoutPopup from './logoutPopup';
+import { setUserInfo } from '../../redux/features/userSlice';
+import { AppDispatch } from '@/app/redux/store';
 
 const numeral = require('numeral');
 
@@ -24,6 +27,8 @@ export function ProfileInfo({
   picSource,
 }: WelcomeProps) {
   const [isOpen, setOpen] = useState(false);
+  const dispatch = useDispatch<AppDispatch>();
+
   const handleOpenPopup = () => {
     setOpen(true);
   };
@@ -33,7 +38,7 @@ export function ProfileInfo({
   };
 
   const handleLogOut = () => {
-    localStorage.clear();
+    dispatch(setUserInfo(null));
     setOpen(false);
   };
 
