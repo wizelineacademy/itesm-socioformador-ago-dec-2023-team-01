@@ -84,6 +84,7 @@ export default function Chat({
     }
   };
   const [tokensFromPrompt, setTokensFromPrompt] = useState(0);
+  const [lastTokensFromResponse, setLastTokensFromResponse] = useState(0);
   const dispatch = useDispatch<AppDispatch>();
 
   const showNotification = (variant: VariantType, text:string, action:string) => {
@@ -96,11 +97,18 @@ export default function Chat({
 
   useEffect(() => {
     const lastMessage = messages[messages.length - 1];
+
     if (lastMessage && lastMessage.role === 'assistant' && isLoading) {
-      const tokensFromResponse = numTokensFromMessage(lastMessage);
-      if (tokensFromResponse > 0) {
-        dispatch(subtractTokens(tokensFromResponse));
-      }
+      const curTokensResponse = numTokensFromMessage(lastMessage);
+      setLastTokensFromResponse((prevTokens) => {
+        const diff = curTokensResponse - prevTokens;
+        if (diff > 0) {
+          dispatch(subtractTokens(diff));
+        }
+        return curTokensResponse;
+      });
+    } else if (lastMessage && lastMessage.role === 'assistant' && !isLoading) {
+      setLastTokensFromResponse(0);
     }
   }, [dispatch, isLoading, messages]);
 
@@ -371,7 +379,7 @@ export default function Chat({
               },
               endAdornment: (
                 <InputAdornment position="end" sx={{ position: 'inherit' }}>
-                  {isLoading && lastMessage()?.role !== 'user' && (
+                  {user.tokens.currentAmountTokens > 0 && isLoading && lastMessage()?.role !== 'user' && (
                   <IconButton onClick={(e) => {
                     e.preventDefault();
                     stopChat();
@@ -380,13 +388,13 @@ export default function Chat({
                     <StopCircleIcon fontSize="large" sx={{ color: 'white' }} />
                   </IconButton>
                   )}
-                  {isLoading && lastMessage()?.role === 'user' && (
+                  {user.tokens.currentAmountTokens > 0 && isLoading && lastMessage()?.role === 'user' && (
                   <CircularProgress size={35} thickness={4} sx={{ color: 'white', marginRight: '10px' }} />
                   )}
                   {user.tokens.currentAmountTokens === 0 && (
                     <BlockIcon fontSize="large" sx={{ color: 'white' }} />
                   )}
-                  {!isLoading && (
+                  {user.tokens.currentAmountTokens > 0 && !isLoading && (
                   <IconButton type="submit">
                     <SendIcon sx={{ color: 'white' }} />
                   </IconButton>
