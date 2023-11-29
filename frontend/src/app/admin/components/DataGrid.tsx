@@ -20,7 +20,7 @@ import { updateTokensInfo } from '@/app/redux/features/userSlice';
 
 export default function DataTable({ groupId, wizeCount, triggerFetch }:{ groupId: string, wizeCount:Function, triggerFetch:Boolean }) {
   const [usersGroup, setUsersGroup] = useState([]);
-  const [totals, setTotals] = useState({ totalWizeCoins: 0, totalUsers: 0 });
+  const [totals, setTotals] = useState({ totalFinalWizeCoins: 0, totalWizeCoins: 0, totalUsers: 0 });
   const [change, setChange] = useState(true);
   const [isPopupOpen, setPopupOpen] = useState(false);
   const [popupText, setPopupText] = useState<string[]>([]);
@@ -46,16 +46,17 @@ export default function DataTable({ groupId, wizeCount, triggerFetch }:{ groupId
   }, [groupId, change, triggerFetch, userRedux?.jwtToken, userRedux?.id, dispatch]);
 
   useEffect(() => {
-    const { totalWizeCoins, totalUsers } = usersGroup.reduce(
+    const { totalFinalWizeCoins, totalWizeCoins, totalUsers } = usersGroup.reduce(
       (accumulator, user:any) => ({
+        totalFinalWizeCoins: accumulator.totalFinalWizeCoins + user.totalWizecoins,
         totalWizeCoins: accumulator.totalWizeCoins + user.wizecoins,
         totalUsers: accumulator.totalUsers + 1,
       }),
-      { totalWizeCoins: 0, totalUsers: 0 },
+      { totalFinalWizeCoins: 0, totalWizeCoins: 0, totalUsers: 0 },
     );
-    setTotals({ totalWizeCoins, totalUsers });
+    setTotals({ totalFinalWizeCoins, totalWizeCoins, totalUsers });
     console.log('this should be smth', totals);
-    wizeCount({ totalWizeCoins, totalUsers });
+    wizeCount({ totalFinalWizeCoins, totalWizeCoins, totalUsers });
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [usersGroup]);
 
@@ -137,7 +138,12 @@ export default function DataTable({ groupId, wizeCount, triggerFetch }:{ groupId
               layout="fixed"
             />
           </Box>
-          {params.value}
+          <Box sx={{ color: '#f5f264', marginRight: '4px' }}>
+            {params.row.wizecoins}
+          </Box>
+          /
+          {' '}
+          {params.row.totalWizecoins}
         </Box>
       ),
     },
