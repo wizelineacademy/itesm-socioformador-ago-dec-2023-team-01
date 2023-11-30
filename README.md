@@ -28,9 +28,14 @@ In your terminal of choice run the following commands in a dedicated folder
 Once in itesm-socioformador-ago-dec-2023-team-01 run the following commands:
 - cd backend
 - npm install
+- npx prisma migrate dev
+- npx prisma generate
+- npm run dev
 - cd ..
 - cd frontend
 - npm install
+- npm run build
+- npm run start
 This should install all the neccessary dependencies
 
 **Backend Environment Variables:**
