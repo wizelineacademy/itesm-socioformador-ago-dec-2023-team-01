@@ -33,39 +33,41 @@ Once in itesm-socioformador-ago-dec-2023-team-01 run the following commands:
 - npm install
 This should install all the neccessary dependencies
 
-### Environment Variables Backend
-PORT -> This should indicate the port the backend should run at
+**Backend Environment Variables:**
 
-DATABASE_URL -> This points to your postgres database
+- **PORT:** Indicates the port at which the backend should run.
 
-BASE_URL -> This represents the base localhost url including the port
+- **DATABASE_URL:** Points to your PostgreSQL database.
 
-CLIENT_ID -> This represents auth0 client ID (provided by auth0)
+- **BASE_URL:** Represents the base localhost URL, including the port.
 
-ISSUER_BASE_URL -> This represents auth0 issuer base url (provided by auth0)
+- **CLIENT_ID:** Auth0 client ID (provided by Auth0). Obtain this from your Auth0 dashboard: [Auth0 Dashboard](https://auth0.com/)
 
-CLIENT_SECRET -> This represents auth0 client secret (provided by auth0)
+- **ISSUER_BASE_URL:** Auth0 issuer base URL (provided by Auth0). Obtain this from your Auth0 dashboard: [Auth0 Dashboard](https://auth0.com/)
 
-AUTH0_AUDIENCE -> This represents auth0 audience (provided by auth0)
+- **CLIENT_SECRET:** Auth0 client secret (provided by Auth0). Obtain this from your Auth0 dashboard: [Auth0 Dashboard](https://auth0.com/)
 
-JWT_SECRET -> This represent a random set of numbers and letters that generate the JWT token
+- **AUTH0_AUDIENCE:** Auth0 audience (provided by Auth0). Obtain this from your Auth0 dashboard: [Auth0 Dashboard](https://auth0.com/)
 
-### Environment Variables Frontend
-AUTH0_SECRET -> This represent a random generated secret key (provided by auth0)
+- **JWT_SECRET:** Random set of numbers and letters used to generate the JWT token.
 
-AUTH0_BASE_URL -> This represent the base url for auth0
+**Frontend Environment Variables:**
 
-AUTH0_ISSUER_BASE_URL -> This represent the base url issued by auth0 (provided by auth0)
+- **AUTH0_SECRET:** Randomly generated secret key (provided by Auth0).
 
-AUTH0_CLIENT_ID -> This represent the client ID (provided by auth0)
+- **AUTH0_BASE_URL:** Base URL for Auth0.
 
-AUTH0_CLIENT_SECRET -> This represent a random number of numbers and letters (provided by auth0)
+- **AUTH0_ISSUER_BASE_URL:** Base URL issued by Auth0 (provided by Auth0). Obtain this from your Auth0 dashboard: [Auth0 Dashboard](https://auth0.com/)
 
-AUTH0_AUDIENCE -> This represents auth0 audience (provided by auth0)
+- **AUTH0_CLIENT_ID:** Client ID (provided by Auth0). Obtain this from your Auth0 dashboard: [Auth0 Dashboard](https://auth0.com/)
 
-PUBLIC_OPENAI_API_KEY -> This represents the openAI api key (provided by openAI)
+- **AUTH0_CLIENT_SECRET:** Random combination of numbers and letters (provided by Auth0). Obtain this from your Auth0 dashboard: [Auth0 Dashboard](https://auth0.com/)
 
-NEXT_PUBLIC_API_URL -> This represent base url including localhost and port number
+- **AUTH0_AUDIENCE:** Auth0 audience (provided by Auth0). Obtain this from your Auth0 dashboard: [Auth0 Dashboard](https://auth0.com/)
+
+- **PUBLIC_OPENAI_API_KEY:** OpenAI API key (provided by OpenAI).
+
+- **NEXT_PUBLIC_API_URL:** Base URL, including localhost and port number.
 
 ## Folder Structure
 ```
