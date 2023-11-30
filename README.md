@@ -36,7 +36,8 @@ Once in itesm-socioformador-ago-dec-2023-team-01 run the following commands:
 - npm install
 - npm run build
 - npm run start
-This should install all the neccessary dependencies
+
+This should install all the necessary dependencies and start both processes
 
 **Backend Environment Variables:**
 
